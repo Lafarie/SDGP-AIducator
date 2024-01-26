@@ -1,0 +1,72 @@
+.App{
+  font-family: 'Inria Sans', sans-serif;;
+}
+
+#navBar{
+  background-color: #003366;
+  padding: 0px 30px;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  display: inline-grid;
+  grid-template-columns: auto auto fit-content(60px);
+  column-gap: 10px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.541));
+}
+
+#navList{
+  list-style: none;
+  color: white;
+  padding: 30px;
+  height: 100%;
+  text-align: center;
+  margin: 0;
+}
+
+#navBar img{
+  height: 100%;
+  width: 100%;
+}
+
+#rightCorner{
+  height: 50px;
+  width: 50px;
+  margin: auto 60px auto auto;
+}
+
+#imageContainer{
+  height: 50px;
+  width: 50px;
+  margin: auto;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.418));
+  
+}
+
+
+#left{
+  color: white;
+}
+
+
+#left{
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  column-gap: 20px;
+  justify-content: left;
+}
+
+#rightCorner{
+  background-color: #B8B0B0;
+  border-radius: 50%;
+}
+
+#navList li{
+  display: inline;
+  padding: 0 5% 0 5%;
+  border-right: solid 2px white;
+}
+
+.NavLinks:link, .NavLinks:visited{
+  text-decoration: none;
+  color: white; 
+}
