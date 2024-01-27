@@ -5,7 +5,6 @@ import Assistant from './AIAssistant';
 import {Link, useLocation} from 'react-router-dom';
 
 function showActivePage(linkpath, url){
-  console.log(url, linkpath)
   if(url === linkpath){
     return "underline";
   } else {
