@@ -13,7 +13,7 @@ function Assistant(){
             method: "post",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(promptObj)
-        }).then((response) => response.json()).then((data) => {console.log(data.message)});
+        }).then((response) => response.json()).then((data) => {document.getElementById("response").innerHTML = data.generated_result});
     }
     return(
       <div id={"AIAssistant"}>
