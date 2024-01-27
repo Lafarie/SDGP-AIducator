@@ -7,7 +7,7 @@ function Assistant(){
 
     function handlePrompt(){
         let promptObj = {
-            body: prompt.current.value
+            prompt: prompt.current.value
         }
         fetch("/api/get/prompt", {
             method: "post",
