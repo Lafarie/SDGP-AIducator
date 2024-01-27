@@ -1,6 +1,7 @@
 import logo from './Images/logoAI.svg';
 import defaultProfile from "./Images/defaultProfile.svg"
 import './App.css';
+import Assistant from './AIAssistant';
 import {Link, useLocation} from 'react-router-dom';
 
 function showActivePage(linkpath, url){
@@ -40,10 +41,12 @@ function Navbar() {
   )
 }
 
+
 function Home() {
   return (
     <div className="App">
       <Navbar></Navbar>
+      <Assistant></Assistant>
     </div>
   );
 }

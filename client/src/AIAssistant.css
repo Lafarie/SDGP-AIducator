@@ -1,0 +1,19 @@
+#AIAssistant{
+    /* max-width: 100%; */
+    width: calc(100% - 60px);
+    height: 100%;
+    margin-top: 110px;
+    padding: 0px 30px;
+    display: inline-grid;
+    grid-template-columns:auto auto ;
+    column-gap: 20px;
+}
+
+#AIAssistant>*{
+    background-color: #D9D9D9;
+    border-radius: 31px;
+}
+
+.frames{
+    padding: 20px;
+}
