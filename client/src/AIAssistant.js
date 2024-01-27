@@ -21,10 +21,12 @@ function Assistant(){
             <div id={"assistentFrame"}>
                 <input type='text' onKeyDownCapture={(e) => {
                     if(e.key === 'Enter'){
+                        document.getElementById("response").innerHTML = "Wait a moment...";
                         handlePrompt(); // getting value of prompt when enter is pressed
                     }
                 }} id={'prompt'} placeholder='Enter question here...' ref={prompt} />
                 <div id={'generate'}><img src={sendIcon} alt='prompt send icon' onClick={() => {
+                    document.getElementById("response").innerHTML = "Wait a moment...";
                     handlePrompt(); // getting value of prompt when send button is pressed. 
                 }}/></div>
             </div>
