@@ -1,5 +1,10 @@
+#root{
+  height: 100%;
+}
+
 .App{
-  font-family: 'Inria Sans', sans-serif;;
+  font-family: 'Inria Sans', sans-serif;
+  height: 100%;
 }
 
 #navBar{

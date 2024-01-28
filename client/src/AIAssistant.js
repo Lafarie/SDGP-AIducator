@@ -1,6 +1,8 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import './AIAssistant.css';
 import sendIcon from './Images/sendicon.svg'
+import good from './Images/thumbsup.svg'
+import bad from './Images/thumbsdown.svg'
 
 function Assistant(){
     let prompt = useRef();
@@ -25,13 +27,16 @@ function Assistant(){
                         handlePrompt(); // getting value of prompt when enter is pressed
                     }
                 }} id={'prompt'} placeholder='Enter question here...' ref={prompt} />
-                <div id={'generate'}><img src={sendIcon} alt='prompt send icon' onClick={() => {
+                <div id={'generate'} className='button'><img src={sendIcon} alt='prompt send icon' onClick={() => {
                     document.getElementById("response").innerHTML = "Wait a moment...";
                     handlePrompt(); // getting value of prompt when send button is pressed. 
                 }}/></div>
             </div>
-            <div id={'response'}><p>Hello there</p></div>
-            
+            <div id={'response'}><p>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.</p></div> 
+            <div id={'rating'}>
+                <div id={'good'} className='button'><img src={good} alt='prompt send icon'/></div>
+                <div id={'bad'} className='button'><img src={bad} alt='prompt send icon'/></div>
+            </div>
         </div>
         <div id={"models"} className={'frames'}>
             <input type='text' id={'prompt2'}/>
