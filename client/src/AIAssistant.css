@@ -20,14 +20,15 @@
     padding: 25px 20px;
     height: inherit;
     max-height: inherit;
+    overflow: auto;
 }
 
 .button{
     height: 20px;
     width: 30px;
     border-radius: 3px;
-    padding: 5px 10px 5px 5px;
     transition: 0.2s;
+    padding: 5px;
     filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.541));
 }
 
@@ -38,7 +39,8 @@
 }
 
 #generate{
-    background-color: #829D9C;
+    background-color: #003366;
+    padding: 5px 10px 5px 5px;
 }
 
 #bad{
@@ -66,7 +68,7 @@
 }
 
 #prompt:focus{
-    outline: solid #829D9C;
+    outline: solid #003366;
 }
 
 #assistentFrame{
@@ -79,14 +81,15 @@
 
 #response{
     background-color: white;
-    margin: 20px 0;
-    padding: 10px 20px;
+    margin: 15px 0;
+    padding: 15px 20px;
     border-radius: 10px; 
     min-height: 70%;
     height: fit-content;
+    border: solid 2.5px #003366;
 }
 
-#response p, #response li{
+#response>*{
     text-align: justify;
     line-height: 1.5;
 }
@@ -99,5 +102,6 @@
     display: inline-grid;
     grid-template-columns: auto auto;
     column-gap: 10px;
+    margin: 0;
     float: right;
 }

@@ -32,14 +32,15 @@ function Assistant(){
                     handlePrompt(); // getting value of prompt when send button is pressed. 
                 }}/></div>
             </div>
-            <div id={'response'}><p>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.</p></div> 
+            <div id={'response'}><p style={{textAlign: "center", lineHeight: "200%"}}>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.
+            <br/><br/>I can answer any educational question you have.<br/>All you gotta do is ask me :D.</p></div> 
             <div id={'rating'}>
                 <div id={'good'} className='button'><img src={good} alt='prompt send icon'/></div>
                 <div id={'bad'} className='button'><img src={bad} alt='prompt send icon'/></div>
             </div>
         </div>
         <div id={"models"} className={'frames'}>
-            <input type='text' id={'prompt2'}/>
+            <h1>3D models</h1>
         </div>
       </div>
     )
