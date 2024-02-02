@@ -1,5 +1,10 @@
+#root{
+  height: 100%;
+}
+
 .App{
-  font-family: 'Inria Sans', sans-serif;;
+  font-family: 'Inria Sans', sans-serif;
+  height: 100%;
 }
 
 #navBar{
@@ -7,11 +12,13 @@
   padding: 0px 30px;
   position: fixed;
   width: 100%;
+  height: fit-content;
   top: 0px;
   display: inline-grid;
   grid-template-columns: auto auto fit-content(60px);
   column-gap: 10px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.541));
+  z-index: 200;
 }
 
 #navList{
