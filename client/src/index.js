@@ -5,7 +5,7 @@ import Home from './App';
 import Forum from './Pages/Forum';
 import Video from './Pages/Video';
 import Quiz from './Pages/Quiz';
-import Todo from './Pages/List';
+import Todo from './Pages/Todo';
 
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'

@@ -6,6 +6,7 @@ function Todo(){
     return (
         <div className="Todo">
             <Navbar />
+            <h2>Todo</h2>
         </div>
     );
 }
