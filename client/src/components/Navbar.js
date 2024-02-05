@@ -1,7 +1,9 @@
-import React from 'react';
+
 import logo from '../Images/logoAI.svg';
 import defaultProfile from "../Images/defaultProfile.svg"
 import {Link, useLocation} from 'react-router-dom';
+import '../App.css';
+import '../index.css';
 
 function showActivePage(linkpath, url){
     console.log(url, linkpath)

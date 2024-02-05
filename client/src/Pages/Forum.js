@@ -1,11 +1,13 @@
-import React from 'react';
+
 import Navbar from '../components/Navbar'; 
+import '../index.css';
 
 function Forum() {
     return (
         <div className="Forum">
             <Navbar />
-           <h1>Forum</h1>
+           <h1 style={{margin: '100px'}}>Forum</h1>
+
         </div>
     );
 }
