@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Home from './App';
+import Video from './video';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
@@ -10,7 +11,7 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Home/>}/>
-      <Route path="/video" element={<Home/>}/> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
+      <Route path="/video" element={<Video/>}/> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
       <Route path="/quiz" element={<Home/>}/>
       <Route path="/forum" element={<Home/>}/>
       <Route path="/todo" element={<Home/>}/>

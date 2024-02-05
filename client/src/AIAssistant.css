@@ -86,7 +86,7 @@
     border-radius: 10px; 
     min-height: 70%;
     height: fit-content;
-    border: solid 2.5px #003366;
+    /* border: solid 2.5px #003366; */
 }
 
 #response>*{
