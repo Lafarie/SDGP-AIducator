@@ -1,8 +1,9 @@
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import './AIAssistant.css';
 import sendIcon from './Images/sendicon.svg'
 import good from './Images/thumbsup.svg'
 import bad from './Images/thumbsdown.svg'
+// import save from './Images/bookmark.svg'
 
 var responseInt = 0;
 
@@ -22,6 +23,41 @@ function Assistant(){
     let prompt = useRef();
 
     const [textbox, settextBox] = useState(false);
+    const [response, setresponse] = useState(false);
+    const [saved, setsaved] = useState(false);
+    const [rating, setrating] = useState("");
+
+    useEffect(() => {
+        let bad = document.getElementById("bad");
+        let good = document.getElementById("good");
+        if(rating === 'good'){
+            good.style.border = "solid 2px white";
+            bad.style.border = "none";
+        } else if (rating === "bad") {
+            bad.style.border = "solid 2px white";
+            good.style.border = "none";
+        } else {
+            bad.style.border = "none";
+            good.style.border = "none";
+        }
+    }, [rating])
+
+    useEffect(() => {
+        let savebtn = document.getElementById('save');
+        if(saved){
+            let convoObj = {
+                prompt: prompt.current.value,
+                response: document.getElementById("response").innerHTML
+            };
+            savebtn.innerHTML = "Response Saved"
+            savebtn.style.backgroundColor = "GREY"
+            console.log(convoObj)
+        } else {
+            savebtn.innerHTML = "Save Response"
+            savebtn.style.backgroundColor = "#003366"
+        }
+    }, [saved])
+
 
     function handlePrompt(){
         let promptObj = {
@@ -33,12 +69,13 @@ function Assistant(){
             body: JSON.stringify(promptObj)
         }).then((response) => response.json()).then((data) => {
             document.getElementById("response").style.fontSize = "16px";
-            document.getElementById("response").innerHTML = data.generated_result
+            document.getElementById("response").innerHTML = data.generated_result;
+            setresponse(true);
             settextBox(false);
             clearInterval(responseInt);
         });
     }
-    
+
     return(
       <div id={"AIAssistant"}>
         <div id={"Assistant"} className={'frames'}>
@@ -48,7 +85,9 @@ function Assistant(){
                         document.getElementById("response").style.fontSize = "20px";
                         document.getElementById("response").innerHTML = "Wait a moment";
                         untilRespond(document.getElementById("response"));
+                        setresponse(false)
                         settextBox(true);
+                        setsaved(false)
                         handlePrompt();
                     }
                 }} id={'prompt'} placeholder='Enter question here...' ref={prompt} disabled={textbox}/>
@@ -56,6 +95,8 @@ function Assistant(){
                     document.getElementById("response").style.fontSize = "20px";
                     document.getElementById("response").innerHTML = "Wait a moment";
                     untilRespond(document.getElementById("response"));
+                    setresponse(false)
+                    setsaved(false)
                     settextBox(true);
                     handlePrompt(); // getting value of prompt when send button is pressed. 
                 }}/></div>
@@ -63,8 +104,30 @@ function Assistant(){
             <div id={'response'}><p style={{textAlign: "center", lineHeight: "200%", fontSize: "20px"}}>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.
             <br/><br/>I can answer any educational question you have.<br/>All you gotta do is ask me :D.</p></div> 
             <div id={'rating'}>
-                <div id={'good'} className='button'><img src={good} alt='prompt send icon'/></div>
-                <div id={'bad'} className='button'><img src={bad} alt='prompt send icon'/></div>
+                <div id={'save'} className='button' style={response?{display: "block"}:{display:"none"}} onClick={() => {
+                    if(!saved){
+                        let convoObj = {
+                            prompt: prompt.current.value,
+                            response: document.getElementById("response").innerHTML,
+                            rating: rating
+                        };
+                    }
+                    setsaved(!saved);
+                }}>Save Response</div>
+                <div id={'good'} className='button'><img src={good} alt='prompt rate good icon' onClick={() => {
+                    if(rating === "good"){
+                        setrating("")
+                    }else{
+                        setrating("good")
+                    }
+                }}/></div>
+                <div id={'bad'} className='button'><img src={bad} alt='prompt rate bad icon' onClick={() => {
+                    if(rating === "bad"){
+                        setrating("")
+                    }else{
+                        setrating("bad")
+                    }
+                }}/></div>
             </div>
         </div>
         <div id={"models"} className={'frames'}>

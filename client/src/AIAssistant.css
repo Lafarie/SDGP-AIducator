@@ -51,6 +51,14 @@
     background-color: #80A98C;
 }
 
+#save{
+    background-color: #003366;
+    color: white;
+    display: none; 
+    padding: 5px 20px;
+    width: fit-content;
+}
+
 /* #generate:hover{
     background-color: #5d7070;
 } */
@@ -100,7 +108,7 @@
 
 #rating{
     display: inline-grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto auto auto;
     column-gap: 10px;
     margin: 0;
     float: right;

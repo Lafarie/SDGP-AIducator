@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import OpenAI from "openai";
 import dotenv from "dotenv";
+import sql from "mysql2";
 
 dotenv.config()
 
@@ -9,6 +10,7 @@ let INSTRUCTIONS =
     `
     You are an AI assistant who is an expert in any field of education. 
     YOU WILL NOT answer anything outside the field of academic education. 
+    Queries about history should be considered education, for example question about historical people and events in history. 
     YOU SHOULD NOT answer any personal issues or statements a user might give as a prompt.
     YOU SHOULD NOT give adivice to users if they ask any issues outside an acedemic sense.
     DO NOT GIVE HEADING TO QUESTIONS YOU ARE NOT ALLOWED TO ANSWER.
@@ -28,13 +30,57 @@ const openai = new OpenAI({
     apiKey: process.env.API_KEY
 });
 
+var dbconnection = sql.createConnection({
+    "host": "localhost",
+    "user": "root",
+    "password": "",
+    "port": 3307
+});
+
+dbconnection.connect((err) => {
+    if(err){
+        console.log(err);
+    } else {
+        console.log("connected");
+    }
+})
+
+let tablesql = "CREATE TABLE queryTable" + 
+                "(id INTEGER NOT NULL AUTO_INCREMENT," + 
+                "prompt VARCHAR(100) NOT NULL," + 
+                "response VARCHAR(500) NOT NULL," + 
+                "promptrating VARCHAR(10)," + 
+                "CONSTRAINT q_id_pk PRIMARY KEY (id));"
+
+dbconnection.query('CREATE DATABASE querydb', (err, result) => {
+    if(err){
+        if(err.errno === 1007){
+            console.log("Database already exists, Storing data in existing database")
+        } else {
+            console.log(err);
+        }
+    } else {
+        console.log("databse created")
+    }
+})
+
+dbconnection.changeUser({"database": "querydb"}); // selecting databse after creation
+
+dbconnection.query(tablesql, (err, result) => { // creating table
+    if(err){
+        if(err.errno === 1050){
+            console.log("table already exists")
+        }
+    } else {
+        console.log("table created successfully");
+    }
+});
 
 async function main(input) {
   const completion = await openai.chat.completions.create({
     messages: [{"role" : "system", "content": INSTRUCTIONS}, {"role": "assistant", "content": input}],
     model: "gpt-3.5-turbo",
   });
-
   return completion.choices[0];
 }
 
