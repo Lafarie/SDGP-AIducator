@@ -26,6 +26,7 @@ function Assistant(){
     const [response, setresponse] = useState(false);
     const [saved, setsaved] = useState(false);
     const [rating, setrating] = useState("");
+    const [responseID, setresponseID] = useState("")
 
     useEffect(() => {
         let bad = document.getElementById("bad");
@@ -45,13 +46,8 @@ function Assistant(){
     useEffect(() => {
         let savebtn = document.getElementById('save');
         if(saved){
-            let convoObj = {
-                prompt: prompt.current.value,
-                response: document.getElementById("response").innerHTML
-            };
             savebtn.innerHTML = "Response Saved"
             savebtn.style.backgroundColor = "GREY"
-            console.log(convoObj)
         } else {
             savebtn.innerHTML = "Save Response"
             savebtn.style.backgroundColor = "#003366"
@@ -63,7 +59,7 @@ function Assistant(){
         let promptObj = {
             prompt: prompt.current.value
         }
-        fetch("/api/get/prompt", {
+        fetch("/api/post/prompt", {
             method: "post",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(promptObj)
@@ -106,11 +102,25 @@ function Assistant(){
             <div id={'rating'}>
                 <div id={'save'} className='button' style={response?{display: "block"}:{display:"none"}} onClick={() => {
                     if(!saved){
+                        // save the prompt and then as the http request send the id then store it here for referencing.
                         let convoObj = {
                             prompt: prompt.current.value,
                             response: document.getElementById("response").innerHTML,
                             rating: rating
                         };
+                        console.log(convoObj);
+                        fetch("/api/post/save", {
+                            method: "POST",
+                            headers: {"Content-Type": "application/json"},
+                            body: JSON.stringify(convoObj)
+                        }).then(response => response.json()).then((data) => {setresponseID(data.id)})
+                    }
+                     else {
+                            fetch("/api/post/unsave", {
+                                method: "POST",
+                                headers: {"Content-Type": "application/json"},
+                                body: JSON.stringify({"unsaveID" : responseID})
+                            })
                     }
                     setsaved(!saved);
                 }}>Save Response</div>

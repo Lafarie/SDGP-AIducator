@@ -88,7 +88,7 @@ let app = new express;
 
 app.use(bodyParser.json());
 
-app.post("/api/get/prompt", async (req, res) => {
+app.post("/api/post/prompt", async (req, res) => {
     console.log(req.body.prompt);
     if(req.body.prompt === ""){
         res.json({"generated_result": "I'm sorry but I have not recieved a proper question to answer."})
@@ -97,6 +97,40 @@ app.post("/api/get/prompt", async (req, res) => {
         let result = (await returnMsg).message;
         res.json({"generated_result": result.content})
     }
+});
+
+app.post("/api/post/save", async (req, res) => {
+    console.log(req.body.rating);
+    dbconnection.query(`INSERT INTO querytable(prompt, response, promptrating) VALUES("${req.body.prompt}", '${req.body.response.replaceAll("'", "*")}', "${req.body.rating}");`, (err, result) => {
+        if(err){
+            console.log(err)
+            res.json({"message": "could no save conversation", "id": "-1"})
+        } else {
+            console.log("saved")
+            dbconnection.query('SELECT id FROM queryTable ORDER BY id DESC LIMIT 1', (err, result) => { // to get the id of the last entry
+                if(err){
+                    console.log("Error")
+                }else{
+                    res.json({"message": "response saved", "id": result[0].id})
+                }
+            })
+        }
+    });
+});
+
+app.post("/api/post/unsave", async (req, res) => {
+    let deleteID = req.body.unsaveID;
+    console.log(deleteID)
+    let deleteQuery = `DELETE FROM querytable WHERE (id = ${deleteID});`
+    dbconnection.query(deleteQuery, (err, result) => {
+        if(err) {
+            res.json({"message":"Response could not be unsaved"})
+            console.log("Response could not be unsaved")
+        } else {
+            res.json({"message":"Response unsaved"})
+            console.log("Response unsaved")
+        }
+    })
 });
 
 app.listen(5000, () => {
