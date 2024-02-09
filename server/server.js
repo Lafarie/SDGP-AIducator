@@ -24,6 +24,7 @@ let INSTRUCTIONS =
     Add heading to question answered and have sections for the answers. 
     Give the answer as a paragraph in html and add section breaks and headings.
     IMPORTANT: EVERY PROPER RESPONSE MUST HAVE ATLEAST 2 SECTIONS AND 200 WORDS.
+    IMPORTANT: Keep responses to a maximum of 5000 words or less. 
     `
 
 const openai = new OpenAI({
@@ -118,6 +119,20 @@ app.post("/api/post/save", async (req, res) => {
     });
 });
 
+app.get("/api/get/responses", (req, res) => {
+    dbconnection.query("SELECT id, prompt FROM querytable", (err, result) => {
+        if(err){
+            console.log("Could not get responses")
+        } else {
+            res.json({"responseArray": result})
+        }
+    })
+})
+
+dbconnection.query("SELECT * FROM querytable", (err, result) => {
+    console.log(result[0])
+})
+
 app.post("/api/post/unsave", async (req, res) => {
     let deleteID = req.body.unsaveID;
     console.log(deleteID)
@@ -132,6 +147,17 @@ app.post("/api/post/unsave", async (req, res) => {
         }
     })
 });
+
+app.post("/api/post/displaySaved", (req, res) => {
+    console.log(req.body.selectedID);
+    dbconnection.query(`SELECT response FROM querytable WHERE id = ${req.body.selectedID}`, (err, result) => {
+        if(err){
+            res.json({message: "response could not be found"})
+        } else {
+            res.json({message: result[0].response})
+        }
+    })
+})
 
 app.listen(5000, () => {
     console.log("listenning on port 5000.")

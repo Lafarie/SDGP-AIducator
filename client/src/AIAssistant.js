@@ -27,8 +27,10 @@ function Assistant(){
     const [saved, setsaved] = useState(false);
     const [rating, setrating] = useState("");
     const [responseID, setresponseID] = useState("")
+    const [allresponses, setallresponses] = useState(null);
+    const [displayID, setdisplayID] = useState("");
 
-    useEffect(() => {
+    useEffect(() => { // settign the look of the rate ebutton
         let bad = document.getElementById("bad");
         let good = document.getElementById("good");
         if(rating === 'good'){
@@ -44,6 +46,40 @@ function Assistant(){
     }, [rating])
 
     useEffect(() => {
+        document.querySelectorAll(".savedResponseClass").forEach((element) => {
+            if(element != null){
+                if(displayID == element.id){
+                    element.className += " selectedResponse";
+                    console.log(element.id)
+                } else {
+                    element.className = "savedResponseClass"
+                }
+            }
+        })
+    }, [displayID])
+
+    useEffect(() => {
+        fetch("/api/get/responses").then(response => response.json()).then((data) => {
+            setallresponses(data.responseArray.map((response) => (
+                <div key={response.id} id={response.id} value={response.id} className='savedResponseClass' onClick={()=> {
+                        fetch("/api/post/displaySaved", {
+                            method: "post",
+                            headers: {"Content-Type":"application/json"},
+                            body: JSON.stringify({selectedID : response.id})
+                        }).then(response => response.json()).then(data => {
+                            document.getElementById("response").innerHTML = data.message.replaceAll("*", "'")
+                            document.getElementById("prompt").innerText = response.prompt;
+                        });
+                        document.getElementById('save').style.display = "block";
+                        setresponseID(response.id);
+                        setdisplayID(response.id);
+                        setsaved(true);
+                }}>{response.prompt}</div>
+            )));
+        });
+    }, [saved])
+
+    useEffect(() => { // to set the look of the save button
         let savebtn = document.getElementById('save');
         if(saved){
             savebtn.innerHTML = "Response Saved"
@@ -74,9 +110,15 @@ function Assistant(){
 
     return(
       <div id={"AIAssistant"}>
+        <div id="savedResponsesContainer" className={'frames'}>
+            <h2>Saved Responses</h2>
+            <div>
+                {allresponses}
+            </div>
+        </div>
         <div id={"Assistant"} className={'frames'}>
             <div id={"assistentFrame"}>
-                <input autoFocus type='text' onKeyDownCapture={(e) => {
+                <input autoFocus type='text' autoComplete='off' onKeyDownCapture={(e) => {
                     if(e.key === 'Enter'){
                         document.getElementById("response").style.fontSize = "20px";
                         document.getElementById("response").innerHTML = "Wait a moment";
@@ -119,7 +161,7 @@ function Assistant(){
                             fetch("/api/post/unsave", {
                                 method: "POST",
                                 headers: {"Content-Type": "application/json"},
-                                body: JSON.stringify({"unsaveID" : responseID})
+                                body: JSON.stringify({"unsaveID" : responseID}) // in this case - remove latest record from db 
                             })
                     }
                     setsaved(!saved);
