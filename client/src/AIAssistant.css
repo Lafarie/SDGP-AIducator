@@ -6,7 +6,7 @@
     max-height: fit-content;
     padding: 0px 30px;
     display: inline-grid;
-    grid-template-columns:50% 50%;
+    grid-template-columns:20% 50% auto;
     column-gap: 10px;
 }
 
@@ -15,6 +15,20 @@
     border-radius: 15px;
     width: inherit;
 }
+
+.savedResponseClass{
+    background-color: white;
+    margin-top: 10px;
+    padding: 20px 10px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.savedResponseClass:hover, .selectedResponse{
+    background-color: #003366;
+    color: white;
+}
+
 
 .frames{
     padding: 25px 20px;
@@ -51,12 +65,33 @@
     background-color: #80A98C;
 }
 
+#save{
+    background-color: #003366;
+    color: white;
+    display: none; 
+    padding: 5px 20px;
+    width: fit-content;
+}
+
+
 /* #generate:hover{
     background-color: #5d7070;
 } */
 
 .button:active{
     filter: none
+}
+
+#savedResponses{
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+}
+
+#savedResponses:focus{
+    outline: solid 2px #003366;
 }
 
 #prompt{
@@ -67,8 +102,13 @@
     border: none;
 }
 
+label{
+    margin: auto;
+    font-weight: bold;
+}
+
 #prompt:focus{
-    outline: solid #003366;
+    outline: solid 2px #003366;
 }
 
 #assistentFrame{
@@ -86,7 +126,7 @@
     border-radius: 10px; 
     min-height: 70%;
     height: fit-content;
-    border: solid 2.5px #003366;
+    /* border: solid 2.5px #003366; */
 }
 
 #response>*{
@@ -100,7 +140,7 @@
 
 #rating{
     display: inline-grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto auto auto auto auto auto;
     column-gap: 10px;
     margin: 0;
     float: right;
