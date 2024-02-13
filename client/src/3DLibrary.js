@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navbar } from './App';
+import Navbar  from './component/Navbar';
 import './index.css';
 import './AIAssistant.css';
 import './App.css';
@@ -18,7 +18,7 @@ const cardData = [
   { id: 10, image: 'https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg',title: 'Card 2', description: 'Description for card 2' },
   { id: 11, image: 'https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg',title: 'Card 1', description: 'Description for card 1' },
   { id: 12, image: 'https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg',title: 'Card 2', description: 'Description for card 2' },
-  
+
 
 ];
 
@@ -84,9 +84,9 @@ function load(){
       <div><h1>CART</h1>
       <div className="cart">
         <div className="grid-container">
-          {currentCards.map(card => (
+          {/* {currentCards.map(card => (
             <Card key={card.id} data={card} />
-          ))}
+          ))} */}
         </div>
       </div>
       </div>
@@ -97,9 +97,9 @@ function load(){
 function Suggestions(){
   return(
     <div className="grid-container">
-          {currentCards.map(card => (
+          {/* {currentCards.map(card => (
             <Card key={card.id} data={card} />
-          ))}
+          ))} */}
     </div>
   )
 }

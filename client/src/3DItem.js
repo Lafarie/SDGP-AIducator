@@ -1,10 +1,9 @@
 import React from "react";
-import { Navbar } from './App';
+import Navbar  from './component/Navbar';
 import './index.css';
 import './AIAssistant.css';
 import './App.css';
 import './3DLibrary.css';
-import 
 
 function Iteam(){
     return (
