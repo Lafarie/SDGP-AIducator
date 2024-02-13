@@ -7,6 +7,8 @@ import bad from './Images/thumbsdown.svg'
 
 var responseInt = 0;
 
+// white response generates cannot view saved responses. (implement)
+
 function untilRespond(element){
     let msg = "Wait a moment";
     responseInt = setInterval(()=>{
@@ -19,11 +21,13 @@ function untilRespond(element){
         }, 1000);
 }
 
+
 function Assistant(){
     let prompt = useRef();
 
     const [textbox, settextBox] = useState(false);
     const [response, setresponse] = useState(false);
+    const [generateButton, setgenerateButton] = useState(true); // enabling and disabling generate button
     const [saved, setsaved] = useState(false);
     const [rating, setrating] = useState("");
     const [responseID, setresponseID] = useState("")
@@ -62,7 +66,7 @@ function Assistant(){
         fetch("/api/get/responses").then(response => response.json()).then((data) => {
             setallresponses(data.responseArray.map((response) => (
                 <div key={response.id} id={response.id} value={response.id} className='savedResponseClass' onClick={()=> {
-                        fetch("/api/post/displaySaved", {
+                        fetch("/api/post/displaySaved", { // getting saved response from db
                             method: "post",
                             headers: {"Content-Type":"application/json"},
                             body: JSON.stringify({selectedID : response.id})
@@ -71,8 +75,9 @@ function Assistant(){
                             document.getElementById("prompt").innerText = response.prompt;
                         });
                         document.getElementById('save').style.display = "block";
-                        setresponseID(response.id);
-                        setdisplayID(response.id);
+                        prompt.current.value = response.prompt;
+                        setresponseID(response.id); // setting the current id to the id of the saved response
+                        setdisplayID(response.id); // setting the id of the current saved response
                         setsaved(true);
                 }}>{response.prompt}</div>
             )));
@@ -90,6 +95,9 @@ function Assistant(){
         }
     }, [saved])
 
+    useEffect(() => {
+            document.getElementById("generate").disabled = generateButton;
+    }, [generateButton])
 
     function handlePrompt(){
         let promptObj = {
@@ -103,10 +111,20 @@ function Assistant(){
             document.getElementById("response").style.fontSize = "16px";
             document.getElementById("response").innerHTML = data.generated_result;
             setresponse(true);
+            setgenerateButton(false);
             settextBox(false);
             clearInterval(responseInt);
         });
     }
+
+    function handleChange() {
+        if(prompt.current.value === ""){
+            setgenerateButton(true)
+        } else {
+            setgenerateButton(false)
+        }
+    }
+
 
     return(
       <div id={"AIAssistant"}>
@@ -119,25 +137,29 @@ function Assistant(){
         <div id={"Assistant"} className={'frames'}>
             <div id={"assistentFrame"}>
                 <input autoFocus type='text' autoComplete='off' onKeyDownCapture={(e) => {
-                    if(e.key === 'Enter'){
+                    if(e.key === 'Enter' && !generateButton){
                         document.getElementById("response").style.fontSize = "20px";
                         document.getElementById("response").innerHTML = "Wait a moment";
                         untilRespond(document.getElementById("response"));
-                        setresponse(false)
+                        setdisplayID(""); // to deselect the current saved response prompt div
+                        setresponse(false);
+                        setgenerateButton(true);
                         settextBox(true);
                         setsaved(false)
                         handlePrompt();
                     }
-                }} id={'prompt'} placeholder='Enter question here...' ref={prompt} disabled={textbox}/>
-                <div id={'generate'} className='button'><img src={sendIcon} alt='prompt send icon' onClick={() => {
+                }} id={'prompt'} placeholder='Enter question here...' ref={prompt} disabled={textbox} onChange={handleChange}/>
+                <input type='image' id={'generate'} className='button'onClick={() => {
                     document.getElementById("response").style.fontSize = "20px";
                     document.getElementById("response").innerHTML = "Wait a moment";
                     untilRespond(document.getElementById("response"));
-                    setresponse(false)
-                    setsaved(false)
+                    setdisplayID(""); // to deselect the current saved response prompt div
+                    setresponse(false);
+                    setsaved(false);
+                    setgenerateButton(true);
                     settextBox(true);
                     handlePrompt(); // getting value of prompt when send button is pressed. 
-                }}/></div>
+                }} src={sendIcon} alt='prompt send icon'/>
             </div>
             <div id={'response'}><p style={{textAlign: "center", lineHeight: "200%", fontSize: "20px"}}>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.
             <br/><br/>I can answer any educational question you have.<br/>All you gotta do is ask me :D.</p></div> 
@@ -166,20 +188,20 @@ function Assistant(){
                     }
                     setsaved(!saved);
                 }}>Save Response</div>
-                <div id={'good'} className='button'><img src={good} alt='prompt rate good icon' onClick={() => {
+                <input type='image' id={'good'} className='button' src={good} alt='prompt rate good icon' onClick={() => {
                     if(rating === "good"){
                         setrating("")
                     }else{
                         setrating("good")
                     }
-                }}/></div>
-                <div id={'bad'} className='button'><img src={bad} alt='prompt rate bad icon' onClick={() => {
+                }}/>
+                <input type='image' id={'bad'} className='button' src={bad} alt='prompt rate bad icon' onClick={() => {
                     if(rating === "bad"){
                         setrating("")
                     }else{
                         setrating("bad")
                     }
-                }}/></div>
+                }}/>
             </div>
         </div>
         <div id={"models"} className={'frames'}>

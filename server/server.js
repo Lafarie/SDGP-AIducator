@@ -49,7 +49,7 @@ dbconnection.connect((err) => {
 let tablesql = "CREATE TABLE queryTable" + 
                 "(id INTEGER NOT NULL AUTO_INCREMENT," + 
                 "prompt VARCHAR(100) NOT NULL," + 
-                "response VARCHAR(500) NOT NULL," + 
+                "response VARCHAR(5000) NOT NULL," + 
                 "promptrating VARCHAR(10)," + 
                 "CONSTRAINT q_id_pk PRIMARY KEY (id));"
 
@@ -92,11 +92,14 @@ app.use(bodyParser.json());
 app.post("/api/post/prompt", async (req, res) => {
     console.log(req.body.prompt);
     if(req.body.prompt === ""){
-        res.json({"generated_result": "I'm sorry but I have not recieved a proper question to answer."})
+        res.json({"generated_result": "I'm sorry but I have not recieved a proper question."})
     } else {
         let returnMsg = main(req.body.prompt);
         let result = (await returnMsg).message;
         res.json({"generated_result": result.content})
+        // setTimeout(() => {
+        //     res.json({"generated_result": "<h1>hello</h1>"})
+        // }, 5000);
     }
 });
 
