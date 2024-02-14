@@ -1,9 +1,10 @@
 import {useEffect, useRef, useState} from 'react';
 import './AIAssistant.css';
 import sendIcon from './Images/sendicon.svg'
-import good from './Images/thumbsup.svg'
-import bad from './Images/thumbsdown.svg'
-// import save from './Images/bookmark.svg'
+import good from './Images/good.svg';
+import bad from './Images/bad.svg';
+import goodfill from './Images/goodfilled.svg';
+import badfill from './Images/badfilled.svg';
 
 var responseInt = 0;
 
@@ -28,6 +29,7 @@ function Assistant(){
     const [textbox, settextBox] = useState(false);
     const [response, setresponse] = useState(false);
     const [generateButton, setgenerateButton] = useState(true); // enabling and disabling generate button
+    const [savedResponsedisable, setsavedResponsedisable] = useState(false); // enabling and disabling the function of veiwing saved responses. 
     const [saved, setsaved] = useState(false);
     const [rating, setrating] = useState("");
     const [responseID, setresponseID] = useState("")
@@ -35,17 +37,17 @@ function Assistant(){
     const [displayID, setdisplayID] = useState("");
 
     useEffect(() => { // settign the look of the rate ebutton
-        let bad = document.getElementById("bad");
-        let good = document.getElementById("good");
+        let badbtn = document.getElementById("bad");
+        let goodbtn = document.getElementById("good");
         if(rating === 'good'){
-            good.style.border = "solid 2px white";
-            bad.style.border = "none";
+            goodbtn.src = goodfill;
+            badbtn.src = bad;
         } else if (rating === "bad") {
-            bad.style.border = "solid 2px white";
-            good.style.border = "none";
+            badbtn.src = badfill;
+            goodbtn.src = good;
         } else {
-            bad.style.border = "none";
-            good.style.border = "none";
+            goodbtn.src = good;
+            badbtn.src = bad;
         }
     }, [rating])
 
@@ -64,22 +66,23 @@ function Assistant(){
 
     useEffect(() => {
         fetch("/api/get/responses").then(response => response.json()).then((data) => {
-            setallresponses(data.responseArray.map((response) => (
-                <div key={response.id} id={response.id} value={response.id} className='savedResponseClass' onClick={()=> {
-                        fetch("/api/post/displaySaved", { // getting saved response from db
-                            method: "post",
-                            headers: {"Content-Type":"application/json"},
-                            body: JSON.stringify({selectedID : response.id})
-                        }).then(response => response.json()).then(data => {
-                            document.getElementById("response").innerHTML = data.message.replaceAll("*", "'")
-                            document.getElementById("prompt").innerText = response.prompt;
-                        });
-                        document.getElementById('save').style.display = "block";
-                        prompt.current.value = response.prompt;
-                        setresponseID(response.id); // setting the current id to the id of the saved response
-                        setdisplayID(response.id); // setting the id of the current saved response
-                        setsaved(true);
-                }}>{response.prompt}</div>
+            setallresponses(data.responseArray.map((savedresponse) => (
+                <div key={savedresponse.id} id={savedresponse.id} value={savedresponse.id} className='savedResponseClass' onClick={()=> {
+                            fetch("/api/post/displaySaved", { // getting saved response from db
+                                method: "post",
+                                headers: {"Content-Type":"application/json"},
+                                body: JSON.stringify({selectedID : savedresponse.id})
+                            }).then(response => response.json()).then(data => {
+                                document.getElementById("response").innerHTML = data.message.replaceAll("*", "'")
+                                document.getElementById("prompt").innerText = savedresponse.prompt;
+                            });
+                            document.getElementById('save').style.display = "block";
+                            prompt.current.value = savedresponse.prompt;
+                            setresponseID(savedresponse.id); // setting the current id to the id of the saved response
+                            setdisplayID(savedresponse.id); // setting the id of the current saved response
+                            setsaved(true);
+                            setrating(savedresponse.promptrating);
+                }}>{savedresponse.prompt}</div>
             )));
         });
     }, [saved])
@@ -94,6 +97,17 @@ function Assistant(){
             savebtn.style.backgroundColor = "#003366"
         }
     }, [saved])
+
+    useEffect(() => {
+        let savedresdisplay = document.getElementById("savedResponsesContainer");
+        if(savedresdisplay !== null){
+            if(savedResponsedisable){
+                savedresdisplay.style.pointerEvents = "none";
+            } else {
+                savedresdisplay.style.pointerEvents = "all";
+            }
+        }
+    }, [savedResponsedisable])
 
     useEffect(() => {
             document.getElementById("generate").disabled = generateButton;
@@ -112,6 +126,7 @@ function Assistant(){
             document.getElementById("response").innerHTML = data.generated_result;
             setresponse(true);
             setgenerateButton(false);
+            setsavedResponsedisable(false);
             settextBox(false);
             clearInterval(responseInt);
         });
@@ -144,6 +159,7 @@ function Assistant(){
                         setdisplayID(""); // to deselect the current saved response prompt div
                         setresponse(false);
                         setgenerateButton(true);
+                        setsavedResponsedisable(true);
                         settextBox(true);
                         setsaved(false)
                         handlePrompt();
@@ -157,6 +173,7 @@ function Assistant(){
                     setresponse(false);
                     setsaved(false);
                     setgenerateButton(true);
+                    setsavedResponsedisable(true);
                     settextBox(true);
                     handlePrompt(); // getting value of prompt when send button is pressed. 
                 }} src={sendIcon} alt='prompt send icon'/>
