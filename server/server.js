@@ -35,7 +35,7 @@ var dbconnection = sql.createConnection({
     "host": "localhost",
     "user": "root",
     "password": "",
-    "port": 3307
+    "port": 3306
 });
 
 dbconnection.connect((err) => {
@@ -159,6 +159,6 @@ app.post("/api/post/displaySaved", (req, res) => {
     })
 })
 
-app.listen(5000, () => {
-    console.log("listenning on port 5000.")
+app.listen(8021, () => {
+    console.log("listenning on port 8021.")
 })

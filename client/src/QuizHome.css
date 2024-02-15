@@ -1,0 +1,93 @@
+
+
+.navbar {
+  background-color: #003366;
+  padding: 10px 0;
+  width:100%;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-grade-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 20px; 
+  margin-left: 20px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: none;
+  width: 400px;
+  border-radius: 5px;
+  outline: none;
+  color: #706C6C;
+  background-color: #D9D9D9;
+}
+
+button {
+  background-color: #D9D9D9;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  height: 100%;
+  margin-left: 10px;
+  border-radius: 5px;
+}
+
+button img {
+  width: 20px;
+  height: auto;
+}
+
+button:hover {
+  background-color: #D9D9D9;
+}
+
+.grade8-label {
+  font-size: 16px;
+  margin-top: 75px; 
+  font-weight: bold;
+  margin-left: -150px;
+
+}
+
+.box-container {
+  display: flex;
+  justify-content: center; 
+  margin-top: 20px;
+
+}
+
+.box {
+  width: 200px;
+  padding: 20px;
+  margin: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.box img {
+  width: 100%;
+  border-radius: 15px;
+}
+.grade9-label {
+  font-size: 16px;
+  margin-top: 20px; 
+  font-weight: bold;
+  margin-left: -675px;
+
+}

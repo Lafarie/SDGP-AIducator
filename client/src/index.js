@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Home from './App';
 import Video from './video';
+import QuizHome from './QuizHome';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import QMaths8 from './QMaths8';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,7 +14,7 @@ root.render(
     <Routes>
       <Route path="/" element={<Home/>}/>
       <Route path="/video" element={<Video/>}/> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
-      <Route path="/quiz" element={<Home/>}/>
+      <Route path="/quiz" element={<QuizHome/>}/>
       <Route path="/forum" element={<Home/>}/>
       <Route path="/todo" element={<Home/>}/>
       <Route path="/profile" element={<Home/>}/>
