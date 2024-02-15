@@ -1,15 +1,85 @@
-
+import "./App.css";
 import "./Forum.css";
 import Navbar from "./component/Navbar";
+import React, { useState } from "react";
 
-function Forum(){
-    return(
-        <div>
-             <Navbar />
-            <h1>Forum</h1>
-           
-        </div>
-    );
+const cardData = [
+  {id: 1,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 1",description: "Description for card 1",},
+  {id: 2,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 2",description: "Description for card 2",},
+  {id: 3,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 1",description: "Description for card 1",},
+  {id: 4,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 2",description: "Description for card 2",},
+  {id: 5,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 1",description: "Description for card 1",},
+  {id: 6,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 2",description: "Description for card 2",},
+  {id: 7,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 1",description: "Description for card 1",},
+  {id: 8,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 2",description: "Description for card 2",},
+  {id: 9,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 1",description: "Description for card 1",},
+  {id: 10,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 2",description: "Description for card 2",  },
+  {id: 11,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 1",description: "Description for card 1",},
+  {id: 12,image:"https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",title: "Card 2",description: "Description for card 2",},
+];
+
+function Forum() {
+  const [selectedForum, setSelectedForum] = useState(null);
+
+  const handleForumClick = (forum) => {
+    setSelectedForum(forum);
+  };
+
+  return (
+    <div>
+      <Navbar />
+      <h1>Forum</h1>
+      <div className="forum-container">
+        <table>
+          <tr>
+            <div className="forum-list">
+              <th>
+              <h2>All Forums</h2>
+              </th>
+              <th>
+              <h2>Popular Forums</h2>
+              </th>
+            </div>
+          </tr>
+          <tr>
+            <td>
+            {cardData.map((forum) => (
+                  <li key={forum.id} onClick={() => handleForumClick(forum)}>
+                    {forum.title}
+                  </li>
+                ))}
+            </td>
+            <td>
+            <div className="forum-details">
+            {selectedForum ? ( <ForumDetails forum={selectedForum} /> ) : ( <PopularForums />
+            )}
+          </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  );
 }
+
+const ForumDetails = ({ forum }) => {
+  return (
+    <div>
+      <img src={forum.image} alt={forum.title} />
+      <h2>{forum.title}</h2>
+      <p>{forum.description}</p>
+      <button>Join</button>
+    </div>
+  );
+};
+
+const PopularForums = () => {
+  return (
+    <div>
+      
+      {/* Render your popular forums list here */}
+    </div>
+  );
+};
 
 export default Forum;
