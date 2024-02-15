@@ -38,6 +38,15 @@ var dbconnection = sql.createConnection({
     "port": 3307
 });
 
+
+function pingdb() { // t
+    var sql_keep = `SELECT 1 + 1 AS solution`; 
+    dbconnection.query(sql_keep, function (err, result) {
+      if (err) throw err;
+    });
+  }
+  setInterval(pingdb, 40000);
+
 dbconnection.connect((err) => {
     if(err){
         console.log(err);
@@ -49,7 +58,7 @@ dbconnection.connect((err) => {
 let tablesql = "CREATE TABLE queryTable" + 
                 "(id INTEGER NOT NULL AUTO_INCREMENT," + 
                 "prompt VARCHAR(100) NOT NULL," + 
-                "response VARCHAR(500) NOT NULL," + 
+                "response VARCHAR(5000) NOT NULL," + 
                 "promptrating VARCHAR(10)," + 
                 "CONSTRAINT q_id_pk PRIMARY KEY (id));"
 
@@ -89,19 +98,22 @@ let app = new express;
 
 app.use(bodyParser.json());
 
-app.post("/api/post/prompt", async (req, res) => {
-    console.log(req.body.prompt);
+app.post("/post/prompt", async (req, res) => {
+    console.log(req.body.prompt); // remove later
     if(req.body.prompt === ""){
-        res.json({"generated_result": "I'm sorry but I have not recieved a proper question to answer."})
+        res.json({"generated_result": "I'm sorry but I have not recieved a proper question."})
     } else {
         let returnMsg = main(req.body.prompt);
         let result = (await returnMsg).message;
         res.json({"generated_result": result.content})
+        // setTimeout(() => {
+        //     res.json({"generated_result": "<h1>hello</h1>"})
+        // }, 5000);
     }
 });
 
-app.post("/api/post/save", async (req, res) => {
-    console.log(req.body.rating);
+app.post("/post/save", async (req, res) => {
+    console.log(req.body.rating); // remove later
     dbconnection.query(`INSERT INTO querytable(prompt, response, promptrating) VALUES("${req.body.prompt}", '${req.body.response.replaceAll("'", "*")}', "${req.body.rating}");`, (err, result) => {
         if(err){
             console.log(err)
@@ -119,8 +131,8 @@ app.post("/api/post/save", async (req, res) => {
     });
 });
 
-app.get("/api/get/responses", (req, res) => {
-    dbconnection.query("SELECT id, prompt FROM querytable", (err, result) => {
+app.get("/get/responses", (req, res) => {
+    dbconnection.query("SELECT id, prompt, promptrating FROM querytable", (err, result) => {
         if(err){
             console.log("Could not get responses")
         } else {
@@ -129,13 +141,9 @@ app.get("/api/get/responses", (req, res) => {
     })
 })
 
-dbconnection.query("SELECT * FROM querytable", (err, result) => {
-    console.log(result[0])
-})
-
-app.post("/api/post/unsave", async (req, res) => {
+app.post("/post/unsave", async (req, res) => {
     let deleteID = req.body.unsaveID;
-    console.log(deleteID)
+    console.log(deleteID) // delete later
     let deleteQuery = `DELETE FROM querytable WHERE (id = ${deleteID});`
     dbconnection.query(deleteQuery, (err, result) => {
         if(err) {
@@ -148,8 +156,8 @@ app.post("/api/post/unsave", async (req, res) => {
     })
 });
 
-app.post("/api/post/displaySaved", (req, res) => {
-    console.log(req.body.selectedID);
+app.post("/post/displaySaved", (req, res) => {
+    console.log(req.body.selectedID); // delete later
     dbconnection.query(`SELECT response FROM querytable WHERE id = ${req.body.selectedID}`, (err, result) => {
         if(err){
             res.json({message: "response could not be found"})
