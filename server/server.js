@@ -98,7 +98,7 @@ let app = new express;
 
 app.use(bodyParser.json());
 
-app.post("/api/post/prompt", async (req, res) => {
+app.post("/post/prompt", async (req, res) => {
     console.log(req.body.prompt); // remove later
     if(req.body.prompt === ""){
         res.json({"generated_result": "I'm sorry but I have not recieved a proper question."})
@@ -112,7 +112,7 @@ app.post("/api/post/prompt", async (req, res) => {
     }
 });
 
-app.post("/api/post/save", async (req, res) => {
+app.post("/post/save", async (req, res) => {
     console.log(req.body.rating); // remove later
     dbconnection.query(`INSERT INTO querytable(prompt, response, promptrating) VALUES("${req.body.prompt}", '${req.body.response.replaceAll("'", "*")}', "${req.body.rating}");`, (err, result) => {
         if(err){
@@ -131,7 +131,7 @@ app.post("/api/post/save", async (req, res) => {
     });
 });
 
-app.get("/api/get/responses", (req, res) => {
+app.get("/get/responses", (req, res) => {
     dbconnection.query("SELECT id, prompt, promptrating FROM querytable", (err, result) => {
         if(err){
             console.log("Could not get responses")
@@ -141,7 +141,7 @@ app.get("/api/get/responses", (req, res) => {
     })
 })
 
-app.post("/api/post/unsave", async (req, res) => {
+app.post("/post/unsave", async (req, res) => {
     let deleteID = req.body.unsaveID;
     console.log(deleteID) // delete later
     let deleteQuery = `DELETE FROM querytable WHERE (id = ${deleteID});`
@@ -156,7 +156,7 @@ app.post("/api/post/unsave", async (req, res) => {
     })
 });
 
-app.post("/api/post/displaySaved", (req, res) => {
+app.post("/post/displaySaved", (req, res) => {
     console.log(req.body.selectedID); // delete later
     dbconnection.query(`SELECT response FROM querytable WHERE id = ${req.body.selectedID}`, (err, result) => {
         if(err){

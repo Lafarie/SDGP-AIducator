@@ -6,6 +6,15 @@ import Video from './video';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
+//react-scripts
+  // "scripts": {
+  //   "start": "react-scripts start",
+  //   "build": "react-scripts build",
+  //   "test": "react-scripts test",
+  //   "eject": "react-scripts eject"
+  // }
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>

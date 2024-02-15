@@ -116,7 +116,7 @@ function Assistant(){
     function handlePrompt(){
         let promptObj = {
             prompt: prompt.current.value
-        }
+        };
         fetch("/api/post/prompt", {
             method: "post",
             headers: {"Content-Type": "application/json"},
