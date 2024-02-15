@@ -1,11 +1,14 @@
 import {useEffect, useRef, useState} from 'react';
 import './AIAssistant.css';
 import sendIcon from './Images/sendicon.svg'
-import good from './Images/thumbsup.svg'
-import bad from './Images/thumbsdown.svg'
-// import save from './Images/bookmark.svg'
+import good from './Images/good.svg';
+import bad from './Images/bad.svg';
+import goodfill from './Images/goodfilled.svg';
+import badfill from './Images/badfilled.svg';
 
 var responseInt = 0;
+
+// white response generates cannot view saved responses. (implement)
 
 function untilRespond(element){
     let msg = "Wait a moment";
@@ -19,11 +22,14 @@ function untilRespond(element){
         }, 1000);
 }
 
+
 function Assistant(){
     let prompt = useRef();
 
     const [textbox, settextBox] = useState(false);
     const [response, setresponse] = useState(false);
+    const [generateButton, setgenerateButton] = useState(true); // enabling and disabling generate button
+    const [savedResponsedisable, setsavedResponsedisable] = useState(false); // enabling and disabling the function of veiwing saved responses. 
     const [saved, setsaved] = useState(false);
     const [rating, setrating] = useState("");
     const [responseID, setresponseID] = useState("")
@@ -31,17 +37,17 @@ function Assistant(){
     const [displayID, setdisplayID] = useState("");
 
     useEffect(() => { // settign the look of the rate ebutton
-        let bad = document.getElementById("bad");
-        let good = document.getElementById("good");
+        let badbtn = document.getElementById("bad");
+        let goodbtn = document.getElementById("good");
         if(rating === 'good'){
-            good.style.border = "solid 2px white";
-            bad.style.border = "none";
+            goodbtn.src = goodfill;
+            badbtn.src = bad;
         } else if (rating === "bad") {
-            bad.style.border = "solid 2px white";
-            good.style.border = "none";
+            badbtn.src = badfill;
+            goodbtn.src = good;
         } else {
-            bad.style.border = "none";
-            good.style.border = "none";
+            goodbtn.src = good;
+            badbtn.src = bad;
         }
     }, [rating])
 
@@ -60,21 +66,23 @@ function Assistant(){
 
     useEffect(() => {
         fetch("/api/get/responses").then(response => response.json()).then((data) => {
-            setallresponses(data.responseArray.map((response) => (
-                <div key={response.id} id={response.id} value={response.id} className='savedResponseClass' onClick={()=> {
-                        fetch("/api/post/displaySaved", {
-                            method: "post",
-                            headers: {"Content-Type":"application/json"},
-                            body: JSON.stringify({selectedID : response.id})
-                        }).then(response => response.json()).then(data => {
-                            document.getElementById("response").innerHTML = data.message.replaceAll("*", "'")
-                            document.getElementById("prompt").innerText = response.prompt;
-                        });
-                        document.getElementById('save').style.display = "block";
-                        setresponseID(response.id);
-                        setdisplayID(response.id);
-                        setsaved(true);
-                }}>{response.prompt}</div>
+            setallresponses(data.responseArray.map((savedresponse) => (
+                <div key={savedresponse.id} id={savedresponse.id} value={savedresponse.id} className='savedResponseClass' onClick={()=> {
+                            fetch("/api/post/displaySaved", { // getting saved response from db
+                                method: "post",
+                                headers: {"Content-Type":"application/json"},
+                                body: JSON.stringify({selectedID : savedresponse.id})
+                            }).then(response => response.json()).then(data => {
+                                document.getElementById("response").innerHTML = data.message.replaceAll("*", "'")
+                                document.getElementById("prompt").innerText = savedresponse.prompt;
+                            });
+                            document.getElementById('save').style.display = "block";
+                            prompt.current.value = savedresponse.prompt;
+                            setresponseID(savedresponse.id); // setting the current id to the id of the saved response
+                            setdisplayID(savedresponse.id); // setting the id of the current saved response
+                            setsaved(true);
+                            setrating(savedresponse.promptrating);
+                }}>{savedresponse.prompt}</div>
             )));
         });
     }, [saved])
@@ -90,11 +98,25 @@ function Assistant(){
         }
     }, [saved])
 
+    useEffect(() => {
+        let savedresdisplay = document.getElementById("savedResponsesContainer");
+        if(savedresdisplay !== null){
+            if(savedResponsedisable){
+                savedresdisplay.style.pointerEvents = "none";
+            } else {
+                savedresdisplay.style.pointerEvents = "all";
+            }
+        }
+    }, [savedResponsedisable])
+
+    useEffect(() => {
+            document.getElementById("generate").disabled = generateButton;
+    }, [generateButton])
 
     function handlePrompt(){
         let promptObj = {
             prompt: prompt.current.value
-        }
+        };
         fetch("/api/post/prompt", {
             method: "post",
             headers: {"Content-Type": "application/json"},
@@ -103,10 +125,21 @@ function Assistant(){
             document.getElementById("response").style.fontSize = "16px";
             document.getElementById("response").innerHTML = data.generated_result;
             setresponse(true);
+            setgenerateButton(false);
+            setsavedResponsedisable(false);
             settextBox(false);
             clearInterval(responseInt);
         });
     }
+
+    function handleChange() {
+        if(prompt.current.value === ""){
+            setgenerateButton(true)
+        } else {
+            setgenerateButton(false)
+        }
+    }
+
 
     return(
       <div id={"AIAssistant"}>
@@ -119,25 +152,31 @@ function Assistant(){
         <div id={"Assistant"} className={'frames'}>
             <div id={"assistentFrame"}>
                 <input autoFocus type='text' autoComplete='off' onKeyDownCapture={(e) => {
-                    if(e.key === 'Enter'){
+                    if(e.key === 'Enter' && !generateButton){
                         document.getElementById("response").style.fontSize = "20px";
                         document.getElementById("response").innerHTML = "Wait a moment";
                         untilRespond(document.getElementById("response"));
-                        setresponse(false)
+                        setdisplayID(""); // to deselect the current saved response prompt div
+                        setresponse(false);
+                        setgenerateButton(true);
+                        setsavedResponsedisable(true);
                         settextBox(true);
                         setsaved(false)
                         handlePrompt();
                     }
-                }} id={'prompt'} placeholder='Enter question here...' ref={prompt} disabled={textbox}/>
-                <div id={'generate'} className='button'><img src={sendIcon} alt='prompt send icon' onClick={() => {
+                }} id={'prompt'} placeholder='Enter question here...' ref={prompt} disabled={textbox} onChange={handleChange}/>
+                <input type='image' id={'generate'} className='button'onClick={() => {
                     document.getElementById("response").style.fontSize = "20px";
                     document.getElementById("response").innerHTML = "Wait a moment";
                     untilRespond(document.getElementById("response"));
-                    setresponse(false)
-                    setsaved(false)
+                    setdisplayID(""); // to deselect the current saved response prompt div
+                    setresponse(false);
+                    setsaved(false);
+                    setgenerateButton(true);
+                    setsavedResponsedisable(true);
                     settextBox(true);
                     handlePrompt(); // getting value of prompt when send button is pressed. 
-                }}/></div>
+                }} src={sendIcon} alt='prompt send icon'/>
             </div>
             <div id={'response'}><p style={{textAlign: "center", lineHeight: "200%", fontSize: "20px"}}>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.
             <br/><br/>I can answer any educational question you have.<br/>All you gotta do is ask me :D.</p></div> 
@@ -166,20 +205,20 @@ function Assistant(){
                     }
                     setsaved(!saved);
                 }}>Save Response</div>
-                <div id={'good'} className='button'><img src={good} alt='prompt rate good icon' onClick={() => {
+                <input type='image' id={'good'} className='button' src={good} alt='prompt rate good icon' onClick={() => {
                     if(rating === "good"){
                         setrating("")
                     }else{
                         setrating("good")
                     }
-                }}/></div>
-                <div id={'bad'} className='button'><img src={bad} alt='prompt rate bad icon' onClick={() => {
+                }}/>
+                <input type='image' id={'bad'} className='button' src={bad} alt='prompt rate bad icon' onClick={() => {
                     if(rating === "bad"){
                         setrating("")
                     }else{
                         setrating("bad")
                     }
-                }}/></div>
+                }}/>
             </div>
         </div>
         <div id={"models"} className={'frames'}>
