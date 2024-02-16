@@ -1,0 +1,26 @@
+#box1 {
+    height: 904px;
+    width: 708px;
+    background-color: #D9D9D9;
+    border-radius: 20px;
+}
+
+#date {
+    color: #000;
+    font-family: "Inria Sans";
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+#topic {
+    color: #000;
+    font-family: "Inria Sans";
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+
