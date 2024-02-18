@@ -8,7 +8,7 @@ import QuizHome from './QuizHome';
 import Library from './3DLibrary';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import QMaths8 from './QMaths8';
+import LessonList from './LessonList';
 
 //react-scripts
   // "scripts": {
@@ -25,15 +25,12 @@ root.render(
     <Routes>
       <Route path="/" element={<Home/>}/>
       <Route path="/video" element={<Video/>}/> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
-
       <Route path="/quiz" element={<QuizHome/>}/>
-      <Route path="/forum" element={<Home/>}/>
-
-      <Route path="/quiz" element={<Home/>}/>
       <Route path="/forum" element={<Forum/>}/>
       <Route path="/todo" element={<Home/>}/>
       <Route path="/profile" element={<Home/>}/>
       <Route path="/library" element={<Library/>}/>
+      <Route path="/LessonList" element={<LessonList subject={'Mathematics'}/>}/>
     </Routes>
   </BrowserRouter>
 );
