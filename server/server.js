@@ -167,6 +167,6 @@ app.post("/post/displaySaved", (req, res) => {
     })
 })
 
-app.listen(8021, () => {
-    console.log("listenning on port 8021.")
+app.listen(1006, () => {
+    console.log("listenning on port 1006.")
 })

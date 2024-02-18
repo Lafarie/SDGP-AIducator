@@ -4,25 +4,27 @@ import searchIcon from './Images/SearchIcon.svg';
 import Maths from './Images/MathsGrade8.jpeg';
 import Geo from './Images/GeoGrade8.jpeg';
 import Sci from './Images/SciGrade8.jpeg';
+import Navbar from './component/Navbar';
+import LessonList from './LessonList';
+import { Link } from 'react-router-dom';
 
 const QuizHome = () => {
-  const history = useHistory(); 
 
-  const handleBoxClick = () => {
-    history.push('/QMaths8'); 
+  const [selectedSubject, setSelectedSubject] = useState(null);
+
+  const handleBoxClick = (subject) => {
+    setSelectedSubject(subject);
   };
+
   return (
     <div>
-      <div className='navbar'>
-        {/* Navigation bar */}
-      </div>
+      <Navbar/> 
       <div className="main-container">
-        <div className="navbar">
-          {/* Navigation bar */}
-        </div>
         <div className="search-grade-container">
           <div className="search-container">
-            <input type="text" placeholder="Search..." />
+            <div className='search-text'>
+              <input type="text" placeholder="Search..." />
+            </div>
             <button><img src={searchIcon} alt="Search" /></button>
           </div>
           <div className="grade8-label">
@@ -30,18 +32,24 @@ const QuizHome = () => {
           </div>
           </div>
           <div className="box-container">
-            <div className="box" onClick={handleBoxClick}>
+            <Link to={'/LessonList'}>
+            <div className="box" onClick={() => handleBoxClick('Mathematics')} >
               <img src={Maths} alt="Maths" />
               <label>Mathematics</label>
             </div>
-            <div className="box">
+            </Link>
+            <Link to={'/LessonList'}>
+            <div className="box" onClick={() => handleBoxClick('Geography')}>
               <img src={Geo} alt="Geography" />
               <label>Geography</label>
             </div>
-            <div className="box">
+            </Link>
+            <Link to={'/LessonList'}>
+            <div className="box" onClick={() => handleBoxClick('Science')}>
               <img src={Sci} alt="Science" />
               <label>Science</label>
             </div>
+            </Link>
           </div>
           <div className="grade9-label">
           Grade 9
@@ -61,6 +69,12 @@ const QuizHome = () => {
             </div>
           </div>
         </div>
+        {selectedSubject && (
+          <div>
+            {/* Render LessonList for the selected subject */}
+            <LessonList subject={selectedSubject} />
+          </div>
+        )}
       </div>
   );
 }
