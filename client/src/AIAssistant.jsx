@@ -124,10 +124,23 @@ function Assistant(){
             body: JSON.stringify(promptObj)
         }).then((response) => response.json()).then((data) => {
             document.getElementById("response").style.fontSize = "16px";
-            document.getElementById("response").innerHTML = data.generated_result;
-            setresponse(true);
-            setgenerateButton(false);
+
+            if(data.flagged){
+                const items = data.generated_result; 
+                const container = document.getElementById("response");
+                const htmlContent = 
+                `<h1>Your prompt has been flagged</h1>
+                <p>AIducator has moderated your response for these reasons</p>
+                <ul>${items.map(item => `<li>${item}</li>`).join('')}</ul>
+                `;  
+                container.innerHTML = htmlContent; 
+                setresponse(false);           
+            } else {
+                document.getElementById("response").innerHTML = data.generated_result;
+                setresponse(true);
+            }
             setsavedResponsedisable(false);
+            setgenerateButton(false);
             settextBox(false);
             clearInterval(responseInt);
         });
@@ -181,8 +194,10 @@ function Assistant(){
                     handlePrompt(); // getting value of prompt when send button is pressed. 
                 }} src={sendIcon} alt='prompt send icon'/>
             </div>
-            <div id={'response'}><p style={{textAlign: "center", lineHeight: "200%", fontSize: "20px"}}>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.
-            <br/><br/>I can answer any educational question you have.<br/>All you gotta do is ask me :D.</p></div> 
+            <div id={'response'}>
+                <p style={{textAlign: "center", lineHeight: "200%", fontSize: "20px"}}>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.
+                <br/><br/>I can answer any educational question you have.<br/>All you gotta do is ask me :D.</p>
+            </div> 
             <div id={'rating'}>
                 <div id={'save'} className='button' style={response?{display: "block"}:{display:"none"}} onClick={() => {
                     if(!saved){

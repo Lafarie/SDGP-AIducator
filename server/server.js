@@ -97,6 +97,17 @@ async function main(input) {
   return completion.choices[0];
 }
 
+function getCategories(objectArr){
+    let keyArr = Object.keys(objectArr);
+    let returnArr = [];
+    keyArr.forEach((elements) => {
+        if(objectArr[elements]){
+            returnArr.push(elements)
+        }
+    })
+    return returnArr;
+}
+
 let app = new express;
 
 app.use(bodyParser.json());
@@ -116,7 +127,8 @@ app.post("/post/prompt", async (req, res) => {
                 let result = (await returnMsg).message;
                 res.json({"flagged":false, "generated_result": result.content})
             } else {
-                res.json({"flagged": true, "generated_result": data.results[0].categories})
+                let arr = getCategories(data.results[0].categories)
+                res.json({"flagged": true, "generated_result": arr})
             }
         })
         // let returnMsg = main(req.body.prompt);
