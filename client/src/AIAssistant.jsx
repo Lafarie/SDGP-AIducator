@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import './AIAssistant.css';
+import Navbar from './component/Navbar';
 import sendIcon from './Images/sendicon.svg'
 import good from './Images/good.svg';
 import bad from './Images/bad.svg';
@@ -142,6 +143,8 @@ function Assistant(){
 
 
     return(
+    <>
+    <Navbar></Navbar>
       <div id={"AIAssistant"}>
         <div id="savedResponsesContainer" className={'frames'}>
             <h2>Saved Responses</h2>
@@ -225,6 +228,7 @@ function Assistant(){
             <h1>3D models</h1>
         </div>
       </div>
+      </>
     )
 }
 
