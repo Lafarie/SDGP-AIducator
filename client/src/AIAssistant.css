@@ -1,6 +1,5 @@
 #AIAssistant{
     width: calc(100% - 60px);
-    margin-top: 110px;
     margin-bottom: 20px;
     min-height: calc(100% - 130px);
     max-height: fit-content;
