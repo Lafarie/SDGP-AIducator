@@ -19,48 +19,43 @@ const cardData = [
 ];
 
 function Forum() {
-  const [selectedForum, setSelectedForum] = useState(null);
+  // const [selectedForum, setSelectedForum] = useState(null);
 
-  const handleForumClick = (forum) => {
-    setSelectedForum(forum);
-  };
+  // const handleForumClick = (forum) => {
+  //   setSelectedForum(forum);
+  // };
 
   return (
     <div>
       <Navbar />
-      <h1>Forum</h1>
-      <div className="forum-container">
-        <table>
-          <tr>
-            <div className="forum-list">
-              <th>
-              <h2>All Forums</h2>
-              </th>
-              <th>
-              <h2>Popular Forums</h2>
-              </th>
-            </div>
-          </tr>
-          <tr>
-            <td>
-            {cardData.map((forum) => (
-                  <li key={forum.id} onClick={() => handleForumClick(forum)}>
-                    {forum.title}
-                  </li>
-                ))}
-            </td>
-            <td>
-            <div className="forum-details">
-            {selectedForum ? ( <ForumDetails forum={selectedForum} /> ) : ( <PopularForums />
-            )}
-          </div>
-            </td>
-          </tr>
-        </table>
+      <div className={'title'}><h1>Forum</h1></div>
+        <div className={'forum-bar'}></div>
+        <div className={'forum-container'}>
+        <div className={'forums'}>
+          <div className={'test'}></div>
+          <div className={'test'}></div>
+          <div className={'test'}></div>
+           {/* <Forums/> */}
+        </div>
+        <div className={'side-bar'}>
+        {/* <PopularForums /> */}
+        </div>
       </div>
     </div>
   );
 }
+
+const Forums = () => {
+  return (
+    <div>
+      {cardData.map((forum) => (
+        <ForumCard key={forum.id} forum={forum} />
+      ))}
+    </div>
+  );
+
+};
+
 
 const ForumDetails = ({ forum }) => {
   return (
