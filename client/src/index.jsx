@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import AIAssistant from './AIAssistant'
 import Home from './App';
 import Forum from './Forum';
 import Video from './video';
@@ -23,7 +24,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Home/>}/>
+      <Route path="/" element={<AIAssistant/>}/>
       <Route path="/video" element={<Video/>}/> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
       <Route path="/quiz" element={<QuizHome/>}/>
       <Route path="/forum" element={<Forum/>}/>

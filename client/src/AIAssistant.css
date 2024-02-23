@@ -119,6 +119,10 @@
     line-height: 1.5;
 }
 
+#reponse{
+    text-align: justify;
+}
+
 #response li{
     margin-bottom: 3px;
 }
