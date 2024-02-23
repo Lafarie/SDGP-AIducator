@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import sql from "mysql2";
+import nodeFetch from "node-fetch"
 
 dotenv.config()
 
@@ -26,6 +27,8 @@ let INSTRUCTIONS =
     IMPORTANT: EVERY PROPER RESPONSE MUST HAVE ATLEAST 2 SECTIONS AND 200 WORDS.
     IMPORTANT: Keep responses to a maximum of 5000 words or less. 
     `
+
+const moderationUrl = 'https://api.openai.com/v1/moderations'; // Open AI moderation URL
 
 const openai = new OpenAI({
     apiKey: process.env.API_KEY
@@ -94,6 +97,17 @@ async function main(input) {
   return completion.choices[0];
 }
 
+function getCategories(objectArr){
+    let keyArr = Object.keys(objectArr);
+    let returnArr = [];
+    keyArr.forEach((elements) => {
+        if(objectArr[elements]){
+            returnArr.push(elements)
+        }
+    })
+    return returnArr;
+}
+
 let app = new express;
 
 app.use(bodyParser.json());
@@ -103,9 +117,23 @@ app.post("/post/prompt", async (req, res) => {
     if(req.body.prompt === ""){
         res.json({"generated_result": "I'm sorry but I have not recieved a proper question."})
     } else {
-        let returnMsg = main(req.body.prompt);
-        let result = (await returnMsg).message;
-        res.json({"generated_result": result.content})
+        fetch(moderationUrl, {
+            method: "POST",
+            headers: {'Content-Type':"application/json", 'Authorization': `Bearer ${process.env.API_KEY}`},
+            body: JSON.stringify({input: req.body.prompt})
+        }).then(response => response.json()).then(async data => {
+            if(!data.results[0].flagged){
+                let returnMsg = main(req.body.prompt);
+                let result = (await returnMsg).message;
+                res.json({"flagged":false, "generated_result": result.content})
+            } else {
+                let arr = getCategories(data.results[0].categories)
+                res.json({"flagged": true, "generated_result": arr})
+            }
+        })
+        // let returnMsg = main(req.body.prompt);
+        // let result = (await returnMsg).message;
+        // res.json({"generated_result": result.content})
         // setTimeout(() => {
         //     res.json({"generated_result": "<h1>hello</h1>"})
         // }, 5000);

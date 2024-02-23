@@ -80,26 +80,9 @@
     cursor: pointer;
 }
 
-
-/* #generate:hover{
-    background-color: #5d7070;
-} */
-
 .button:active{
     filter: none
 }
-
-/* #savedResponses{
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    font-size: 14px;
-}
-
-#savedResponses:focus{
-    outline: solid 2px #003366;
-} */
 
 #prompt{
     width: 100%;
