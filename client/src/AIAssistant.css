@@ -4,6 +4,7 @@
     min-height: calc(100% - 130px);
     max-height: fit-content;
     padding: 0px 30px;
+    margin-top: 100px;
     display: inline-grid;
     grid-template-columns:20% 50% auto;
     column-gap: 10px;
