@@ -1,11 +1,15 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import './LessonList.css';
 import Navbar from './component/Navbar';
 import searchIcon from './Images/SearchIcon.svg';
 
 const LessonList = () => {
   const { subject } = useParams();
+
+  const [displaygrade, setdisplaygrade] = useState("")
+
+  let location = useLocation();
 
   // Define lesson data
   const grade8LessonData = {
@@ -65,12 +69,16 @@ const LessonList = () => {
     ],
   };
 
+  useEffect(() => {
+    setdisplaygrade(location.pathname.split("/")[3]);
+  }, [location])
+
     // Determine the grade based on the subject selected
   const grade = subject.startsWith('Grade 8') ? 'Grade 8' : 'Grade 9';
 
   // Get the list of lessons for the selected subject and grade
-  const lessons = subject.startsWith('Grade 8')
-    ? grade8LessonData[subject.slice(8)] || []
+  const lessons = displaygrade === "8"
+    ? grade8LessonData[subject] || []
     : grade9LessonData[subject] || [];
 
   return (
@@ -84,7 +92,7 @@ const LessonList = () => {
             </div>
             <button><img src={searchIcon} alt="Search" /></button>
           </div>
-          <div className="grade-label">{grade} - {subject}</div>
+          <div className="grade-label">Grade {displaygrade} - {subject}</div>
         </div>
         <div className="lesson-list">
           {lessons.map((lesson, index) => (

@@ -32,7 +32,7 @@ root.render(
       <Route path="/todo" element={<Home/>}/>
       <Route path="/profile" element={<SignUp/>}/>
       <Route path="/library" element={<Library/>}/>
-      <Route path="/LessonList/:subject" element={<LessonList />} />
+      <Route path="/LessonList/:subject/:grade" element={<LessonList />} />
     </Routes>
   </BrowserRouter>
 );

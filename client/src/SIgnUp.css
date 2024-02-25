@@ -1,5 +1,9 @@
 #signUpbody{
-    background-color: aqua;
+    background-attachment: fixed;
+    background-size: cover;
+    background-image: url("./Images/SignUpBackground.png");
+    filter: blur(10px);
+    -webkit-filter: blur(30px);
     width: 100%;
     height: 100%;
 }

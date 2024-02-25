@@ -36,19 +36,19 @@ const QuizHome = () => {
           </div>
           </div>
           <div className="box-container">
-            <Link to={`/LessonList/${'Mathematics'}`}>
+            <Link to={`/LessonList/${'Mathematics'}/${'8'}`}>
             <div className="box" onClick={() => handleGrade8BoxClick('Mathematics')} >
               <img src={Maths} alt="Maths" />
               <label>Mathematics</label>
             </div>
             </Link>
-            <Link to={`/LessonList/${'Geography'}`}>
+            <Link to={`/LessonList/${'Geography'}/${'8'}`}>
             <div className="box" onClick={() => handleGrade8BoxClick('Geography')}>
               <img src={Geo} alt="Geography" />
               <label>Geography</label>
             </div>
             </Link>
-            <Link to={`/LessonList/${'Science'}`}>
+            <Link to={`/LessonList/${'Science'}/${'8'}`}>
             <div className="box" onClick={() => handleGrade8BoxClick('Science')}>
               <img src={Sci} alt="Science" />
               <label>Science</label>
@@ -59,19 +59,19 @@ const QuizHome = () => {
           Grade 9
           </div>
           <div className="box-container">
-          <Link to={`/LessonList/${'Mathematics'}`}>
+          <Link to={`/LessonList/${'Mathematics'}/${'9'}`}>
             <div className="box" onClick={() => handleGrade9BoxClick('Mathematics')} >
               <img src={Maths} alt="Maths" />
               <label>Mathematics</label>
             </div>
             </Link>
-            <Link to={`/LessonList/${'Geography'}`}>
+            <Link to={`/LessonList/${'Geography'}/${'9'}`}>
             <div className="box" onClick={() => handleGrade9BoxClick('Geography')}>
               <img src={Geo} alt="Geography" />
               <label>Geography</label>
             </div>
             </Link>
-            <Link to={`/LessonList/${'Science'}`}>
+            <Link to={`/LessonList/${'Science'}/${'9'}`}>
             <div className="box" onClick={() => handleGrade9BoxClick('Science')}>
               <img src={Sci} alt="Science" />
               <label>Science</label>
