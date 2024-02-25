@@ -1,9 +1,9 @@
 #root{
   height: 100%;
+  font-family: 'Inria Sans', sans-serif;
 }
 
 .App{
-  font-family: 'Inria Sans', sans-serif;
   height: 100%;
 }
 

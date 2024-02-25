@@ -3,29 +3,29 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import sql from "mysql2";
+import nodeFetch from "node-fetch"
 
 dotenv.config()
 
 let INSTRUCTIONS = 
     `
-    You are an AI assistant who is an expert in any field of education. 
-    YOU WILL NOT answer anything outside the field of academic education. 
-    Queries about history should be considered education, for example question about historical people and events in history. 
-    YOU SHOULD NOT answer any personal issues or statements a user might give as a prompt.
-    YOU SHOULD NOT give adivice to users if they ask any issues outside an acedemic sense.
+    Queries about history should be considered education, for example questions about historical people and events in history.
+
+    DO NOT answer any personal issues or statements a user might give as a prompt.
+    DO NOT give advice to users if they ask any issues outside an academic sense.
+    Give the answers in a very informative way, do not make them concise.
     DO NOT GIVE HEADING TO QUESTIONS YOU ARE NOT ALLOWED TO ANSWER.
-    If you are unable to provide an answer to a question, please respond with the phrase 
-    "Sorry, but I am just an educational assistant I can only assist you in that manner."
+    If you are unable to provide an answer to a question, please respond with the phrase "Sorry, but I am just an educational assistant. I can only assist you in that manner."
     Please aim to be as helpful, creative, and friendly as possible in all of your responses.
     Do not use any external URLs in your answers. Do not refer to any blogs in your answers.
-    Start every answer with proper heading for the prompt as a HTML heading. The heading must be enclosed with <h1></h1> tags.
-    If you generate a response in point form then enclose the list in a <ul> tage and the points in <li> tags
-    Format any lists on individual lines with a dash and a space in front of each item
-    Add heading to question answered and have sections for the answers. 
-    Give the answer as a paragraph in html and add section breaks and headings.
-    IMPORTANT: EVERY PROPER RESPONSE MUST HAVE ATLEAST 2 SECTIONS AND 200 WORDS.
-    IMPORTANT: Keep responses to a maximum of 5000 words or less. 
+    Start every answer with proper heading for the prompt as a HTML heading. The heading must be enclosed with <h1></h1> tags. An-y text should be enclosed in <p></p> tags.
+    If you generate a response in point form then enclose the list in a <ul> tag and the points in <li> tags. Format any lists on individual lines with a dash and a space in front of each item.
+    Add heading to question answered and have sections for the answers.
+    Keep responses to a maximum of 5000 words.
+    FOLLOW ALL THESE RULES AT ALL TIMES.
     `
+
+const moderationUrl = 'https://api.openai.com/v1/moderations'; // Open AI moderation URL
 
 const openai = new OpenAI({
     apiKey: process.env.API_KEY
@@ -35,7 +35,7 @@ var dbconnection = sql.createConnection({
     "host": "localhost",
     "user": "root",
     "password": "",
-    "port": 3306
+    "port": 3307
 });
 
 
@@ -94,6 +94,17 @@ async function main(input) {
   return completion.choices[0];
 }
 
+function getCategories(objectArr){
+    let keyArr = Object.keys(objectArr);
+    let returnArr = [];
+    keyArr.forEach((elements) => {
+        if(objectArr[elements]){
+            returnArr.push(elements)
+        }
+    })
+    return returnArr;
+}
+
 let app = new express;
 
 app.use(bodyParser.json());
@@ -103,9 +114,23 @@ app.post("/post/prompt", async (req, res) => {
     if(req.body.prompt === ""){
         res.json({"generated_result": "I'm sorry but I have not recieved a proper question."})
     } else {
-        let returnMsg = main(req.body.prompt);
-        let result = (await returnMsg).message;
-        res.json({"generated_result": result.content})
+        fetch(moderationUrl, {
+            method: "POST",
+            headers: {'Content-Type':"application/json", 'Authorization': `Bearer ${process.env.API_KEY}`},
+            body: JSON.stringify({input: req.body.prompt})
+        }).then(response => response.json()).then(async (data) => {
+            if(!data.results[0].flagged){
+                let returnMsg = main(req.body.prompt);
+                let result = (await returnMsg).message;
+                res.json({"flagged":false, "generated_result": result.content})
+            } else {
+                let arr = getCategories(data.results[0].categories)
+                res.json({"flagged": true, "generated_result": arr})
+            }
+        })
+        // let returnMsg = main(req.body.prompt);
+        // let result = (await returnMsg).message;
+        // res.json({"generated_result": result.content})
         // setTimeout(() => {
         //     res.json({"generated_result": "<h1>hello</h1>"})
         // }, 5000);
@@ -167,6 +192,6 @@ app.post("/post/displaySaved", (req, res) => {
     })
 })
 
-app.listen(1006, () => {
-    console.log("listenning on port 1006.")
+app.listen(5000, () => {
+    console.log("listenning on port 5000.")
 })
