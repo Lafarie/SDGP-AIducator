@@ -7,6 +7,7 @@ import Forum from './Forum';
 import Video from './video';
 import QuizHome from './QuizHome';
 import Library from './3DLibrary';
+import SignUp from './SignUp'
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import LessonList from './LessonList';
@@ -29,7 +30,7 @@ root.render(
       <Route path="/quiz" element={<QuizHome/>}/>
       <Route path="/forum" element={<Forum/>}/>
       <Route path="/todo" element={<Home/>}/>
-      <Route path="/profile" element={<Home/>}/>
+      <Route path="/profile" element={<SignUp/>}/>
       <Route path="/library" element={<Library/>}/>
       <Route path="/LessonList" element={<LessonList subject={'Mathematics'}/>}/>
     </Routes>
