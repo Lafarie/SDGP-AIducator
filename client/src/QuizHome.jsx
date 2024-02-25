@@ -12,8 +12,12 @@ const QuizHome = () => {
 
   const [selectedSubject, setSelectedSubject] = useState(null);
 
-  const handleBoxClick = (subject) => {
-    setSelectedSubject(subject);
+  const handleGrade8BoxClick = (subject) => {
+    setSelectedSubject({ grade: 'Grade 8', subject });
+  };
+
+  const handleGrade9BoxClick = (subject) => {
+    setSelectedSubject({ grade: 'Grade 9', subject });
   };
 
   return (
@@ -32,20 +36,20 @@ const QuizHome = () => {
           </div>
           </div>
           <div className="box-container">
-            <Link to={'/LessonList'}>
-            <div className="box" onClick={() => handleBoxClick('Mathematics')} >
+            <Link to={`/LessonList/${'Mathematics'}`}>
+            <div className="box" onClick={() => handleGrade8BoxClick('Mathematics')} >
               <img src={Maths} alt="Maths" />
               <label>Mathematics</label>
             </div>
             </Link>
-            <Link to={'/LessonList'}>
-            <div className="box" onClick={() => handleBoxClick('Geography')}>
+            <Link to={`/LessonList/${'Geography'}`}>
+            <div className="box" onClick={() => handleGrade8BoxClick('Geography')}>
               <img src={Geo} alt="Geography" />
               <label>Geography</label>
             </div>
             </Link>
-            <Link to={'/LessonList'}>
-            <div className="box" onClick={() => handleBoxClick('Science')}>
+            <Link to={`/LessonList/${'Science'}`}>
+            <div className="box" onClick={() => handleGrade8BoxClick('Science')}>
               <img src={Sci} alt="Science" />
               <label>Science</label>
             </div>
@@ -55,18 +59,24 @@ const QuizHome = () => {
           Grade 9
           </div>
           <div className="box-container">
-            <div className="box">
+          <Link to={`/LessonList/${'Mathematics'}`}>
+            <div className="box" onClick={() => handleGrade9BoxClick('Mathematics')} >
               <img src={Maths} alt="Maths" />
               <label>Mathematics</label>
             </div>
-            <div className="box">
+            </Link>
+            <Link to={`/LessonList/${'Geography'}`}>
+            <div className="box" onClick={() => handleGrade9BoxClick('Geography')}>
               <img src={Geo} alt="Geography" />
               <label>Geography</label>
             </div>
-            <div className="box">
+            </Link>
+            <Link to={`/LessonList/${'Science'}`}>
+            <div className="box" onClick={() => handleGrade9BoxClick('Science')}>
               <img src={Sci} alt="Science" />
               <label>Science</label>
             </div>
+            </Link>
           </div>
         </div>
         {selectedSubject && (

@@ -1,0 +1,88 @@
+.navbar {
+    background-color: #003366;
+    padding: 10px 0;
+    width:100%;
+  }
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .search-grade-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .search-container {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+  }
+  
+  .search-text input[type=text] {
+    padding: 10px;
+    border: none;
+    width: 400px;
+    border-radius: 5px;
+    outline: none;
+    color: #706C6C;
+    background-color: #D9D9D9;
+  }
+  
+  button {
+    background-color: #D9D9D9;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    height: 100%;
+    margin-left: 10px;
+    border-radius: 5px;
+  }
+  
+  button img {
+    width: 20px;
+    height: auto;
+  }
+  
+  button:hover {
+    background-color: #D9D9D9;
+  }
+  .grade-label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: -450px;
+    margin-top: 30px;
+  }
+  .lesson-list {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Divide into two columns */
+    column-gap: 100px; /* Add some gap between the columns */
+    row-gap: 20px;
+  }
+
+  .lesson-button {
+    background-color: #003366;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  
+  .lesson-button:hover {
+    background-color: #003366;
+  }
+
+  /* Style for odd-numbered buttons */
+.lesson-button.odd {
+    grid-column: 2; 
+  }
+  
+  /* Style for even-numbered buttons */
+  .lesson-button.even {
+    grid-column: 1; 
+  }

@@ -30,7 +30,7 @@ root.render(
       <Route path="/todo" element={<Home/>}/>
       <Route path="/profile" element={<Home/>}/>
       <Route path="/library" element={<Library/>}/>
-      <Route path="/LessonList" element={<LessonList subject={'Mathematics'}/>}/>
+      <Route path="/LessonList/:subject" element={<LessonList />} />
     </Routes>
   </BrowserRouter>
 );
