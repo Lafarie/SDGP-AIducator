@@ -17,6 +17,19 @@
     backdrop-filter: blur(100px);
     height: 100%;
     width: 100%;
+    position: fixed;
+    overflow: scroll;
+    background-attachment: fixed;
+}
+
+#signUp::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#signUp {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .panel{
@@ -139,6 +152,17 @@
     margin-top: 20px;
 }
 
+#terms{
+    border: none;
+    transform: scale(1.5);
+    margin-right: 2px;
+    vertical-align: middle;
+}
+
+#terms:checked{
+    fill: #003366;
+}
+
 #rightdiv{
     text-align: center;  
     color: #003366;
@@ -154,7 +178,7 @@
 #rightdiv p{
     font-size: 40px;
     margin: 0;
-    color: #003366;
+    color: white;
 }
 
 #rightdiv img{
