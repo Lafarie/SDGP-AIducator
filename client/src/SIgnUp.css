@@ -36,7 +36,7 @@
     margin: auto;
     width: max-content;
     padding: 30px;
-    background-color: rgba(255, 255, 255, 0.482);
+    background-color: rgba(255, 255, 255, 0.615);
     border-radius: 20px  
 }
 
@@ -184,4 +184,8 @@
 #rightdiv img{
     height: 350px;
     width: 350px;
+}
+
+.alert{
+    display: none;
 }
