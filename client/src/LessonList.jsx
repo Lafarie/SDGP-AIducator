@@ -3,6 +3,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import './LessonList.css';
 import Navbar from './component/Navbar';
 import searchIcon from './Images/SearchIcon.svg';
+import {Link} from 'react-router-dom'
 
 
 const LessonList = ({ handleLessonClick }) => {
@@ -111,7 +112,7 @@ const LessonList = ({ handleLessonClick }) => {
         </div>
         <div className="lesson-list">
           {lessons.map((lesson, index) => (
-            <button key={index} className={`lesson-button ${index % 2 === 0 ? 'even' : 'odd'}`} onClick={() => handleLessonClick(lesson)}>{lesson}</button>
+            <Link key={index} to={location.pathname + "/" + lesson}><button key={index} className={`lesson-button ${index % 2 === 0 ? 'even' : 'odd'}`}>{lesson}</button></Link>
           ))}
         </div>
       </div>

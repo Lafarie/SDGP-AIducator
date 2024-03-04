@@ -125,6 +125,12 @@
     transform: scale(0.97);
 }
 
+#CreateAccount:disabled{
+    background-color: rgba(128, 128, 128, 0.515);   
+    color: rgba(0, 0, 0, .5);
+    pointer-events: none;
+}
+
 .SignUpBtns:hover{
     transform: scale(0.97);
 }
