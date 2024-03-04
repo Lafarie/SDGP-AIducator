@@ -24,9 +24,13 @@ const QuizHome = () => {
     setSelectedLesson(null);
   };
 
-  const handleLessonClick = (lesson) => {
+  // const handleLessonClick = (lesson) => {
+  //   setSelectedLesson(lesson);
+  // };
+
+  function handleLesson(lesson){
     setSelectedLesson(lesson);
-  };
+  }
 
   return (
     <div>
@@ -90,7 +94,7 @@ const QuizHome = () => {
         {selectedSubject && !selectedLesson && (
           <div>
             {/* Render LessonList for the selected subject */}
-            <LessonList subject={selectedSubject} handleLessonClick={handleLessonClick} />
+            <LessonList subject={selectedSubject} handleLessonClick={handleLesson()} />
           </div>
         )}
         {selectedLesson && (

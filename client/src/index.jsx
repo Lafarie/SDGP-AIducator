@@ -29,12 +29,12 @@ root.render(
       <Route path="/" element={<AIAssistant/>}/>
       <Route path="/video" element={<Video/>}/> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
       <Route path="/quiz" element={<QuizHome/>}/>
-      <Route path="/quiz/:lesson" element={<QuizPage />} />
       <Route path="/forum" element={<Forum/>}/>
       <Route path="/todo" element={<Home/>}/>
       <Route path="/profile" element={<SignUp/>}/>
       <Route path="/library" element={<Library/>}/>
       <Route path="/LessonList/:subject/:grade" element={<LessonList />} />
+      <Route path="/LessonList/:subject/:grade/:lesson" element={<QuizPage />} />
     </Routes>
   </BrowserRouter>
 );

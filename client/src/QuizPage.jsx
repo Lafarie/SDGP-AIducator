@@ -1,5 +1,6 @@
 import React from 'react';
 import './QuizPage.css'; 
+import { useLocation } from 'react-router-dom';
 
 
 const QuizPage = ({ lesson }) => {
@@ -15,9 +16,13 @@ const QuizPage = ({ lesson }) => {
     // Add more questions here
   ];
 
+  let location = useLocation()
+
   return (
     <div>
-      <h1>Quiz for {lesson}</h1>
+      {/* <h1>Quiz for {lesson}</h1> */}
+      <h1>Grade {location.pathname.split("/")[3].replaceAll("%20", " ")} - {location.pathname.split("/")[2].replaceAll("%20", " ")} </h1>
+      <h2>{location.pathname.split("/")[4].replaceAll("%20", " ")}</h2>
       {/* Render quiz questions here */}
       {quizQuestions.map((question, index) => (
         <div key={index}>
