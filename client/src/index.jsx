@@ -11,6 +11,7 @@ import SignUp from './SignUp'
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import LessonList from './LessonList';
+import QuizPage from './QuizPage';
 
 //react-scripts
   // "scripts": {
@@ -28,6 +29,7 @@ root.render(
       <Route path="/" element={<AIAssistant/>}/>
       <Route path="/video" element={<Video/>}/> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
       <Route path="/quiz" element={<QuizHome/>}/>
+      <Route path="/quiz/:lesson" element={<QuizPage />} />
       <Route path="/forum" element={<Forum/>}/>
       <Route path="/todo" element={<Home/>}/>
       <Route path="/profile" element={<SignUp/>}/>

@@ -6,18 +6,26 @@ import Geo from './Images/GeoGrade8.jpeg';
 import Sci from './Images/SciGrade8.jpeg';
 import Navbar from './component/Navbar';
 import LessonList from './LessonList';
+import QuizPage from './QuizPage';
 import { Link } from 'react-router-dom';
 
 const QuizHome = () => {
 
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedLesson, setSelectedLesson] = useState(null);
 
   const handleGrade8BoxClick = (subject) => {
     setSelectedSubject({ grade: 'Grade 8', subject });
+    setSelectedLesson(null);
   };
 
   const handleGrade9BoxClick = (subject) => {
     setSelectedSubject({ grade: 'Grade 9', subject });
+    setSelectedLesson(null);
+  };
+
+  const handleLessonClick = (lesson) => {
+    setSelectedLesson(lesson);
   };
 
   return (
@@ -79,10 +87,15 @@ const QuizHome = () => {
             </Link>
           </div>
         </div>
-        {selectedSubject && (
+        {selectedSubject && !selectedLesson && (
           <div>
             {/* Render LessonList for the selected subject */}
-            <LessonList subject={selectedSubject} />
+            <LessonList subject={selectedSubject} handleLessonClick={handleLessonClick} />
+          </div>
+        )}
+        {selectedLesson && (
+          <div>
+            <QuizPage lesson={selectedLesson} />
           </div>
         )}
       </div>
