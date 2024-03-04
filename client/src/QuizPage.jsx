@@ -3,7 +3,6 @@ import './QuizPage.css';
 
 
 const QuizPage = ({ lesson }) => {
- 
   // Placeholder for quiz questions
   const quizQuestions = [
 
