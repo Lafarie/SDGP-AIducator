@@ -7,6 +7,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 100px;
   }
 
   .search-grade-container {
@@ -58,8 +59,8 @@
   .lesson-list {
     margin-top: 20px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Divide into two columns */
-    column-gap: 100px; /* Add some gap between the columns */
+    grid-template-columns: repeat(2, 1fr); 
+    column-gap: 100px; 
     row-gap: 20px;
   }
 
