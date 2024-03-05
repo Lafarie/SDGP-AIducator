@@ -1,104 +1,39 @@
+// Import necessary libraries and components
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import "./Forum.css";
 import SearchIcon from "./Images/SearchIcon.svg";
 import ForumIcon from "./Images/ForumIcon.svg";
 import Navbar from "./component/Navbar";
-import React, { useState } from "react";
 
-const cardData = [
-  {
-    id: 1,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 1",
-    description: "Description for card 1",
-  },
-  {
-    id: 2,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 2",
-    description: "Description for card 2",
-  },
-  {
-    id: 3,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 1",
-    description: "Description for card 1",
-  },
-  {
-    id: 4,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 2",
-    description: "Description for card 2",
-  },
-  {
-    id: 5,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 1",
-    description: "Description for card 1",
-  },
-  {
-    id: 6,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 2",
-    description: "Description for card 2",
-  },
-  {
-    id: 7,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 1",
-    description: "Description for card 1",
-  },
-  {
-    id: 8,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 2",
-    description: "Description for card 2",
-  },
-  {
-    id: 9,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 1",
-    description: "Description for card 1",
-  },
-  {
-    id: 10,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 2",
-    description: "Description for card 2",
-  },
-  {
-    id: 11,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 1",
-    description: "Description for card 1",
-  },
-  {
-    id: 12,
-    image:
-      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
-    title: "Card 2",
-    description: "Description for card 2",
-  },
-];
-
+// Define Forum component
 function Forum() {
-  // const [selectedForum, setSelectedForum] = useState(null);
+  // Define state for forum data
+  const [forums, setForums] = useState([]);
 
-  // const handleForumClick = (forum) => {
-  //   setSelectedForum(forum);
-  // };
 
+//   useEffect(() => {
+//     fetch("/api/data")  // Relative path to your server's endpoint
+//         .then(res => res.json())
+//         .then(data => {
+//             console.log(data);
+//         })
+// }, []);
+
+
+  // // Fetch forum data from server
+  useEffect(() => {
+    fetch("api/forum")
+      .then(res => res.json())
+      .then(data => {
+        // Check if the response data contains an array directly or is wrapped in an object
+        // const forumData = Array.isArray(data) ? data : data.message;
+        setForums(data.message);
+        console.log(data.message);
+      })
+  }, []);
+
+  // Render Forum component JSX
   return (
     <div>
       <Navbar />
@@ -113,78 +48,35 @@ function Forum() {
       </div>
       <div className={"forum-container"}>
         <div className={"forums-list"}>
-          <div className={"forum"}>
-            <div className="img">
-              <img src={ForumIcon} alt="" />
+          {forums.map((forum) => (
+            <div className={"forum"} key={forum.ForumID} onClick={ () =>console.log(forum.ForumID)}>
+              <div className="img">
+                <img src={ForumIcon} alt="" />
+              </div>
+              <div className="forum-short-details">
+                <h2>{forum.Name}</h2>
+                <p>{forum.Description}</p>
+              </div>
+              <div className="forum-status">
+                <div>
+                  <p>{'Questions'}</p>
+                  <p>{'Answers'}</p>
+                </div>
+                <div>
+                  <p>{forum.questions}</p>
+                  <p>{forum.answers}</p>
+                </div>
+              </div>
             </div>
-            <div className="forum-short-details">
-              <h2>{'Forum Name'}</h2>
-              <p>{'Description for forum'}</p>
-            </div>
-            <div className="forum-status">
-              <div><p>{'Questions'}</p><p>{'Answers'}</p></div>
-              <div><p>{'5'}</p><p>{'3'}</p></div>
-            </div>
-          </div>
-          {/* <Forums/> */}
+          ))}
         </div>
         <div className={"side-bar"}>
-          {/* <PopularForums /> */}
-          <div className="img"> <img src="" alt="" /></div>
-          <div className="forum-long-details">
-            <h2>{'Forum Name'}</h2>
-            <p>{'Description for forum'}</p>
-            <button id={'forum-id'} name={'ForumName'}>Join</button>
-          </div>
-          </div>
-      </div>
-    </div>
-  );
-}
-
-const Forums = () => {
-  return (
-    <div>
-      {cardData.map((forum) => (
-        <div className={"forum"} key={forum.id}>
-          <div className="img">
-            <img src={forum.image} alt="" />
-          </div>
-          <div className="forum-short-details">
-            <h2>{forum.title}</h2>
-            <p>{forum.description}</p>
-          </div>
-          <div className="forum-status">
-            <div><p>{'Questions'}</p><p>{'Answers'}</p></div>
-            <div><p>{count(forum.questions)}</p><p>{count(forum.answers)}</p></div>
-          </div>
+          {/* Render PopularForums component here */}
         </div>
-      ))}
-    </div>
-  );
-}
-
-const count = (data) => {
-  return data.length;
-}
-
-//if forum clicked
-
-const ForumSideCard = () => {
-  return (
-    <div className={"side-bar"}>
-      <div className="img"> <img src="" alt="" /></div>
-      <div className="forum-long-details">
-        <h2>{forum.title}</h2>
-        <p>{forum.description}</p>
-        <button id={'forum-id'} name={'ForumName'}>Join</button>
       </div>
     </div>
   );
-
 }
 
-const PopularForums = () => {
-
-}
+// Export Forum component
 export default Forum;
