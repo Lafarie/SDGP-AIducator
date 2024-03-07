@@ -1,5 +1,197 @@
-#signUpbody{
-    background-color: aqua;
-    width: 100%;
+#SignUpBody{
+    background-image: url("./Images/SignUpBackdrop.png");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    font-family: 'Inria Sans', sans-serif;
     height: 100%;
+    width: 100%;
+}
+
+#signUp{
+    margin: auto;
+    display: inline-grid;
+    grid-auto-columns: 1fr;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    column-gap: 50px;
+    backdrop-filter: blur(100px);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overflow: scroll;
+    background-attachment: fixed;
+}
+
+#signUp::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#signUp {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.panel{
+    margin: auto;
+    width: max-content;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.615);
+    border-radius: 20px  
+}
+
+.textBoxDiv{
+    display: flex;
+}
+
+.panelItem{
+    margin-bottom: 20px;
+}
+
+.panel div input[type="text"], .panel div input[type="password"]{
+    width: 100%;
+}
+
+.textBoxDiv input[type='password']{
+    font-size: 0px;
+}
+
+.textBoxDiv input[type='text'], .textBoxDiv input[type='password']{
+    font-family: 'Inria Sans', sans-serif;
+    font-size: 14px;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+}
+
+.textBoxDiv input[type='text']:focus, .textBoxDiv input[type='password']:focus{
+    outline: 2px solid #003366;
+}
+
+#passDiv img{
+    height: 25px;
+    width: 25px;
+    padding-left: 10px;
+    align-self: center;
+    cursor: pointer;
+}
+
+.SignUpBtns{
+    background-color: white;
+    padding: 1px;
+    color: black;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    border: solid 1px black;
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    column-gap: 20px;
+    width: 100%;
+    transition: 0.2s;
+}
+
+.SignUpBtns img{
+    margin: auto;
+    height: 20px;
+}
+
+.SignUpBtns p{
+    margin-top: 16px;
+    margin-right: 0;
+}
+
+#applebtn img{
+    height: 25px;
+}
+
+.CreateBtn{
+    font-family: 'Inria Sans', sans-serif;
+    background-color: #003366;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    width: 100%;
+    margin-left: 0;
+    font-weight: normal;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+.CreateBtn:hover{
+    background-color: #022951;
+    transform: scale(0.97);
+}
+
+#CreateAccount:disabled{
+    background-color: rgba(128, 128, 128, 0.515);   
+    color: rgba(0, 0, 0, .5);
+    pointer-events: none;
+}
+
+.SignUpBtns:hover{
+    transform: scale(0.97);
+}
+
+#nameDiv{
+    column-gap: 10px;
+    width: 100%;
+    display: flex;
+}
+
+#divider{
+    color: rgba(255, 255, 255, 0.505);
+    font-weight: bold;
+    display: inline-grid;
+    grid-template-columns: auto 20% auto;
+    width: 100%;
+    text-align: center;
+}
+
+#divider hr{
+    border: 1px solid rgba(255, 255, 255, 0.442);
+}
+
+#divider>*{
+    margin-top: 20px;
+}
+
+#terms{
+    border: none;
+    transform: scale(1.5);
+    margin-right: 2px;
+    vertical-align: middle;
+}
+
+#terms:checked{
+    fill: #003366;
+}
+
+#rightdiv{
+    text-align: center;  
+    color: #003366;
+    background-color: rgba(102, 51, 153, 0);
+}
+
+#rightdiv h1{
+    font-size: 100px;
+    margin: 0;
+    color: #003366;
+}
+
+#rightdiv p{
+    font-size: 40px;
+    margin: 0;
+    color: white;
+}
+
+#rightdiv img{
+    height: 350px;
+    width: 350px;
+}
+
+.alert{
+    display: none;
 }

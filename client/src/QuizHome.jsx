@@ -6,15 +6,31 @@ import Geo from './Images/GeoGrade8.jpeg';
 import Sci from './Images/SciGrade8.jpeg';
 import Navbar from './component/Navbar';
 import LessonList from './LessonList';
+import QuizPage from './QuizPage';
 import { Link } from 'react-router-dom';
 
 const QuizHome = () => {
 
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedLesson, setSelectedLesson] = useState(null);
 
-  const handleBoxClick = (subject) => {
-    setSelectedSubject(subject);
+  const handleGrade8BoxClick = (subject) => {
+    setSelectedSubject({ grade: 'Grade 8', subject });
+    setSelectedLesson(null);
   };
+
+  const handleGrade9BoxClick = (subject) => {
+    setSelectedSubject({ grade: 'Grade 9', subject });
+    setSelectedLesson(null);
+  };
+
+  // const handleLessonClick = (lesson) => {
+  //   setSelectedLesson(lesson);
+  // };
+
+  function handleLesson(lesson){
+    setSelectedLesson(lesson);
+  }
 
   return (
     <div>
@@ -32,20 +48,20 @@ const QuizHome = () => {
           </div>
           </div>
           <div className="box-container">
-            <Link to={'/LessonList'}>
-            <div className="box" onClick={() => handleBoxClick('Mathematics')} >
+            <Link to={`/LessonList/${'Mathematics'}/${'8'}`}>
+            <div className="box" onClick={() => handleGrade8BoxClick('Mathematics')} >
               <img src={Maths} alt="Maths" />
               <label>Mathematics</label>
             </div>
             </Link>
-            <Link to={'/LessonList'}>
-            <div className="box" onClick={() => handleBoxClick('Geography')}>
+            <Link to={`/LessonList/${'Geography'}/${'8'}`}>
+            <div className="box" onClick={() => handleGrade8BoxClick('Geography')}>
               <img src={Geo} alt="Geography" />
               <label>Geography</label>
             </div>
             </Link>
-            <Link to={'/LessonList'}>
-            <div className="box" onClick={() => handleBoxClick('Science')}>
+            <Link to={`/LessonList/${'Science'}/${'8'}`}>
+            <div className="box" onClick={() => handleGrade8BoxClick('Science')}>
               <img src={Sci} alt="Science" />
               <label>Science</label>
             </div>
@@ -55,24 +71,35 @@ const QuizHome = () => {
           Grade 9
           </div>
           <div className="box-container">
-            <div className="box">
+          <Link to={`/LessonList/${'Mathematics'}/${'9'}`}>
+            <div className="box" onClick={() => handleGrade9BoxClick('Mathematics')} >
               <img src={Maths} alt="Maths" />
               <label>Mathematics</label>
             </div>
-            <div className="box">
+            </Link>
+            <Link to={`/LessonList/${'Geography'}/${'9'}`}>
+            <div className="box" onClick={() => handleGrade9BoxClick('Geography')}>
               <img src={Geo} alt="Geography" />
               <label>Geography</label>
             </div>
-            <div className="box">
+            </Link>
+            <Link to={`/LessonList/${'Science'}/${'9'}`}>
+            <div className="box" onClick={() => handleGrade9BoxClick('Science')}>
               <img src={Sci} alt="Science" />
               <label>Science</label>
             </div>
+            </Link>
           </div>
         </div>
-        {selectedSubject && (
+        {selectedSubject && !selectedLesson && (
           <div>
             {/* Render LessonList for the selected subject */}
-            <LessonList subject={selectedSubject} />
+            <LessonList subject={selectedSubject} handleLessonClick={handleLesson()} />
+          </div>
+        )}
+        {selectedLesson && (
+          <div>
+            <QuizPage lesson={selectedLesson} />
           </div>
         )}
       </div>
