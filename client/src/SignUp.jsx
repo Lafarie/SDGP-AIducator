@@ -9,6 +9,7 @@ import app from "./firebase";
 // import { initializeApp } from "firebase/app";
 import { getDatabase, ref, push, onValue } from "firebase/database";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
@@ -27,6 +28,8 @@ function SignUp(){
     const [useremail, setuseremail] = useState("");
     const [userpassword, setuserpassword] = useState("");
     const [terms, setterms] = useState(false);
+
+    const toHome = useNavigate();
 
     const UserRef = ref(database, 'users/');
     let userData = [];
@@ -103,6 +106,8 @@ function SignUp(){
                 push(ref(database, 'users/'), userObj); // pushing data to firebase realtime database. 
                 emailAlert.style.display = "none";
                 nameAlert.style.display = "none";
+                toHome("/");
+
                 // ...
             })
             .catch((error) => {
@@ -128,7 +133,7 @@ function SignUp(){
     }
 
     useEffect(() => {
-        document.body.id = "SignUpBody";
+        document.body.id = "AccountBody";
         // Clean up function to remove styles on unmount (optional)
         return () => {
             document.body.id = null;
@@ -147,34 +152,36 @@ function SignUp(){
                         onChange={() => {
                             setfname(firstName.current.value);
                         }}/>
-                        <input type="text" placeholder="Last Name" ref={lastName} required autoComplete="on" onChange={() => {
+                        <input type="text" placeholder="Last Name" ref={lastName} required onChange={() => {
                             setlname(lastName.current.value);
                         }}/>                     
                     </div>
                     <p id="nameAlert" className="alert">*Username already exists</p>
                     <div id="mailDiv" className="textBoxDiv panelItem">
-                        <input type="text" placeholder="Email Address" ref={email} required autoComplete="on" onChange={() => {
+                        <input type="text" placeholder="Email Address" ref={email} required autoComplete="new-password" onChange={() => {
                             setuseremail(email.current.value);
                         }}/>
                     </div>
                     <p id="emailAlert" className="alert">*Username already exists</p>
                     <div id="passDiv" className="textBoxDiv panelItem">
-                        <input id="passwordtxt" type={showPass?"text":"password"} ref={password} required placeholder="Your Password" autoComplete="on"
+                        <input id="passwordtxt" type={showPass?"text":"password"} ref={password} required placeholder="Your Password" autoComplete="new-password"
                         onChange={() => {
                             setuserpassword(password.current.value);
                         }}/>
-                        <img src={showPass?show:hide} onClick={() => {
-                            setShowPass(!showPass);
-                        }}/>
+                        <div id="passIconDiv">
+                            <img src={showPass?show:hide} onClick={() => {
+                                setShowPass(!showPass);
+                            }}/>
+                        </div>
                     </div>
                     <button id="CreateAccount" className="panelItem CreateBtn">
                         Create Account
                     </button>
-                    <div>
-                        <input type="checkbox" id="terms" required checked={terms} onClick={() => {
+                    <div id="termsDiv">
+                        <input type="checkbox" id="terms" required defaultChecked={false} onClick={() => {
                             setterms(!terms);
                         }}/>
-                        <label htmlFor="terms" style={{cursor : "pointer", marginLeft: "10px"}}>By submitting the form, you agree to our Terms and Conditions</label>
+                        <label htmlFor="terms" style={{cursor : "pointer", marginLeft: "0.5vw"}}>By submitting the form, you agree to our Terms and Conditions</label>
                     </div>
                     <div id="divider">
                         <div>
@@ -186,13 +193,15 @@ function SignUp(){
                         </div>
                     </div>
                     <div id="googlebtn" className="panelItem SignUpBtns signinbtn">
-                        <img src={googleIcon}/>
+                        <div className="googleImgContainer">
+                            <img src={googleIcon}/>
+                        </div>
                         <p>Sign in with Google</p>
                     </div>
-                    <div id="applebtn" className="SignUpBtns signinbtn">
+                    {/* <div id="applebtn" className="SignUpBtns signinbtn">
                         <img src={appleIcon}/>
                         <p>Sign in with Apple</p>
-                    </div>
+                    </div> */}
                 </form>
                 
             </div>  
