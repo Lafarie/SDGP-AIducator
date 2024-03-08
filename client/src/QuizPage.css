@@ -8,6 +8,14 @@
   
   .question {
     margin-bottom: 20px;
+    margin-left: 300px;
+    background-color: #D9D9D9;
+    border-radius: 5px;
+    width: 700px;
+    margin-top: 20px;
+    color: #003366;
+    height: 350px;
+
   }
   
   .options {
@@ -15,9 +23,38 @@
     padding: 0;
   }
   
-  .option {
+  .option input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Create a custom radio button */
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.option input[type="radio"]:checked {
+    background-color: #003366; 
+}
+
+.option label {
+    display: inline-block;
     margin-bottom: 10px;
-  }
+    cursor: pointer;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 550px;
+    font-weight: bold;
+    margin-left: 25px;
+}
+
   
   .submit-button {
     padding: 10px 20px;
@@ -32,3 +69,72 @@
     background-color: #0056b3;
   }
   
+  .first-container {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    align-items: flex-start;
+    margin-top: 100px;
+    justify-items: center;
+    
+  }
+  .h01{
+    margin-left: -700px;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: x-large;
+  }
+  .h02{
+    margin-left: -2175px;
+    font-weight: bold;
+    margin-top: 50px;
+    font-size: x-large;
+    margin-bottom: 30px;
+  }
+  .Question-container{
+    margin-left: -500px;
+    grid-column: 1;
+  }
+  .Q-Number{
+    font-weight: bold;
+    font-size: larger;
+    margin-top: 20px;
+    margin-left: 30px;
+  }
+  .Other-Box {
+  background-color: #D9D9D9; 
+  padding: 20px;
+  margin-bottom: 20px;
+  grid-column: 2;
+  margin-right: 200px;
+  width: 200px;
+  margin-top: 20px;
+  border-radius: 5px;
+  height: 275px;
+}
+.Remaining-questions{
+    background-color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+    height:100px
+}
+.Time-remaining{
+    background-color: #fff;
+    font-weight: bold;
+    margin-top: 50px;
+    border-radius: 5px;
+    text-align: center;
+    height: 100px;
+    
+}
+.Submit{
+    grid-column: 2;
+    margin-top: -3350px;
+    margin-right: 200px;
+    background-color: #003366;
+    width: 100px;
+    height: 35px;
+    border-radius: 10px;
+    text-align: center;
+
+}

@@ -87,3 +87,10 @@
   .lesson-button.even {
     grid-column: 1; 
   }
+  a {
+    color: black; 
+  }
+  
+  a:visited {
+    color: black; 
+  }
