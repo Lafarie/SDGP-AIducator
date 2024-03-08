@@ -12,6 +12,7 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import LessonList from './LessonList';
 import QuizPage from './QuizPage';
+import QuizResults from './QuizResults';
 
 //react-scripts
   // "scripts": {
@@ -35,6 +36,7 @@ root.render(
       <Route path="/library" element={<Library/>}/>
       <Route path="/LessonList/:subject/:grade" element={<LessonList />} />
       <Route path="/LessonList/:subject/:grade/:lesson" element={<QuizPage />} />
+      <Route path="/quiz-results" element={<QuizResults/>} />
     </Routes>
   </BrowserRouter>
 );

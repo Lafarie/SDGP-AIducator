@@ -1,0 +1,184 @@
+.quiz-results-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin: 20px;
+    margin-top: 120px;
+  }
+  
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-picture {
+    width: 150px;
+    height: 135px;
+    background-color: #D9D9D9;
+    margin-bottom: 10px;
+    border-radius: 50px;
+  }
+
+.N-Questions{
+    background-color: #003366;
+    grid-column: 1;
+    width: 300px;
+    height: 175px;
+    margin-bottom: 60px;
+    color: #ffff;
+    border-radius: 10px;
+    font-weight: bold;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.Correct-box{
+    background-color: #003366;
+    grid-column: 1;
+    width: 300px;
+    height: 175px;
+    margin-bottom: 60px;
+    color: #ffff;
+    border-radius: 10px;
+    font-weight: bold;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.Score-box{
+    background-color: #003366;
+    grid-column: 1;
+    width: 300px;
+    height: 175px;
+    margin-bottom: 10px;
+    color: #ffff;
+    border-radius: 10px;
+    font-weight: bold;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.details-box{
+    background-color: #003366;
+    grid-column: 2;
+    margin-bottom: 50px;
+    width: 500px;
+    height: 300px;
+    color: #ffff;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-top: 30px;
+}
+
+.QandA{
+    background-color: #003366;
+    grid-column: 2;
+    margin-bottom: 10px;
+    height: 70px;
+    color: #ffff;
+    border-radius: 35px;
+    width: 425px;
+    font-weight: bold;
+    margin-top: 30px;
+}
+
+.Remarks-box{
+    background-color: #003366;
+    grid-column: 3;
+    width: 400px;
+    height: 525px;
+    margin-bottom: 10px;
+    color: #ffff;
+    border-radius: 10px;
+    font-weight: bold;
+
+}
+
+.TextInput {
+    margin-bottom: 10px;
+    margin-left: 40px;
+}
+.Name-box,.Email-box,.Grade-box{
+    margin-bottom: 50px;
+    margin-top: 55px;
+    margin-left: 20px;
+    font-size: x-large;
+
+}
+.NameInput,
+.EmailInput {
+    margin-left: 80px;
+    width: 300px;
+    height: 20px;
+}
+.GradeInput{
+    width: 20px;
+    margin-left: 80px;
+}
+#Arrow{
+    width: 25px;
+    margin-left: 20px;
+    margin-top: 20px;
+    height: 25px;
+}
+.QandA-label{
+    margin-left: 70px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: x-large;
+
+}
+.RemarksInput{
+    width: 350px;
+    height: 425px;
+    margin-left: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+.Remarks{
+    margin-left: 150px;
+    margin-top: 20px;
+    font-size: xx-large;
+    text-align: center;
+}
+.CorrectLabel{
+    text-align: center;
+    font-size: x-large;
+}
+
+.ScoreLabel{
+    text-align: center;
+    font-size: x-large;
+
+}
+
+.NQs{
+    text-align: center;
+    font-size: x-large;
+
+}
+.NQ-digit{
+    font-size: 60px;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.Score{
+    font-size: 60px;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.Correct{
+    font-size: 60px;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}

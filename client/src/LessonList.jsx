@@ -6,7 +6,7 @@ import searchIcon from './Images/SearchIcon.svg';
 import {Link} from 'react-router-dom'
 
 
-const LessonList = ({ handleLessonClick }) => {
+const LessonList = () => {
   const { subject } = useParams();
 
   const [displaygrade, setdisplaygrade] = useState("")
