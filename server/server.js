@@ -208,7 +208,7 @@ app.post("/post/save", async (req, res) => {
             // to get the id of the last entry
             if (err) {
               console.log("Error");
-            } else {
+            // } else {
               res.json({ message: "response saved", id: result[0].id });
             }
           }
@@ -260,29 +260,28 @@ app.post("/post/displaySaved", (req, res) => {
   );
 });
 
-app.get("/forum", (req, res) => {
-    // console.log("get request received");
-//   let forum = req.body.data;
-//   if (forum === "all") {
-    let query = "SELECT * FROM Forums";
-//   } else {
-//     let query = `SELECT * FROM Forums WHERE Name = ${forum}`;
-//   }
+app.post("/post/forum", (req, res) => {
+  let forum = req.body.forum;
+  // console.log(forum);
+  let query;
+
+  if (forum === "all") {
+    query = "SELECT * FROM Forums";
+  }else{
+    query = `SELECT * FROM Forums WHERE ForumID = ${forum}`;
+  }
+
   dbconnection.query(query, (err, result) => {
     if (err) {
-      res.json({ message: "response could not be found" });
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
     } else {
       res.json({ message: result });
     }
   });
 });
 
-app.get("/data", (req, res) => {
-    // Your server logic to handle the request
-    res.json({ message: "Data from server" });
-});
 
-
-app.listen(5000, () => {
+app.listen(3001, () => {
   console.log("listenning on port 5000.");
 });

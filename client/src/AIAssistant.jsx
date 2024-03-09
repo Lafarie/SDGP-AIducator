@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import './AIAssistant.css';
-import sendIcon from './Images/sendicon.svg'
+import sendIcon from './Images/sendicon.svg';
 import good from './Images/good.svg';
 import bad from './Images/bad.svg';
 import goodfill from './Images/goodfilled.svg';
