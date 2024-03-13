@@ -1,41 +1,44 @@
-/* QuizPage.css */
-
 .quiz-container {
-    max-width: 800px;
+    max-width: 50vw;
     margin: 0 auto;
-    padding: 20px;
-  }
+    padding: 2vh;
+}
   
-  .question {
-    margin-bottom: 20px;
-    margin-left: 300px;
+.question {
+    margin-bottom: 2vh;
+    margin-left: 15vw;
     background-color: #D9D9D9;
-    border-radius: 5px;
-    width: 700px;
-    margin-top: 20px;
+    border-radius: 1.5vw;
+    width: 55vw;
+    margin-top: 2vh;
     color: #003366;
-    height: 350px;
+    height: 45vh;
+    padding: 1vh 1vw;
+}
 
-  }
-  
-  .options {
+.Qs {
+    margin-left: 4vw;
+    font-weight: bold;
+    font-size: 3vh;
+    margin-top: 1vh;
+}
+
+.options {
     list-style-type: none;
     padding: 0;
-  }
+}
   
-  .option input[type="radio"] {
+.option input[type="radio"] {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    /* Create a custom radio button */
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ccc;
+    width: 1.5vw;
+    height: 1.5vw;
     border-radius: 50%;
-    background-color: transparent;
+    background-color: #fff;
     outline: none;
     cursor: pointer;
-    margin-left: 20px;
+    margin-left: 3.5vw;
 }
 
 .option input[type="radio"]:checked {
@@ -44,97 +47,116 @@
 
 .option label {
     display: inline-block;
-    margin-bottom: 10px;
+    margin-bottom: 1vh;
     cursor: pointer;
-    padding: 10px;
+    padding: 1vh;
     background-color: #fff;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 550px;
+    border-radius: 1vw;
+    width: 37.5vw;
     font-weight: bold;
-    margin-left: 25px;
+    margin-left: 3vw;
+    font-size: 2.5vh;
 }
 
-  
-  .submit-button {
-    padding: 10px 20px;
+.submit-button {
+    padding: 1vh 2vw;
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 1vw;
     cursor: pointer;
-  }
-  
-  .submit-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .first-container {
-    display: grid;
-    grid-template-columns: 1fr 200px;
-    align-items: flex-start;
-    margin-top: 100px;
-    justify-items: center;
-    
-  }
-  .h01{
-    margin-left: -700px;
-    font-weight: bold;
-    margin-top: 10px;
-    font-size: x-large;
-  }
-  .h02{
-    margin-left: -2175px;
-    font-weight: bold;
-    margin-top: 50px;
-    font-size: x-large;
-    margin-bottom: 30px;
-  }
-  .Question-container{
-    margin-left: -500px;
-    grid-column: 1;
-  }
-  .Q-Number{
-    font-weight: bold;
-    font-size: larger;
-    margin-top: 20px;
-    margin-left: 30px;
-  }
-  .Other-Box {
-  background-color: #D9D9D9; 
-  padding: 20px;
-  margin-bottom: 20px;
-  grid-column: 2;
-  margin-right: 200px;
-  width: 200px;
-  margin-top: 20px;
-  border-radius: 5px;
-  height: 275px;
 }
-.Remaining-questions{
-    background-color: #fff;
-    font-weight: bold;
-    border-radius: 5px;
-    text-align: center;
-    height:100px
-}
-.Time-remaining{
-    background-color: #fff;
-    font-weight: bold;
-    margin-top: 50px;
-    border-radius: 5px;
-    text-align: center;
-    height: 100px;
-    
-}
-.Submit{
-    grid-column: 2;
-    margin-top: -3350px;
-    margin-right: 200px;
-    background-color: #003366;
-    width: 100px;
-    height: 35px;
-    border-radius: 10px;
-    text-align: center;
 
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.first-container {
+    display: grid;
+    grid-template-columns: 1fr 10vw;
+    align-items: flex-start;
+    margin-top: 12vh;
+    justify-items: center;
+    margin-left: 0.5vw;
+}
+
+.h01 {
+    margin-left: -49vw;
+    font-weight: bold;
+    margin-top: 1vh;
+    font-size: 3vh;
+}
+
+.h02 {
+    margin-left: -150.75vw;
+    font-weight: bold;
+    margin-top: 8vh;
+    font-size: 3vh;
+    margin-bottom: 3vh;
+}
+
+.Question-container {
+    margin-left: -25vw;
+    grid-column: 1;
+}
+
+.Q-Number {
+    font-weight: bold;
+    font-size: 3vh;
+    margin-top: 2vh;
+    margin-left: 4vw;
+    margin-bottom: 2.5vh;
+}
+
+.Other-Box {
+    background-color: #D9D9D9; 
+    padding: 2vh;
+    margin-bottom: 2vh;
+    grid-column: 2;
+    margin-right: 10vw;
+    width: 20vw;
+    margin-top: 2vh;
+    border-radius: 1.5vw;
+    height: 40vh;
+    position: sticky;
+    top: 11vh;
+}
+
+.Remaining-questions {
+    background-color: #fff;
+    font-weight: bold;
+    border-radius: 2.5vw;
+    text-align: center;
+    height: 15vh;
+    font-size: 2.5vh;
+}
+
+.Time-remaining {
+    background-color: #fff;
+    font-weight: bold;
+    margin-top: 5vh;
+    border-radius: 2.5vw;
+    text-align: center;
+    height: 15vh;
+    font-size: 2.5vh;
+}
+
+.Submit-box {
+    grid-column: 2;
+    margin-top: -67vh;
+    margin-right: 10vw;
+    background-color: #003366;
+    width: 7.5vw;
+    height: 10vh;
+    border-radius: 2vw;
+}
+
+.Submit {
+    text-align: center;
+    font-size: 3vh;
+    margin-top: 1.5vh;
+}
+.Time-label,.QR-label{
+    margin-top: 1.5vh;
+    
 }
