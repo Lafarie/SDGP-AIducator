@@ -36,18 +36,23 @@ function SignIn() {
         signInWithEmailAndPassword(database, email.current.value, password.current.value)
         .then((data) => {
           console.log(data, "authData");
-          history("/");
+          let emailP = document.getElementById("Alerts");
+          emailP.style.display = "none";
+          history("/home");
         })
         .catch((err) => {
         //   alert(err.code);
-        let emailP = document.getElementById("emailAlert");
-        let passP = document.getElementById("passAlert");
-
-        emailP.innerHTML = err.code;
-        passP.innerHTML = err.code;
-
+        let emailP = document.getElementById("Alerts");
+        
+        if(err.code === "auth/invalid-credential") {
+            emailP.innerHTML = "You have entered a incorrect email or password.";
+        } else if (err.code === "auth/invalid-email"){
+            emailP.innerHTML = "You have entered an invalid email";
+        } else {
+            emailP.innerHTML = (err.code).split("/")[1].replaceAll("-", " ");
+        }
+        emailP.style.color = "RED";
         emailP.style.display = "block";
-        passP.style.display = "block";
 
         });;
     }
@@ -70,20 +75,19 @@ function SignIn() {
                     onChange={() => {
                         setemailStr(email.current.value);
                     }}/>
-                    <p id="emailAlert"></p>
                 </div>
                 <div id="passDiv" className="form-group textBoxDiv signInPassDiv">
                         <input id="passwordtxt" type={showPass?"text":"password"} ref={password} required placeholder="Your Password" autoComplete="new-password"
                         onChange={() => {
                             setpassstr(password.current.value);
                         }}/>
-                        <p id="passAlert"></p>
                         <div id="passIconDiv">
                         <img src={showPass?show:hide} onClick={() => {
                             setShowPass(!showPass);
                         }}/>
                         </div>
                 </div>
+                    <p id="Alerts"></p>
                 <button type="submit" id="SignInBtn" className="signInbtn" onClick={getDetails}>Sign In</button>
                 <div id="googlebtnSignin" className="panelItem SignUpBtns signinbtn">
                     <div className="googleImgContainer">

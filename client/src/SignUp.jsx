@@ -106,7 +106,7 @@ function SignUp(){
                 push(ref(database, 'users/'), userObj); // pushing data to firebase realtime database. 
                 emailAlert.style.display = "none";
                 nameAlert.style.display = "none";
-                toHome("/");
+                toHome("/home");
 
                 // ...
             })
