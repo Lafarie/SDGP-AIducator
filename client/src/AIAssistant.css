@@ -8,6 +8,7 @@
     display: inline-grid;
     grid-template-columns:20% 50% auto;
     column-gap: 10px;
+    font-size: 0.9vw;
 }
 
 #AIAssistant>*{
@@ -19,8 +20,8 @@
 
 .savedResponseClass{
     background-color: white;
-    margin-top: 10px;
-    padding: 20px 10px;
+    margin-top: 1vw;
+    padding: 1.2vw 1vw;
     border-radius: 10px;
     transition: 0.2s;
     cursor: pointer;
@@ -40,18 +41,17 @@
 }
 
 .button{
-    height: 20px;
-    width: 30px;
+    height: 1.2vw;
+    width: 1vw;
     border-radius: 3px;
-    /* transition: 0.2s; */
-    padding: 5px;
+    /* padding: 5px; */
     filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.541));
 }
 
-#generate:disabled{
+/* #generate:disabled{
     filter: none;
     background-color: grey;
-}
+} */
 
 .button img{
     height: 100%;
@@ -59,24 +59,21 @@
     margin: auto;
 }
 
-#generate{
-    background-color: #003366;
-    padding: 5px 10px 5px 5px;
-}
-
 #bad{
     background-color: #C16C6C;
+    padding: 0.5vw;
 }
 
 #good{
     background-color: #80A98C;
+    padding: 0.5vw;
 }
 
 #save{
     background-color: #003366;
     color: white;
     display: none; 
-    padding: 5px 20px;
+    padding: 0.5vw 1.2vw;
     width: fit-content;
     cursor: pointer;
 }
@@ -88,13 +85,30 @@
 #prompt{
     width: 100%;
     height: 20px;
-    padding: 10px 20px;
+    padding: 0.9vw 1.2vw;
     border-radius: 5px;
     border: none;
+    font-size: 0.8vw;
 }
 
 #prompt:focus{
     outline: solid 2px #003366;
+}
+
+#generateContainer{
+    height: fit-content;
+    width: 1.2vw;
+    padding: 0.5vw; 
+    background-color:  #003366;
+    display: flex;
+    justify-content: center;
+    border-radius: 0.2vw;
+    cursor: pointer;
+}
+
+#generateContainer #generate{
+    height: 100%;
+    width: 100%;  
 }
 
 #assistentFrame{
@@ -108,7 +122,7 @@
 #response{
     background-color: white;
     margin: 15px 0;
-    padding: 15px 20px;
+    padding: 1vw 1.5vw;
     border-radius: 10px; 
     min-height: 70%;
     height: fit-content;
@@ -117,7 +131,12 @@
 
 #response>*{
     text-align: justify;
-    line-height: 1.5;
+    line-height: 1.9vw;
+    font-size: 0.9vw;
+}
+
+#response h1, #reponse h2, #reponse h3, #reponse h4, #reponse h5, #reponse h6{
+    font-size: 1.9vw;
 }
 
 #reponse{
