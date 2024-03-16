@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import hide from "./Images/eye-password-hide.svg";
 import show from "./Images/eye-password-show.svg";
 import googleIcon from "./Images/GoogleIcon.svg";
-import appleIcon from "./Images/AppleIcon.svg";
 import logo from "./Images/BigLogo.png";
 import app from "./firebase";
 // import { initializeApp } from "firebase/app";
@@ -104,8 +103,8 @@ function SignUp(){
                 document.getElementById("terms").checked = false;
                 setShowPass(false);
                 push(ref(database, 'users/'), userObj); // pushing data to firebase realtime database. 
-                emailAlert.style.display = "none";
-                nameAlert.style.display = "none";
+                // emailAlert.style.display = "none";
+                // nameAlert.style.display = "none";
                 toHome("/home");
 
                 // ...
