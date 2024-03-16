@@ -2,63 +2,83 @@ import React, { useState, useEffect } from 'react';
 import './QuizPage.css'; 
 import { useLocation,Link } from 'react-router-dom';
 import Navbar from './component/Navbar';
+import axios from 'axios';
 
 
 const QuizPage = ({ lesson }) => {
-  // Placeholder for quiz questions
-  const quizQuestions = [
+    const [quizQuestions, setQuizQuestions] = useState([]); // State to store quiz questions
 
-    {
-      question: 'What is the definition of a triangle?',
-      options: ['A polygon with two sides','A polygon with three sides', 'A polygon with four sides', 'A polygon with five sides'],
-      correctAnswer: 'A polygon with three sides'
-    },
-    {
-      question: 'The sum of the angles in a triangle?',
-      options: ['90 degrees', '180 degrees', '270 degrees','360 degrees'],
-      correctAnswer: '180 degrees'
-    },
-    {
-      question: 'A quadrilateral with all four right angles is called?',
-      options: ['Square', 'Rectangle', 'Rhombus','Trapezium'],
-      correctAnswer: 'Square'
-    },
-    {
-        question: 'The opposite angles in a parallelogram?',
-        options: ['Acute', 'Obtuse', 'Congruent','Supplementary'],
-        correctAnswer: 'Congruent'
-      },
-    {
-        question: 'The diameter of a circle is twice the length of its?',
-        options: ['Circumference', 'Radius', 'Area','None of the above'],
-        correctAnswer: 'Square'
-    },
-    {
-        question: 'If two lines intersect at a right angle, they are considered?',
-        options: ['Parallel', 'Perpendicular', 'Intersecting','None of the above'],
-        correctAnswer: 'Square'
-    },
-    {
-        question: 'The measure of a straight angle is?',
-        options: ['90 degrees', '180 degrees', '270 degrees','360 degrees'],
-        correctAnswer: '90 degrees'
-    },
-    {
-        question: 'A triangle with all sides equal is called?',
-        options: ['Scalene', 'Isosceles', 'Equilateral','Right-angled'],
-        correctAnswer: 'Equilateral'
-    },
-    {
-        question: 'The diagonal of a square divides it into two?',
-        options: ['Triangles of different areas', 'Triangles of equal areas', 'Rectangles','None of the above'],
-        correctAnswer: 'Triangles of equal areas'
-    },
-    {
-        question: 'In a right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides. This is known as?',
-        options: ['Pythagorean theorem', 'Law of cosines', 'Law of sines','Triangle inequality theorem'],
-        correctAnswer: 'Pythagorean theorem'
-    },
-  ];
+    useEffect(() => {
+        // Function to fetch quiz questions from the backend
+        const fetchQuizQuestions = async () => {
+          try {
+            // Make an HTTP GET request to fetch quiz questions for the selected lesson
+            const response = await axios.get(`/api/quiz-questions/${lesson}`);
+            // Update the state with the fetched quiz questions
+            setQuizQuestions(response.data);
+          } catch (error) {
+            console.error('Error fetching quiz questions:', error);
+          }
+        };
+
+        // Call the fetchQuizQuestions function when the component mounts
+        fetchQuizQuestions();
+
+    }, [lesson]);
+  // Placeholder for quiz questions
+//   const quizQuestions = [
+
+//     {
+//       question: 'What is the definition of a triangle?',
+//       options: ['A polygon with two sides','A polygon with three sides', 'A polygon with four sides', 'A polygon with five sides'],
+//       correctAnswer: 'A polygon with three sides'
+//     },
+//     {
+//       question: 'The sum of the angles in a triangle?',
+//       options: ['90 degrees', '180 degrees', '270 degrees','360 degrees'],
+//       correctAnswer: '180 degrees'
+//     },
+//     {
+//       question: 'A quadrilateral with all four right angles is called?',
+//       options: ['Square', 'Rectangle', 'Rhombus','Trapezium'],
+//       correctAnswer: 'Square'
+//     },
+//     {
+//         question: 'The opposite angles in a parallelogram?',
+//         options: ['Acute', 'Obtuse', 'Congruent','Supplementary'],
+//         correctAnswer: 'Congruent'
+//       },
+//     {
+//         question: 'The diameter of a circle is twice the length of its?',
+//         options: ['Circumference', 'Radius', 'Area','None of the above'],
+//         correctAnswer: 'Square'
+//     },
+//     {
+//         question: 'If two lines intersect at a right angle, they are considered?',
+//         options: ['Parallel', 'Perpendicular', 'Intersecting','None of the above'],
+//         correctAnswer: 'Square'
+//     },
+//     {
+//         question: 'The measure of a straight angle is?',
+//         options: ['90 degrees', '180 degrees', '270 degrees','360 degrees'],
+//         correctAnswer: '90 degrees'
+//     },
+//     {
+//         question: 'A triangle with all sides equal is called?',
+//         options: ['Scalene', 'Isosceles', 'Equilateral','Right-angled'],
+//         correctAnswer: 'Equilateral'
+//     },
+//     {
+//         question: 'The diagonal of a square divides it into two?',
+//         options: ['Triangles of different areas', 'Triangles of equal areas', 'Rectangles','None of the above'],
+//         correctAnswer: 'Triangles of equal areas'
+//     },
+//     {
+//         question: 'In a right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides. This is known as?',
+//         options: ['Pythagorean theorem', 'Law of cosines', 'Law of sines','Triangle inequality theorem'],
+//         correctAnswer: 'Pythagorean theorem'
+//     },
+//   ];
 
   let location = useLocation()
 
