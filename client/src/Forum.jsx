@@ -5,7 +5,6 @@ import "./Forum.css";
 import SearchIcon from "./Images/SearchIcon.svg";
 import ForumIcon from "./Images/ForumIcon.svg";
 import Navbar from "./component/Navbar";
-import { Link } from "react-router-dom";
 
 // Define Forum component
 function Forum() {
@@ -13,20 +12,15 @@ function Forum() {
   const [forums, setForums] = useState([]);
   const [currentID, setCurrentID] = useState("");
 
-  // // Fetch forum data from server
   useEffect(() => {
-    fetch("/api/post/forum", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Pass JSON data directly in the body
-      body: JSON.stringify({ forum: "all" }),
-    })
+    fetch(`/api/get/forum?forumId=all`)
       .then((res) => res.json())
       .then((data) => {
         setForums(data.message);
-        console.log(data.message);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   }, []);
 
@@ -83,10 +77,12 @@ function Forum() {
                   <div className="forum-long-details">
                     <h2>{forum.name}</h2>
                     <p>{forum.Description}</p>
-                    <Link to={"/forum-page/" + forum.ForumID}>
-                      <button id="join-button"> Join </button>
-                    </Link> 
                   </div>
+                  <div className="side-bar-button">
+                    <button id="join-button" onClick={() => {window.location.href ="/forum-page/" + forum.ForumID + "/" + forum.Name;}}>
+                      Join
+                    </button>
+                    </div>
                 </div>
               )
           )}

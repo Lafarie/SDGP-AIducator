@@ -1,8 +1,9 @@
-import express from "express"
+import express from "express";
 import bodyParser from "body-parser";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import sql from "mysql2";
+// const fetch = require("node-fetch");
 
 dotenv.config();
 
@@ -120,43 +121,43 @@ dbconnection.query(tablesql, (err, result) => {
 
 // Execute SQL queries to create tables
 dbconnection.query(usersql, (err, results) => {
-    if (err) {
-        if (err.errno === 1050) {
-        console.log("users table already exists");
-        }
-    } else {
-        console.log("users table created successfully");
+  if (err) {
+    if (err.errno === 1050) {
+      console.log("users table already exists");
     }
+  } else {
+    console.log("users table created successfully");
+  }
 });
 
 dbconnection.query(threadsql, (err, results) => {
-    if (err) {
-        if (err.errno === 1050) {
-        console.log("thread table already exists");
-        }
-    } else {
-        console.log("thread table created successfully");
+  if (err) {
+    if (err.errno === 1050) {
+      console.log("thread table already exists");
     }
+  } else {
+    console.log("thread table created successfully");
+  }
 });
 
 dbconnection.query(postsql, (err, results) => {
-    if (err) {
-        if (err.errno === 1050) {
-        console.log("post table already exists");
-        }
-    } else {
-        console.log("post table created successfully");
+  if (err) {
+    if (err.errno === 1050) {
+      console.log("post table already exists");
     }
+  } else {
+    console.log("post table created successfully");
+  }
 });
 
 dbconnection.query(forumsql, (err, results) => {
-    if (err) {
-        if (err.errno === 1050) {
-        console.log("forum table already exists");
-        }
-    } else {
-        console.log("forum table created successfully");
+  if (err) {
+    if (err.errno === 1050) {
+      console.log("forum table already exists");
     }
+  } else {
+    console.log("forum table created successfully");
+  }
 });
 
 async function main(input) {
@@ -208,7 +209,7 @@ app.post("/post/save", async (req, res) => {
             // to get the id of the last entry
             if (err) {
               console.log("Error");
-            // } else {
+              // } else {
               res.json({ message: "response saved", id: result[0].id });
             }
           }
@@ -260,14 +261,14 @@ app.post("/post/displaySaved", (req, res) => {
   );
 });
 
-app.post("/post/forum", (req, res) => {
-  let forum = req.body.forum;
+app.get("/get/forum", (req, res) => {
+  let forum = req.query.forumId;
   // console.log(forum);
   let query;
 
   if (forum === "all") {
     query = "SELECT * FROM Forums";
-  }else{
+  } else {
     query = `SELECT * FROM Forums WHERE ForumID = ${forum}`;
   }
 
@@ -281,6 +282,131 @@ app.post("/post/forum", (req, res) => {
   });
 });
 
+app.get("/get/threads", (req, res) => {
+  let forumid = req.query.forumId;
+  // console.log(threads);
+  let query;
+
+  query = "SELECT * FROM Threads WHERE ForumID = " + forumid;
+
+  dbconnection.query(query, (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      res.json({ message: result });
+    }
+  });
+});
+
+app.get("/get/thread", (req, res) => {
+  let thread = req.query.threadId;
+  // console.log(threads);
+  let query;
+
+  query = `SELECT * FROM Threads WHERE ThreadID = ${thread}`;
+
+  dbconnection.query(query, (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      res.json({ message: result });
+    }
+  });
+});
+
+app.get("/get/posts", (req, res) => {
+  let thread = req.query.threadId;
+  // console.log(threads);
+  let query;
+
+  query = `SELECT * FROM Posts WHERE ThreadID = ${thread}`;
+
+  dbconnection.query(query, (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      res.json({ message: result });
+    }
+  });
+});
+
+app.get("/put/create/forum", (req, res) => {
+  let forumName = req.query.forumName;
+  let forumDescription = req.query.content;
+  let query;
+
+  query = `INSERT INTO Forums (Name, Description) VALUES (?, ?)`;
+
+  dbconnection.query(query,[forumName,forumDescription], (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+});
+
+app.get("/put/create/thread", (req, res) => {
+  let forumID = req.query.forumID;
+  // let userID = req.query.userID;
+  let title = req.query.title;
+  let content = req.query.content;
+  let tag = req.query.tags;
+  console.log(tag);
+
+  let query;
+
+  query = `INSERT INTO Threads (ForumID, UserID, Title, CreationDate, Views, Content, UpVote, DownVote, Tag)
+  VALUES (?, 1, ?, current_timestamp(), 0, ?, 0, 0, ?);`;
+
+  dbconnection.query(query,[forumID,title,content,tag], (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+});
+
+app.get("/put/create/post", (req, res) => {
+  // let userID = req.query.userID;
+
+  let threadID = req.query.threadID;
+  let content = req.query.content;
+  let tag = req.query.tags;
+
+
+  let query;
+
+  query = `INSERT INTO Posts (UserID, ThreadID, Content, CreationDate, UpVotes, DownVotes, Tag)VALUES ( 1, ?, ?, current_timestamp(), 0, 0, ?);`;
+
+  dbconnection.query(query,[threadID, content, tag], (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+});
+
+app.put("/put/vote", (req, res) => {
+  let postID = req.query.postID;
+  let vote = req.query.vote;
+
+  let query;
+
+  query = `UPDATE Posts SET ${vote} = ${vote} + 1 WHERE PostID = ${postID}`;
+
+  dbconnection.query(query, (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+})
+
+  
 
 app.listen(3001, () => {
   console.log("listenning on port 5000.");

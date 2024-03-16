@@ -10,7 +10,6 @@ function CreatePost() {
   const [forumName, setForumName] = useState("");
   const [threadID, setThreadID] = useState("");
   const [threadName, setThreadName] = useState("");
-  const [postID, setPostID] = useState("");
   const [forum, setForum] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -32,65 +31,6 @@ function CreatePost() {
 
     setType(type);
   }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("submit");
-    if (type === "forum") {
-      document
-        .getElementById("create-post-form")
-        .addEventListener("submit", (e) => {
-          e.preventDefault();
-          let forumName = document.getElementById("post-question").value;
-          let content = document.getElementById("post-content").value;
-          let file = document.getElementById("attach-file").value;
-          fetch("/api/put/create/forum?" + "forumName=" + forumName + "&content=" + content + "&file=" + file)
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data.message);
-            })
-            .catch((error) => {
-              console.error("Error fetching forum data:", error);
-            });
-        });
-    } else if (type === "thread") {
-      document
-        .getElementById("create-post-form")
-        .addEventListener("submit", (e) => {
-          e.preventDefault();
-          let title = document.getElementById("post-question").value;
-          let content = document.getElementById("post-content").value;
-          let file = document.getElementById("attach-file").value;
-          let tags = document.getElementById("post-tags").value;
-          
-          fetch("/api/put/create/thread?" + "forumID=" + forumID + "&title=" + title + "&content=" +content +"&tags=" +tags)
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data.message);
-            })
-            .catch((error) => {
-              console.error("Error fetching forum data:", error);
-            });
-        });
-    } else if (type === "post") {
-      document
-        .getElementById("create-post-form")
-        .addEventListener("submit", (e) => {
-          e.preventDefault();
-          let content = document.getElementById("post-content3").value;
-          // let file = document.getElementById("attach-file").value;
-          let tags = document.getElementById("post-tags3").value;
-          fetch("/api/put/create/post?" + "threadID=" + threadID + "&content=" + content + "&tags=" + tags)
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data.message);
-            })
-            .catch((error) => {
-              console.error("Error fetching forum data:", error);
-            });
-        });
-    }
-  }
 
   useEffect(() => {
     if (type === "thread") {
@@ -114,41 +54,55 @@ function CreatePost() {
     }
   }, [type]);
 
-  // Render CreatePost component JSX
-  // useEffect(() => {
-  //   if (type === "forum") {
-  //     fetch("/api/put/create/forum?" + "forumName=" + forum + "&content=" + content + "&file=" + file)
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log(data.message);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching forum data:", error);
-  //       });
-  //   } else if (type === "thread") {
-  //     fetch(
-  //       "/api/post/create/thread?" + "forumID=" + forumID + "&title=" + title + "&content=" + content + "&tags=" + tags)
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log(data.message);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching forum data:", error);
-  //       });
-  //   } else if (type === "post") {
-  //     fetch("/api/post/create/post?" + "threadID=" + threadID +
-  //         "&content=" +
-  //         content
-  //     )
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log(data.message);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching forum data:", error);
-  //       });
-  //   }
-  // }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("submit");
+    if (type === "forum") {
+      
+          let forumName = document.getElementById("forum-name").value;
+          let description = document.getElementById("forum-description").value;
+          let file = document.getElementById("forum-attach-file").value;
+          fetch("/api/put/create/forum?" + "forumName=" + forumName + "&content=" + description + "&file=" + file)
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data.message);
+            })
+            .catch((error) => {
+              console.error("Error fetching forum data:", error);
+            });
+    } else if (type === "thread") {
+      
+          let title = document.getElementById("thread-question-title").value;
+          let content = document.getElementById("thread-content").value;
+          let file = document.getElementById("thread-attach-file").value;
+          let tags = document.getElementById("thread-tags").value;
+          console.log(tags)
+          
+          fetch("/api/put/create/thread?" + "forumID=" + forumID + "&title=" + title + "&content=" +content +"&tags=" +tags)
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data.message);
+            })
+            .catch((error) => {
+              console.error("Error fetching forum data:", error);
+            });
+    } else if (type === "post") {
+
+          let content = document.getElementById("post-content").value;
+          // let file = document.getElementById("attach-file").value;
+          let tags = document.getElementById("post-tags").value;
+          // console.log(tags)
+
+          fetch("/api/put/create/post?" + "threadID=" + threadID + "&content=" + content + "&tags=" + tags)
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data.message);
+            })
+            .catch((error) => {
+              console.error("Error fetching forum data:", error);
+            });
+    }
+  }
 
   if (type === "forum") {
     return (
@@ -165,21 +119,14 @@ function CreatePost() {
                 Forum Name
               </label>
               <br />
-              <input
-                type="text"
-                id="post-question"
-                name="post-question"
-                required
-              />
+              <input type="text" id="forum-name" name="post-question" required/>
               <br />
-              <label htmlFor="post-content">Messege:</label>
+              <label htmlFor="post-content">Description:</label>
               <br />
-              <textarea id="post-content" name="post-content" required />
+              <textarea id="forum-description" name="post-content" required />
               <br />
-              <label htmlFor="attach-file">
-                {" "}
-                Attach File:
-                <input type="file" id="attach-file" name="attach-file" />
+              <label htmlFor="attach-file"> Attach File:
+                <input type="file" id="forum-attach-file" name="attach-file" />
               </label>
               <br />
               <button type="submit">Submit</button>
@@ -201,29 +148,24 @@ function CreatePost() {
           <div className="create-post">
             <form id="create-post-form" onSubmit={handleSubmit}>
               <label id="post-question-label" htmlFor="post-question">
-                Your Question
+                Your Question Title
               </label>
               <br />
-              <input
-                type="text"
-                id="post-question"
-                name="post-question"
-                required
-              />
+              <input type="text" id="thread-question-title" name="thread-question" required/>
               <br />
-              <label htmlFor="post-content">Messege:</label>
+              <label htmlFor="thread-content">Messege:</label>
               <br />
-              <textarea id="post-content" name="post-content" required />
+              <textarea id="thread-content" name="thread-content" required />
               <br />
-              <label htmlFor="attach-file">
+              <label htmlFor="thread-attach-file">
                 {" "}
                 Attach File:
-                <input type="file" id="attach-file" name="attach-file" />
+                <input type="file" id="thread-attach-file" name="thread-attach-file" />
               </label>
               <br />
-              <label htmlFor="post-tags">Tags:</label>
+              <label htmlFor="thread-tags">Tags:</label>
               <br />
-              <input type="text" id="post-tags" name="post-tags" required />
+              <input type="text" id="thread-tags" name="thread-tags" required />
               <button type="submit">Submit</button>
             </form>
           </div>
@@ -244,7 +186,7 @@ function CreatePost() {
             <form id="create-post-form" onSubmit={handleSubmit}>
               <label htmlFor="post-content">Messege:</label>
               <br />
-              <textarea id="post-content3" name="post-content" required />
+              <textarea id="post-content" name="post-content" required />
               <br />
               <label htmlFor="attach-file">
                 {" "}
@@ -254,7 +196,7 @@ function CreatePost() {
               <br />
               <label htmlFor="post-tags">Tags:</label>
               <br />
-              <input type="text" id="post-tags3" name="post-tags" required />
+              <input type="text" id="post-tags" name="post-tags" required />
               <br />
               <button type="submit">Submit</button>
             </form>

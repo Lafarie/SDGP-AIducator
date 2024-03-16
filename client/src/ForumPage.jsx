@@ -8,35 +8,30 @@ function ForumPage() {
   let location = useLocation();
 
   const [forumID, setforumID] = useState("");
-  const [forum, setForums] = useState(null); // Initialize forum state as null;
-
-  useEffect(() => {}, []);
+  const [forumName, setforumName] = useState("Hello");
+  const [threads, setThreads] = useState(null); // Initialize forum state as null;
 
   useEffect(() => {
     let url = location.pathname;
     let forumID = url.split("/")[2];
+    let forumName = url.split("/")[3];
+    // console.log(forumName)
     setforumID(forumID);
+    setforumName(forumName.replace(/%20/g, ` `));
 
-    fetch("/api/post/forum", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Pass JSON data directly in the body
-      body: JSON.stringify({ forum: "" + forumID }),
-    })
+    fetch(`/api/get/threads?forumId=${forumID}`)
       .then((res) => res.json())
       .then((data) => {
-        setForums(data.message); // Update forum state with the data
+        setThreads(data.message);
         console.log(data.message);
       })
       .catch((error) => {
-        console.error("Error fetching forum data:", error);
+        console.error("Error fetching data:", error);
       });
   }, []);
 
   // Render loading state while fetching data
-  if (!forum) {
+  if (!threads) {
     return (
       <>
         <Navbar />
@@ -49,12 +44,12 @@ function ForumPage() {
   return (
     <>
       <Navbar />
-      <title>{forum[0].Name}</title>
+      <title>{forumName}</title>
 
       <div className="forum-page-top-bar">
-        <h1 className="forum-title">{forum[0].Name}</h1>
-        <Link to={"/create-post/" + forumID} id="create-post-button">
-            Create Post
+        <h1 className="forum-title">{forumName}</h1>
+        <Link to={"/create/thread/" + forumID} id="create-post-button">
+          Create Post
         </Link>
       </div>
 
@@ -64,17 +59,25 @@ function ForumPage() {
             <h2>Votes & Reply</h2>
             <h3>Questions</h3>
           </div>
-          <div className="post">
-            <div className="post-status">
-              <div className="post-vote"></div>
-              <div className="post-reply"></div>
-              <div className="post-views"></div>
-            </div>
-            <div className="post-details">
-              <h2>Post Title</h2>
-              <p>Post Content</p>
-            </div>
-          </div>
+          {threads.map((thread) => {
+            return (
+              <div className="post"
+                key={thread.ThreadID}
+                onClick={() => {
+                  window.location.href = "/post/" + forumID + "/" + forumName + "/" + thread.ThreadID;
+                }}>
+                <div className="post-status">
+                  <div className="post-vote"></div>
+                  <div className="post-reply"></div>
+                  <div className="post-views"></div>
+                </div>
+                <div className="post-details">
+                  <h2>{thread.Title}</h2>
+                  <p>{thread.Content}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
         <div className="forum-recent-post"></div>
       </div>

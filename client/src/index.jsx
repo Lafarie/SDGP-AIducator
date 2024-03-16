@@ -7,7 +7,8 @@ import Video from './video';
 import QuizHome from './QuizHome';
 import Library from './3DLibrary';
 import ForumPage from './ForumPage';
-import CreatePost from './CreatePost';
+import CreatePost from './Create';
+import Post from './Post';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import LessonList from './LessonList';
@@ -33,8 +34,9 @@ root.render(
       <Route path="/profile" element={<Home/>}/>
       <Route path="/library" element={<Library/>}/>
       <Route path="LessonList" element={<LessonList subject={'Mathematics'}/>}/>
-      <Route path="/forum-page/:index" element={<ForumPage/>}/>
-      <Route path="/create-post/:index" element={<CreatePost/>}/>
+      <Route path="/forum-page/:index/:forumName" element={<ForumPage/>}/>
+      <Route path="/create/:type/:index" element={<CreatePost/>}/>
+      <Route path="/post/:index/:forumName/:threadID" element={<Post/>}/>
     </Routes>
   </BrowserRouter>
 );
