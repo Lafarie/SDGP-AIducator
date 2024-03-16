@@ -128,7 +128,7 @@ const QuizPage = ({ lesson }) => {
                 {quizQuestions.map((question, index) => (
                 <div key={index} className='question'>
                     <div className='Q-Number'>Question  {`${index + 1}`.padStart(2, '0')}:</div>
-                    <h4>{question.question}</h4>
+                    <label className='Qs'>{question.question}</label>
                     <ul className='options'>
                         {question.options.map((option, i) => (
                             <li key={i} className="option">
@@ -142,16 +142,18 @@ const QuizPage = ({ lesson }) => {
             </div>
             <div className='Other-Box'>
                 <div className='Remaining-questions'>
-                    <p>Questions Remaining : </p>
+                    <p className='QR-label'>Questions Remaining : </p>
                     {remainingQuestions}
                 </div>
                 <div className='Time-remaining'>
-                    <p>Time Remaining :</p>
+                    <p className='Time-label'>Time Remaining :</p>
                     {formatTime(remainingTime)}
                 </div>
             </div>
-            <div className='Submit'>
-                <Link to={`/quiz-results?score=${totalScore}&correct=${correctAnswers}`} style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>Submit</Link>
+            <div className='Submit-box'>
+                <div className='Submit'>
+                    <Link to={`/quiz-results?score=${totalScore}&correct=${correctAnswers}`} style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>Submit</Link>
+                </div>
             </div>
         </div>
     </div>
