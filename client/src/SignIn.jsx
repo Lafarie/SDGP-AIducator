@@ -84,14 +84,14 @@ function SignIn() {
                         <div id="passIconDiv">
                         <img src={showPass?show:hide} onClick={() => {
                             setShowPass(!showPass);
-                        }}/>
+                        }} alt="PasIcon"/>
                         </div>
                 </div>
                     <p id="Alerts"></p>
                 <button type="submit" id="SignInBtn" className="signInbtn" onClick={getDetails}>Sign In</button>
                 <div id="googlebtnSignin" className="panelItem SignUpBtns signinbtn">
                     <div className="googleImgContainer">
-                        <img src={googleIcon}/>
+                        <img src={googleIcon} alt="googleIcon"/>
                     </div>
                     <p>Sign in with Google</p>
                 </div>

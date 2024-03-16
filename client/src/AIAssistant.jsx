@@ -7,6 +7,8 @@ import bad from './Images/bad.svg';
 import goodfill from './Images/goodfilled.svg';
 import badfill from './Images/badfilled.svg';
 
+import getCurrentUser from './currentUser';
+
 var responseInt = 0;
 
 // white response generates cannot view saved responses. (implement)
@@ -26,6 +28,17 @@ function untilRespond(element){
 
 function Assistant(){
     let prompt = useRef();
+
+    useEffect(() => {
+        getCurrentUser().then((user) => {
+            if(user) {
+                console.log(user.email);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+        
+    }) 
 
     const [textbox, settextBox] = useState(false);
     const [response, setresponse] = useState(false);

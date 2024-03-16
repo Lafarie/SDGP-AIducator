@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import AIAssistant from './AIAssistant'
@@ -15,6 +14,7 @@ import LessonList from './LessonList';
 import QuizPage from './QuizPage';
 import QuizResults from './QuizResults';
 import Welcome from './welcome';
+import { StudentSurvey } from './Survey';
 //react-scripts
 // "scripts": {
 //   "start": "react-scripts start",
@@ -37,6 +37,7 @@ root.render(
       <Route path="/profile" element={<SignUp />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signin" element={<SignIn />} />
+      <Route path="/surveyStu" element={<StudentSurvey />} />
       <Route path="/library" element={<Library />} />
       <Route path="/LessonList/:subject/:grade" element={<LessonList />} />
       <Route path="/LessonList/:subject/:grade/:lesson" element={<QuizPage />} />
