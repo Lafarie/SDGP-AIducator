@@ -33,6 +33,8 @@ function Assistant(){
         getCurrentUser().then((user) => {
             if(user) {
                 console.log(user.email);
+            } else {
+                console.log(null)
             }
         }).catch((err) => {
             console.log(err);

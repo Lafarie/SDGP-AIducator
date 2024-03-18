@@ -1,7 +1,25 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import './Survey.css'
+import './Survey.css';
+import getCurrentUser from "./currentUser";
+import app from "./firebase";
+
+import { getDatabase, ref, get, set, orderByChild, equalTo, query, onValue} from "firebase/database";
+import { useNavigate } from "react-router-dom";
 
 export function StudentSurvey(){
+
+    const [CuserId, setCuserId] = useState("");
+    // const [dbuser, setdbuser] = useState(null);
+
+    let toHome = useNavigate();
+
+    useEffect(() => {
+        getCurrentUser().then((user) => {
+            if(user){
+                setCuserId(user.uid);
+            }
+        })
+    }, [])
 
     useEffect(() => {
         document.body.id = "AccountBody";
@@ -19,6 +37,7 @@ export function StudentSurvey(){
     const [geology, setgeology] = useState(false);
     const [chemical, setchemical] = useState(false);
     const [FlFa, setFlFa] = useState(false);
+
     const [usergrade, setusergrade] = useState("default");
 
     let interestArr = [
@@ -35,15 +54,19 @@ export function StudentSurvey(){
     let Grade = useRef();
 
     useEffect(() => {
-        if(usergrade === "default"){
+        if(usergrade === "default" && !geography ){
             document.getElementById("finish").disabled = true;
         } else {
-            document.getElementById("finish").disabled = false;
+            if(!math && !geography && !science && !geometry && !astronomy && !geology && !chemical && !FlFa){
+                document.getElementById("finish").disabled = true;
+            } else {
+                document.getElementById("finish").disabled = false;
+            }
         }
-    }, [usergrade])
+    }, [usergrade, geography, math, science, geometry, astronomy, geology, chemical, FlFa])
 
     function getDetails(){
-        console.log(Grade.current.value)
+        let database = getDatabase(app)
 
         let userIntrestArr = [];
 
@@ -53,7 +76,20 @@ export function StudentSurvey(){
             }
         })
 
-        console.log(userIntrestArr)
+        const userRef = ref(database, 'users/' + CuserId);
+
+        onValue(userRef, (user) => {
+            if(Grade.current !== null){
+                let data = user.val();
+                data.grade = Grade.current.value; 
+                data.interests = userIntrestArr;
+
+                set(userRef, data);
+            }
+        })
+
+        toHome('/home');
+
 
     }
 
