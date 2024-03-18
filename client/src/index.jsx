@@ -36,7 +36,7 @@ root.render(
       <Route path="LessonList" element={<LessonList subject={'Mathematics'}/>}/>
       <Route path="/forum-page/:index/:forumName" element={<ForumPage/>}/>
       <Route path="/create/:type/:index" element={<CreatePost/>}/>
-      <Route path="/post/:index/:forumName/:threadID" element={<Post/>}/>
+      <Route path="/post/:threadID" element={<Post/>}/>
     </Routes>
   </BrowserRouter>
 );

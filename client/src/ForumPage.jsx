@@ -4,6 +4,11 @@ import "./Forum.css";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
+import upvote from "./Images/upVote.svg";
+import downvote from "./Images/downVote.svg";
+import post from "./Images/post.svg";
+import eye from "./Images/eye.svg";
+
 function ForumPage() {
   let location = useLocation();
 
@@ -61,15 +66,29 @@ function ForumPage() {
           </div>
           {threads.map((thread) => {
             return (
-              <div className="post"
+              <div
+                className="post"
                 key={thread.ThreadID}
                 onClick={() => {
-                  window.location.href = "/post/" + forumID + "/" + forumName + "/" + thread.ThreadID;
-                }}>
+                  window.location.href = "/post/" + thread.ThreadID;
+                }}
+              >
                 <div className="post-status">
-                  <div className="post-vote"></div>
-                  <div className="post-reply"></div>
-                  <div className="post-views"></div>
+                  <div className="post-vote">
+                    <div className="post-vote-row">
+                      <img src={upvote} alt="upvote" />
+                      <img src={downvote} alt="downvote" />
+                    </div>
+                    <p>{thread.UpVotes - thread.DownVotes}</p>
+                  </div>
+                  <div className="post-reply">
+                    <img src={post} alt="post" />
+                    <p>{thread.PostCount}</p>
+                  </div>
+                  <div className="post-views">
+                    <img src={eye} alt="eye" />
+                    <p>{thread.Views}</p>
+                  </div>
                 </div>
                 <div className="post-details">
                   <h2>{thread.Title}</h2>
