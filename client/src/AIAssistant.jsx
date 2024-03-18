@@ -7,6 +7,8 @@ import bad from './Images/bad.svg';
 import goodfill from './Images/goodfilled.svg';
 import badfill from './Images/badfilled.svg';
 
+import getCurrentUser from './currentUser';
+
 var responseInt = 0;
 
 // white response generates cannot view saved responses. (implement)
@@ -26,6 +28,19 @@ function untilRespond(element){
 
 function Assistant(){
     let prompt = useRef();
+
+    useEffect(() => {
+        getCurrentUser().then((user) => {
+            if(user) {
+                console.log(user.email);
+            } else {
+                console.log(null)
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+        
+    }) 
 
     const [textbox, settextBox] = useState(false);
     const [response, setresponse] = useState(false);
@@ -112,6 +127,13 @@ function Assistant(){
 
     useEffect(() => {
             document.getElementById("generate").disabled = generateButton;
+            if(generateButton){
+                document.getElementById("generateContainer").style.backgroundColor = "GREY";
+                document.getElementById("generateContainer").className = "";
+            } else {
+                document.getElementById("generateContainer").style.backgroundColor = "#003366";
+                document.getElementById("generateContainer").className = "button";
+            }
     }, [generateButton])
 
     function handlePrompt(){
@@ -181,7 +203,7 @@ function Assistant(){
                         handlePrompt();
                     }
                 }} id={'prompt'} placeholder='Enter question here...' ref={prompt} disabled={textbox} onChange={handleChange}/>
-                <input type='image' id={'generate'} className='button'onClick={() => {
+                <div id='generateContainer' className='button' onClick={() => {
                     document.getElementById("response").style.fontSize = "20px";
                     document.getElementById("response").innerHTML = "Wait a moment";
                     untilRespond(document.getElementById("response"));
@@ -192,7 +214,9 @@ function Assistant(){
                     setsavedResponsedisable(true);
                     settextBox(true);
                     handlePrompt(); // getting value of prompt when send button is pressed. 
-                }} src={sendIcon} alt='prompt send icon'/>
+                }}>
+                <input type='image' id={'generate'} className='button' src={sendIcon} alt='prompt send icon'/>
+                </div>
             </div>
             <div id={'response'}>
                 <p style={{textAlign: "center", lineHeight: "200%", fontSize: "20px"}}>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.

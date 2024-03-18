@@ -1,0 +1,162 @@
+.quiz-container {
+    max-width: 50vw;
+    margin: 0 auto;
+    padding: 2vh;
+}
+  
+.question {
+    margin-bottom: 2vh;
+    margin-left: 15vw;
+    background-color: #D9D9D9;
+    border-radius: 1.5vw;
+    width: 55vw;
+    margin-top: 2vh;
+    color: #003366;
+    height: 45vh;
+    padding: 1vh 1vw;
+}
+
+.Qs {
+    margin-left: 4vw;
+    font-weight: bold;
+    font-size: 3vh;
+    margin-top: 1vh;
+}
+
+.options {
+    list-style-type: none;
+    padding: 0;
+}
+  
+.option input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 1.5vw;
+    height: 1.5vw;
+    border-radius: 50%;
+    background-color: #fff;
+    outline: none;
+    cursor: pointer;
+    margin-left: 3.5vw;
+}
+
+.option input[type="radio"]:checked {
+    background-color: #003366; 
+}
+
+.option label {
+    display: inline-block;
+    margin-bottom: 1vh;
+    cursor: pointer;
+    padding: 1vh;
+    background-color: #fff;
+    border-radius: 1vw;
+    width: 37.5vw;
+    font-weight: bold;
+    margin-left: 3vw;
+    font-size: 2.5vh;
+}
+
+.submit-button {
+    padding: 1vh 2vw;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 1vw;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.first-container {
+    display: grid;
+    grid-template-columns: 1fr 10vw;
+    align-items: flex-start;
+    margin-top: 12vh;
+    justify-items: center;
+    margin-left: 0.5vw;
+}
+
+.h01 {
+    margin-left: -49vw;
+    font-weight: bold;
+    margin-top: 1vh;
+    font-size: 3vh;
+}
+
+.h02 {
+    margin-left: -150.75vw;
+    font-weight: bold;
+    margin-top: 8vh;
+    font-size: 3vh;
+    margin-bottom: 3vh;
+}
+
+.Question-container {
+    margin-left: -25vw;
+    grid-column: 1;
+}
+
+.Q-Number {
+    font-weight: bold;
+    font-size: 3vh;
+    margin-top: 2vh;
+    margin-left: 4vw;
+    margin-bottom: 2.5vh;
+}
+
+.Other-Box {
+    background-color: #D9D9D9; 
+    padding: 2vh;
+    margin-bottom: 2vh;
+    grid-column: 2;
+    margin-right: 10vw;
+    width: 20vw;
+    margin-top: 2vh;
+    border-radius: 1.5vw;
+    height: 40vh;
+    position: sticky;
+    top: 11vh;
+}
+
+.Remaining-questions {
+    background-color: #fff;
+    font-weight: bold;
+    border-radius: 2.5vw;
+    text-align: center;
+    height: 15vh;
+    font-size: 2.5vh;
+}
+
+.Time-remaining {
+    background-color: #fff;
+    font-weight: bold;
+    margin-top: 5vh;
+    border-radius: 2.5vw;
+    text-align: center;
+    height: 15vh;
+    font-size: 2.5vh;
+}
+
+.Submit-box {
+    grid-column: 2;
+    margin-top: -67vh;
+    margin-right: 10vw;
+    background-color: #003366;
+    width: 7.5vw;
+    height: 10vh;
+    border-radius: 2vw;
+}
+
+.Submit {
+    text-align: center;
+    font-size: 3vh;
+    margin-top: 1.5vh;
+}
+.Time-label,.QR-label{
+    margin-top: 1.5vh;
+    
+}

@@ -19,11 +19,11 @@ function Navbar() {
         <div id={"imageContainer"}>
           <img src={logo} alt="AIducator logo" id={"logo"}/>
         </div>
-        <Link className='NavLinks' to={"/"}><h1>AIducator</h1></Link>
+        <Link className='NavLinks' to={"/home"}><h1>AIducator</h1></Link>
       </div>
       <div id={"right"}>
         <ul id={"navList"}>
-          <li><Link className='NavLinks' to={"/"} style={{textDecoration:showActivePage("/", url.pathname)}}>HOME</Link></li>
+          <li><Link className='NavLinks' to={"/home"} style={{textDecoration:showActivePage("/home", url.pathname)}}>HOME</Link></li>
           <li><Link className='NavLinks' to={"/video"} style={{textDecoration:showActivePage("/video", url.pathname)}}>VIDEOS</Link></li>
           <li><Link className='NavLinks' to={"/quiz"} style={{textDecoration:showActivePage("/quiz", url.pathname)}}>QUIZ</Link></li>
           <li><Link className='NavLinks' to={"/forum"} style={{textDecoration:showActivePage("/forum", url.pathname)}}>FORUM</Link></li>
