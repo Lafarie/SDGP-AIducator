@@ -1,13 +1,10 @@
-import React from 'react';
-import Navbar from './component/Navbar';
-import Assistant from './AIAssistant';
+import './App.css';
 
 
 function Home() {
   return (
     <div className="App">
       <Navbar></Navbar>
-      <Assistant></Assistant>
     </div>
   );
 }

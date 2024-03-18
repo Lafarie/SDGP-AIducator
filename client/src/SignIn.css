@@ -1,0 +1,74 @@
+#SignInContainer{
+    background-color: rgba(255, 255, 255, 0.674);
+    height: fit-content;
+    width: fit-content;
+    margin: auto;
+    padding: 2vw;
+    border-radius: 2vw;
+    text-align: center;
+}
+
+#SignInContainer h1{
+    color: #003366;
+}
+
+#SignInContainer form>*{
+    /* text-align: center; */
+    margin-bottom: 1vw;
+}
+
+#SignInContainer form input{
+    font-family: 'Inria Sans', sans-serif;
+    width: calc(100% - 2vw);
+    font-size: 0.8vw;
+    padding: 1vw;
+    border: none;
+    border-radius: 5px;
+}
+
+.form-group{
+    width: 100%;
+}
+
+form{
+    width: 20vw;
+}
+
+
+.signInMailDiv{
+    display: block;
+    width: 100%;
+}
+
+.signInPassDiv{
+    width: 100%;
+}
+
+.signInbtn{
+    font-family: 'Inria Sans', sans-serif;
+    background-color: #003366;
+    padding: 1vw;
+    color: white;
+    text-align: center;
+    font-size: 0.8vw;
+    width: 100%;
+    margin-left: 0;
+    font-weight: normal;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+.signInbtn:hover{
+    background-color: #022951;
+    transform: scale(0.97);
+}
+
+.signInbtn:disabled{
+    background-color: rgba(128, 128, 128, 0.515);   
+    color: rgba(0, 0, 0, .5);
+    pointer-events: none;
+}
+
+#passAlert, #emailAlert{
+    display: none;
+}

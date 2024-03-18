@@ -1,0 +1,138 @@
+#SurveyBody{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    backdrop-filter: blur(100px);
+}
+
+.InterestsBox{
+    display: flex;
+    column-gap: 2vw;
+    width: 50vw;
+    flex-wrap: wrap;
+    row-gap: 1.5vw;
+    margin-top: 1vw;
+    border: 2px solid rgba(0, 0, 0, 0.148);
+    filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.201));
+    padding: 2vw;
+    border-radius: 1vw;
+}
+
+#contentContainerSurvey{
+    background-color: rgba(255, 255, 255, 0.367);
+    padding: 1.5vw 5vw;
+    border-radius: 2vw;
+    height: fit-content;
+}
+
+#SurveyTitle{
+    text-align: center;
+}
+
+#SurveyTitle h1{
+    font-size: 2.5vw;
+    color: #003366;
+}
+
+#SurveyTitle h2{
+    font-size: 1.2vw;
+    color: #003366;
+}
+
+.InterestsBox label{
+    cursor: pointer;
+    /* background-color: rgb(221, 220, 220); */
+    background-color: white;
+    padding: 1vw 2vw;
+    border-radius: 2vw;
+    user-select: none;
+    font-size: 0.8vw;
+    transition: 0.2s;
+}
+
+.InterestsBox label:hover{
+    transform: scale(1.1);
+}
+
+#SurveyContainer{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+#finishbutton{
+    height: fit-content;
+    margin-top: auto;
+    text-align: center;
+    height: fit-content;
+}
+
+.headingClass{
+    margin-top: 1.5vw;
+}
+
+#finishbutton button{
+    margin-top: 1.5vw;
+    font-size: 1.1vw;
+    font-family: 'Inria Sans', sans-serif;
+    font-weight: normal;
+    padding: 1vw 5vw;
+    border-radius: 2vw;
+    background-color: white;
+    color: #003366;
+    transition: 0.2s;
+    filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.201));
+}
+
+#finishbutton button:hover{
+    background-color: white;
+    transform: scale(0.95);
+    filter: none;
+}
+
+#finishbutton button:disabled{
+    opacity: 0;
+}
+
+#gradeSelect{
+    /* display: none; */
+    font-size: 0.8vw;
+    padding: 1vw 3vw 1vw 1vw;
+    border: none;
+    appearance: none;
+    width: fit-content;
+    min-height: fit-content;
+    border-radius: 0.5vw;
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.274));
+}
+
+#gradeSelect:focus{
+    outline: 2px solid #003366;
+}
+
+#gradeSelect option{
+    padding: 2vw;
+    height: 2vw;
+    border-radius: none;
+}
+
+#gradeSelect option p{
+    padding: 2vw;
+}
+
+#Grade8option{
+    height: 2vw;
+}
+
+.h2heading{
+    font-size: 1.2vw;
+    color: #003366;
+    margin: 1vw 0;
+}
+
+.h2p{
+    font-size: 0.8vw;
+    color: #003366;
+    margin: 1vw 0;
+}
