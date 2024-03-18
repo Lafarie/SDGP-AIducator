@@ -281,9 +281,10 @@ body {
   width: 30%;
   object-fit: contain;
   height: 500px;
-  background-color: #f5f5f5;
+  background-color: #D9D9D9;
   border-radius: 5px;
   margin: 10px auto;
+  padding: 10px;
 }
 
 .forum-page-bar {

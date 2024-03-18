@@ -549,11 +549,12 @@ app.get("/check/thread/vote", (req, res) => {
   });
 });
 
-app.get("/update/views", (req, res) => {
-  const threadID = req.query.threadId;
-  const query = `UPDATE Threads SET Views = Views + 1 WHERE ThreadID = ${threadID}`;
+app.post("/update/views", (req, res) => {
+  const threadID = req.body.threadId;
 
-  dbconnection.query(query, (err, result) => {
+  const query = `UPDATE Threads SET Views = Views + 1 WHERE ThreadID = ?`;
+
+  dbconnection.query(query,[threadID],(err, result) => {
     if (err) {
       console.error("Error executing query:", err);
       res.status(500).json({ message: "Internal server error" });
@@ -564,7 +565,7 @@ app.get("/update/views", (req, res) => {
 });
 
 app.get("/get/popular-threads", (req, res) => {
-  const query = `SELECT * FROM Threads ORDER BY UpVotes DESC LIMIT 5`;
+  const query = `SELECT * FROM Threads ORDER BY UpVotes DESC LIMIT 8`;
 
   dbconnection.query(query, (err, result) => {
     if (err) {

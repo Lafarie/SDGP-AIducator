@@ -35,7 +35,6 @@ function Post() {
         });
         console.log(data.message);
       });
-    
 
     fetch(`/api/get/posts?threadId=${threadID}`)
       .then((res) => res.json())
@@ -43,30 +42,46 @@ function Post() {
         console.log(data.message);
         setPosts(data.message);
         setForumName(data.message[0].Title);
-      })  
+      })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      fetch("/api/update/views", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ threadId: threadID }),
+      });
+    }, 15000);
+  }, [posts]);
+
   const submitThreadVote = (type) => {
-    fetch(`/api/check/thread/vote?threadId=${threadID}&userId=${user}&voteType=${type}`)
+    fetch(
+      `/api/check/thread/vote?threadId=${threadID}&userId=${user}&voteType=${type}`
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.message === "successful") {
-          // fetch(`/api/update/thread/vote?threadId=${threadID}&vote=${type}`);
+          fetch(`/api/update/thread/vote?threadId=${threadID}&vote=${type}`);
           console.log("Thread-Voted");
         }
       });
   };
 
   const submitPostVote = (type, postID) => {
-    fetch(`/api/check/post/vote?postId=${postID}&userId=${user}&voteType=${type}`)
+    fetch(
+      `/api/check/post/vote?postId=${postID}&userId=${user}&voteType=${type}`
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.message === "successful") {
           console.log("Post-Voted");
-          // fetch(`/api/update/post/vote?postId=${postID}&vote=${type}`);
+          fetch(`/api/update/post/vote?postId=${postID}&vote=${type}`);
         }
       });
   };
@@ -98,9 +113,8 @@ function Post() {
       voted: false,
       type: "",
     });
-  
+
     const handleVote = (newType) => {
-      
       let newCount = vote.count;
       if (!vote.voted) {
         newCount += newType === "UpVote" ? 1 : -1;
@@ -110,16 +124,16 @@ function Post() {
         newCount += newType === "UpVote" ? -1 : 1;
         newType = "Removed";
       }
-  
+
       setVote({
         count: newCount,
         voted: newType !== "Removed",
         type: newType,
       });
-  
+
       submitPostVote(newType, post.PostID);
     };
-    
+
     return (
       <div className="thread-post" key={`post-${post.PostID}`}>
         <div className="post-voting">

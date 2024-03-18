@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./component/Navbar";
 import "./Forum.css";
 import { useLocation } from "react-router-dom";
+import PopularPosts from "./component/PopularPosts";
 
 function CreatePost() {
   let location = useLocation();
@@ -124,15 +125,15 @@ function CreatePost() {
               <label htmlFor="post-content">Description:</label>
               <br />
               <textarea id="forum-description" name="post-content" required />
-              <br />
+              {/* <br />
               <label htmlFor="attach-file"> Attach File:
                 <input type="file" id="forum-attach-file" name="attach-file" />
-              </label>
+              </label> */}
               <br />
               <button type="submit">Submit</button>
             </form>
           </div>
-          <div className="forum-recent-post"></div>
+          <div className="side-bar"><PopularPosts/></div>
         </div>
       </>
     );
@@ -156,12 +157,12 @@ function CreatePost() {
               <label htmlFor="thread-content">Messege:</label>
               <br />
               <textarea id="thread-content" name="thread-content" required />
-              <br />
+              {/* <br />
               <label htmlFor="thread-attach-file">
                 {" "}
                 Attach File:
                 <input type="file" id="thread-attach-file" name="thread-attach-file" />
-              </label>
+              </label> */}
               <br />
               <label htmlFor="thread-tags">Tags:</label>
               <br />
@@ -169,7 +170,7 @@ function CreatePost() {
               <button type="submit">Submit</button>
             </form>
           </div>
-          <div className="forum-recent-post"></div>
+          <div className="side-bar"><PopularPosts/></div>
         </div>
       </>
     );
@@ -187,12 +188,12 @@ function CreatePost() {
               <label htmlFor="post-content">Messege:</label>
               <br />
               <textarea id="post-content" name="post-content" required />
-              <br />
+              {/* <br />
               <label htmlFor="attach-file">
                 {" "}
                 Attach File:
                 <input type="file" id="attach-file" name="attach-file" />
-              </label>
+              </label> */}
               <br />
               <label htmlFor="post-tags">Tags:</label>
               <br />
@@ -201,7 +202,8 @@ function CreatePost() {
               <button type="submit">Submit</button>
             </form>
           </div>
-          <div className="forum-recent-post"></div>
+          <div className="side-bar">
+            <PopularPosts/></div>
         </div>
       </>
     );

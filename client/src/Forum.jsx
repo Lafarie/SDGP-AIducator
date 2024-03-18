@@ -4,11 +4,14 @@ import "./Forum.css";
 import SearchIcon from "./Images/SearchIcon.svg";
 import ForumIcon from "./Images/ForumIcon.svg";
 import Navbar from "./component/Navbar";
+import PopularPosts from "./component/PopularPosts";
+import Footer from "./component/Footer";
 
 function Forum() {
   const [forums, setForums] = useState([]);
   const [currentID, setCurrentID] = useState("");
-  const [popularPosts, setPopularPosts] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     fetch(`/api/get/forum?forumId=all`)
@@ -19,36 +22,50 @@ function Forum() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-
-    fetchPopularPosts(); // Fetch popular posts when component mounts
   }, []);
 
-  const fetchPopularPosts = async () => {
-    try {
-      const response = await fetch(`/api/get/popular-threads`);
-      const data = await response.json();
-      setPopularPosts(data.message);
-      console.log(data.message);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+
+  const handleSearch = () => {
+    if (searchInput.trim() !== "") {
+      const filteredForums = forums.filter((forum) =>
+        forum.Name.toLowerCase().includes(searchInput.toLowerCase())
+      );
+      setSearchResults(filteredForums);
+    } else {
+      setSearchResults([]);
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+
+
   return (
+    <>
     <div>
       <Navbar />
       <div className="forum-page-top-bar">
         <h1 className="forum-title">Forum</h1>
       </div>
       <div className="search-bar">
-        <input type="text" placeholder="Search" />
-        <button>
+        <input
+          type="text"
+          placeholder="Search"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onClick={handleKeyPress}
+        />
+        <button onClick={handleSearch}>
           <img src={SearchIcon} alt="Search" />
         </button>
       </div>
       <div className="forum-container">
         <div className="forums-list">
-          {forums.map((forum) => (
+          {(searchResults.length > 0 ? searchResults : forums).map((forum) => (
             <div
               className="forum"
               key={forum.ForumID}
@@ -88,7 +105,13 @@ function Forum() {
                       <p>{forum.Description}</p>
                     </div>
                     <div className="side-bar-button">
-                      <button id="join-button" onClick={() =>(window.location.href ="/forum-page/" + forum.ForumID + "/" + forum.Name)}>
+                      <button
+                        id="join-button"
+                        onClick={() =>
+                          (window.location.href =
+                            "/forum-page/" + forum.ForumID + "/" + forum.Name)
+                        }
+                      >
                         Join
                       </button>
                     </div>
@@ -99,20 +122,14 @@ function Forum() {
             })
           ) : (
             <>
-              <h2>Popular Topics</h2>
-              <div className="popular-topics">
-                {popularPosts.map((post) => (
-                  <div key={post.ThreadID} >
-                    <h3 onClick={ ()=>window.location.href = "/post/" + post.ThreadID}>{post.Title}</h3>
-                    <hr />
-                  </div>
-                ))}
-              </div>
+              <PopularPosts />
             </>
           )}
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 
