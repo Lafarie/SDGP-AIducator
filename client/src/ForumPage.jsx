@@ -9,6 +9,7 @@ import upvote from "./Images/upVote.svg";
 import downvote from "./Images/downVote.svg";
 import post from "./Images/post.svg";
 import eye from "./Images/eye.svg";
+import Footer from "./component/Footer";
 
 function ForumPage() {
   let location = useLocation();
@@ -132,6 +133,7 @@ function ForumPage() {
           <PopularPosts />
         </div>
       </div>
+      <Footer />
     </>
   );
 }

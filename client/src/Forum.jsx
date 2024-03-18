@@ -127,8 +127,10 @@ function Forum() {
           )}
         </div>
       </div>
+      <Footer />
+      
     </div>
-    <Footer />
+    
     </>
   );
 }

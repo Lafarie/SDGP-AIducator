@@ -3,6 +3,7 @@ import Navbar from "./component/Navbar";
 import "./Forum.css";
 import { useLocation } from "react-router-dom";
 import PopularPosts from "./component/PopularPosts";
+import Footer from "./component/Footer";
 
 function CreatePost() {
   let location = useLocation();
@@ -135,6 +136,7 @@ function CreatePost() {
           </div>
           <div className="side-bar"><PopularPosts/></div>
         </div>
+        <Footer/>
       </>
     );
   } else if (type === "thread") {
@@ -172,6 +174,7 @@ function CreatePost() {
           </div>
           <div className="side-bar"><PopularPosts/></div>
         </div>
+        <Footer/>
       </>
     );
   } else if (type === "post") {
@@ -180,7 +183,7 @@ function CreatePost() {
         <Navbar />
         <title>{threadName}</title>
         <div className="forum-page-top-bar">
-          <h1 className="forum-title">{threadName}</h1>
+          <h1 className="forum-title">Reply: {threadName}</h1>
         </div>
         <div className="create-post-page">
           <div className="create-post">
@@ -205,6 +208,7 @@ function CreatePost() {
           <div className="side-bar">
             <PopularPosts/></div>
         </div>
+        <Footer/>
       </>
     );
   }

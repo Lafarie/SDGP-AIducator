@@ -624,15 +624,7 @@ app.get("/quiz/questions", (req, res) => {
     });
   });
 });
-    console.log(req.body.selectedID); // delete later
-    dbconnection.query(`SELECT response FROM querytable WHERE id = ${req.body.selectedID}`, (err, result) => {
-        if (err) {
-            res.json({ message: "response could not be found" })
-        } else {
-            res.json({ message: result[0].response })
-        }
-    })
-})
+  
 
 app.listen(3001, () => {
   console.log("listenning on port 5000.");

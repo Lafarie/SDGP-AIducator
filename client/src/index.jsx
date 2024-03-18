@@ -45,6 +45,10 @@ root.render(
       <Route path="/LessonList/:subject/:grade" element={<LessonList />} />
       <Route path="/LessonList/:subject/:grade/:lesson" element={<QuizPage />} />
       <Route path="/quiz-results" element={<QuizResults/>} />
+      <Route path="/forum-page/:forumID/:forumName" element={<ForumPage />} />
+      <Route path="/create/:type/:id" element={<CreatePost />} />
+      <Route path="/post/:postID" element={<Post />} />
+
     </Routes>
   </BrowserRouter>
 );

@@ -5,6 +5,8 @@ import "./Forum.css";
 import { Link } from "react-router-dom";
 import upVote from "./Images/upVote.svg";
 import downVote from "./Images/downVote.svg";
+import Footer from "./component/Footer";
+import PopularPosts from "./component/PopularPosts";
 
 function Post() {
   const [posts, setPosts] = useState([]);
@@ -222,8 +224,9 @@ function Post() {
             <PostComponent post={post} key={`post-${post.PostID}`} />
           ))}
         </div>
-        <div className="forum-recent-post"></div>
+        <div className="forum-recent-post"><PopularPosts/></div>
       </div>
+      <Footer/>
     </>
   );
 }
