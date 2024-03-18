@@ -1,0 +1,86 @@
+const cardData = [
+  {
+    id: 1,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 1",
+    description: "Description for card 1",
+  },
+  {
+    id: 2,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 2",
+    description: "Description for card 2",
+  },
+  {
+    id: 3,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 1",
+    description: "Description for card 1",
+  },
+  {
+    id: 4,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 2",
+    description: "Description for card 2",
+  },
+  {
+    id: 5,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 1",
+    description: "Description for card 1",
+  },
+  {
+    id: 6,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 2",
+    description: "Description for card 2",
+  },
+  {
+    id: 7,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 1",
+    description: "Description for card 1",
+  },
+  {
+    id: 8,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 2",
+    description: "Description for card 2",
+  },
+  {
+    id: 9,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 1",
+    description: "Description for card 1",
+  },
+  {
+    id: 10,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 2",
+    description: "Description for card 2",
+  },
+  {
+    id: 11,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 1",
+    description: "Description for card 1",
+  },
+  {
+    id: 12,
+    image:
+      "https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg",
+    title: "Card 2",
+    description: "Description for card 2",
+  },
+];
