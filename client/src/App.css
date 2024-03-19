@@ -1,9 +1,9 @@
 #root{
   height: 100%;
+  font-family: 'Inria Sans', sans-serif;
 }
 
 .App{
-  font-family: 'Inria Sans', sans-serif;
   height: 100%;
 }
 
@@ -65,6 +65,7 @@
 #rightCorner{
   background-color: #B8B0B0;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 #navList li{
@@ -76,4 +77,116 @@
 .NavLinks:link, .NavLinks:visited{
   text-decoration: none;
   color: white; 
+}
+/* 
+.NavLinks:hover{
+  color: #FFD700;
+} */
+
+/* Footer */
+
+footer{
+  margin-top: 200px;
+  background-color: #003366;
+  color: white;
+  text-align: center;
+  padding: 20px 0 0px 0;
+  bottom: 0;
+  width: 100%;
+  filter: drop-shadow(0px -4px 4px rgba(0, 0, 0, 0.541));
+}
+
+#footer-row{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+
+#footer-set-one, #footer-set-two{
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 0 20px;
+  
+}
+
+#footer-set-three{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 5px;
+  align-items: center;
+  padding: 0 10px 0 10px;
+  color: white;
+  background-color: #003366;
+  bottom: 0;
+  width: 100%;
+}
+
+#footer-set-one a,#footer-set-two a, #footer-set-three a{
+  padding: 5px 0 5px 0;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+#footer-set-one a:hover, #footer-set-two a:hover, #footer-set-three a:hover{
+  color: #FFD700;
+}
+
+#footer-set-one h3, #footer-set-two h3{
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+  color: #808080;
+}
+
+#footer-logo {
+  position: absolute;
+  right: 0;
+  margin-right: 135px;
+  width: 13%;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.541));
+}
+
+#logo-inside{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  gap: 20px;
+}
+
+#logo-inside img{
+  cursor: pointer;
+  width: 18%;
+}
+
+#footer-aiducator-logo{
+  width: 90%;
+  height: 100%;
+  margin: auto;
+}
+
+#facebook-logo{
+  width: 30px;
+  height: 30px;
+}
+
+#profileSec{
+  position: fixed;
+  right: 5vw;
+  background-color: aliceblue;
+  top: 4vw;
+  display: none;
+  padding: 2vw;
+}
+
+#profileSec h1{
+  margin: 0;
+  margin-bottom: 1vw;
+  font-size: 1.2vw;
+  font-weight: normal;
 }
