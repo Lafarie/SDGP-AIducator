@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import './AIAssistant.css';
 import Navbar from './component/Navbar';
-import sendIcon from './Images/sendicon.svg'
+import sendIcon from './Images/sendicon.svg';
 import good from './Images/good.svg';
 import bad from './Images/bad.svg';
 import goodfill from './Images/goodfilled.svg';
@@ -33,6 +33,8 @@ function Assistant(){
         getCurrentUser().then((user) => {
             if(user) {
                 console.log(user.email);
+            } else {
+                console.log(null)
             }
         }).catch((err) => {
             console.log(err);
@@ -49,6 +51,8 @@ function Assistant(){
     const [responseID, setresponseID] = useState("")
     const [allresponses, setallresponses] = useState(null);
     const [displayID, setdisplayID] = useState("");
+
+    const [tags, settags] = useState([]);
 
     useEffect(() => { // settign the look of the rate ebutton
         let badbtn = document.getElementById("bad");
@@ -157,6 +161,8 @@ function Assistant(){
                 setresponse(false);           
             } else {
                 document.getElementById("response").innerHTML = data.generated_result;
+                console.log(data.tags);
+                settags(data.tags);
                 setresponse(true);
             }
             setsavedResponsedisable(false);

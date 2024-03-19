@@ -6,6 +6,10 @@ import Forum from './Forum';
 import Video from './video';
 import QuizHome from './QuizHome';
 import Library from './3DLibrary';
+import ForumPage from './ForumPage';
+import CreatePost from './Create';
+import Post from './Post';
+import Todo from './todo';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 import reportWebVitals from './reportWebVitals';
@@ -33,7 +37,7 @@ root.render(
       <Route path="/video" element={<Video />} /> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
       <Route path="/quiz" element={<QuizHome />} />
       <Route path="/forum" element={<Forum />} />
-      <Route path="/todo" element={<Home />} />
+      <Route path="/todo" element={<Todo/>} />
       <Route path="/profile" element={<SignUp />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signin" element={<SignIn />} />
@@ -42,6 +46,10 @@ root.render(
       <Route path="/LessonList/:subject/:grade" element={<LessonList />} />
       <Route path="/LessonList/:subject/:grade/:lesson" element={<QuizPage />} />
       <Route path="/quiz-results" element={<QuizResults/>} />
+      <Route path="/forum-page/:forumID/:forumName" element={<ForumPage />} />
+      <Route path="/create/:type/:id" element={<CreatePost />} />
+      <Route path="/post/:postID" element={<Post />} />
+
     </Routes>
   </BrowserRouter>
 );

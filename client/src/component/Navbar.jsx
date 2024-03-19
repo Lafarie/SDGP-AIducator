@@ -1,7 +1,14 @@
 import logo from '../Images/logoAI.svg';
 import defaultProfile from "../Images/defaultProfile.svg"
 import '../App.css';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
+import getCurrentUsers from '../currentUser';
+import { useEffect, useState } from 'react';
+import getCurrentUser from '../currentUser';
+import app from '../firebase';
+import { getDatabase, ref, onValue} from "firebase/database";
+import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+// import PropTypes from 'prop-types';
 
 function showActivePage(linkpath, url){
   if(url === linkpath){
@@ -12,7 +19,21 @@ function showActivePage(linkpath, url){
 }
 
 function Navbar() {
-  let url = useLocation();
+   let url = useLocation();
+  let back = useNavigate();
+
+  const [showprofile, setshowprofile] = useState(true);
+
+  useEffect(() => {
+    getCurrentUsers().then((user) => {
+      if(user === null){
+        back("/")
+      } else {
+        console.log(user.uid)
+      }
+    })
+  }, []);
+
   return (
     <div id={"navBar"}>
       <div id={"left"}>
@@ -30,13 +51,82 @@ function Navbar() {
           <li><Link className='NavLinks' to={"/todo"} style={{textDecoration:showActivePage("/todo", url.pathname)}}>TO-DO</Link></li>
         </ul>
       </div>
-      <Link id={"rightCorner"} className='NavLinks' to={"/profile"}>
-      <div>
+      <div id={"rightCorner"} className='NavLinks' onClick={() => {
+        if(showprofile){
+          document.getElementById("profileSec").style.display = "block";
+        } else {
+          document.getElementById("profileSec").style.display = "none";
+        }
+        setshowprofile(!showprofile);
+      }}>
         <img src={defaultProfile} alt="profile" id={"profile"}/>
       </div>
-      </Link>
+      <ProfileSection id="profileSec"/>
     </div>
   )
+}
+
+function ProfileSection({id}){
+
+  const [Currentuser, setCurrentuser] = useState(null);
+  const [BaseDetails, setBaseDetails] = useState(null)
+
+  let goBack = useNavigate()
+
+  let db = getDatabase(app);
+
+  useEffect(() => {
+      getCurrentUser().then((user) => {
+          if(user){
+            setBaseDetails(user)
+            let dbRef = ref(db, "users/" + user.uid)
+            onValue(dbRef, (user) => {
+              console.log("Hello")
+              setCurrentuser(user.val())
+            })
+          }
+        }).catch(error => {
+          console.error(error)
+        })
+  }, [])
+
+
+
+  useEffect(() => {
+    let navbar = document.getElementById("navBar")
+    if(navbar !== null){
+      document.getElementById(id).style.top = navbar.clientHeight  + "px";
+      console.log(navbar.clientHeight)
+    }
+
+  }, []);
+
+  function UserSignOut(){
+    let auth = getAuth();
+
+    signOut(auth).then(() => {
+      setCurrentuser(null)
+      goBack("/")
+    }).catch(error => {
+      console.error(error);
+    });
+  }
+
+  return(
+    <div id={id}>
+      <div id='userDeatils'>
+        <h1>{Currentuser !== null?Currentuser.fname + " " + Currentuser.lname:"User"}</h1>
+        <h1>{BaseDetails !== null?BaseDetails.email:"Email"}</h1>
+      </div>
+      <hr id='profileHr'></hr>
+      <h2 onClick={() => {
+        if(confirm("Do you want to sign out")){
+          UserSignOut();
+        }
+      }}>Sign Out</h2>
+    </div>
+  )
+
 }
 
 export default Navbar;

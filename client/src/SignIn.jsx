@@ -1,5 +1,5 @@
 import app from "./firebase";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, } from 'firebase/auth';
 import { useRef } from "react";
 import { useEffect, useState } from "react";
 import "./SignIn.css";
@@ -54,7 +54,7 @@ function SignIn() {
         emailP.style.color = "RED";
         emailP.style.display = "block";
 
-        });;
+        });
     }
 
     useEffect(() => {
