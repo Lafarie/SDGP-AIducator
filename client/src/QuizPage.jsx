@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './QuizPage.css'; 
 import { useLocation,Link } from 'react-router-dom';
 import Navbar from './component/Navbar';
-import axios from 'axios';
+// import axios from 'axios';
 
 
 const QuizPage = ({ lesson }) => {
