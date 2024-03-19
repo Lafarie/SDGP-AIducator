@@ -3,9 +3,8 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import sql from "mysql2";
-import nodeFetch from "node-fetch"
 
-dotenv.config()
+dotenv.config();
 
 let INSTRUCTIONS =
     `
@@ -24,6 +23,10 @@ let INSTRUCTIONS =
     Keep responses to a maximum of 5000 words.
     FOLLOW ALL THESE RULES AT ALL TIMES.
     `
+
+let MODELINSTRUCTIONS = `I want you take the users prompt and then compare it with these topics which are 
+                        "Math", "Geography", "Science", "Geometry", "Astronomy", "Geology", "Chemical", "Flora and Fauna", "People" and return the 
+                        tages that relate to the prompt and give them as an array. If the awnser doesnt relate to any topic return a empty array`
 
 const moderationUrl = 'https://api.openai.com/v1/moderations'; // Open AI moderation URL
 
@@ -94,6 +97,14 @@ async function main(input) {
     return completion.choices[0];
 }
 
+async function getKeywords(input){
+    const completion = await openai.chat.completions.create({
+        messages: [{ "role": "system", "content": MODELINSTRUCTIONS }, { "role": "assistant", "content": input }],
+        model: "gpt-3.5-turbo",
+    });
+    return completion.choices[0];
+}
+
 function getCategories(objectArr) {
     let keyArr = Object.keys(objectArr);
     let returnArr = [];
@@ -121,19 +132,15 @@ app.post("/post/prompt", async (req, res) => {
         }).then(response => response.json()).then(async (data) => {
             if (!data.results[0].flagged) {
                 let returnMsg = main(req.body.prompt);
+                let tags = getKeywords(req.body.prompt);
                 let result = (await returnMsg).message;
-                res.json({ "flagged": false, "generated_result": result.content })
+                let tagresults = (await tags).message;
+                res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content })
             } else {
                 let arr = getCategories(data.results[0].categories)
                 res.json({ "flagged": true, "generated_result": arr })
             }
         })
-        // let returnMsg = main(req.body.prompt);
-        // let result = (await returnMsg).message;
-        // res.json({"generated_result": result.content})
-        // setTimeout(() => {
-        //     res.json({"generated_result": "<h1>hello</h1>"})
-        // }, 5000);
     }
 });
 

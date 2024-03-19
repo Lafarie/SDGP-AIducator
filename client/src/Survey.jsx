@@ -37,6 +37,7 @@ export function StudentSurvey(){
     const [geology, setgeology] = useState(false);
     const [chemical, setchemical] = useState(false);
     const [FlFa, setFlFa] = useState(false);
+    const [people, setpeople] = useState(false);
 
     const [usergrade, setusergrade] = useState("default");
 
@@ -48,7 +49,8 @@ export function StudentSurvey(){
         {name: "Astronomy", setFunc: () => {setastronomy(!astronomy)}, state: astronomy}, 
         {name: "Geology", setFunc: () => {setgeology(!geology)}, state: geology}, 
         {name: "Chemical", setFunc: () => {setchemical(!chemical)}, state: chemical},
-        {name: "Flora and Funa", setFunc: () => {setFlFa(!FlFa)}, state: FlFa}
+        {name: "Flora and Fauna", setFunc: () => {setFlFa(!FlFa)}, state: FlFa},
+        {name: "People", setFunc: () => {setpeople(!people)}, state: people}
     ]
 
     let Grade = useRef();
@@ -63,7 +65,7 @@ export function StudentSurvey(){
                 document.getElementById("finish").disabled = false;
             }
         }
-    }, [usergrade, geography, math, science, geometry, astronomy, geology, chemical, FlFa])
+    }, [usergrade, geography, math, science, geometry, astronomy, geology, chemical, FlFa, people])
 
     function getDetails(){
         let database = getDatabase(app)

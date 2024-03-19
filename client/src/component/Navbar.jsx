@@ -1,7 +1,9 @@
 import logo from '../Images/logoAI.svg';
 import defaultProfile from "../Images/defaultProfile.svg"
 import '../App.css';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
+import getCurrentUsers from '../currentUser';
+import { useEffect } from 'react';
 
 function showActivePage(linkpath, url){
   if(url === linkpath){
@@ -13,6 +15,19 @@ function showActivePage(linkpath, url){
 
 function Navbar() {
   let url = useLocation();
+
+  let back = useNavigate();
+
+  useEffect(() => {
+    getCurrentUsers().then((user) => {
+      if(user === null){
+        back("/")
+      } else {
+        console.log(user.uid)
+      }
+    })
+  }, []);
+  
   return (
     <div id={"navBar"}>
       <div id={"left"}>

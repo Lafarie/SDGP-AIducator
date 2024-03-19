@@ -180,4 +180,22 @@ const QuizPage = ({ lesson }) => {
   );
 };
 
+function QuestionContainer(){
+
+  return (
+      <div key={index} className='question'>
+          <div className='Q-Number'>Question  {`${index + 1}`.padStart(2, '0')}:</div>
+          <label className='Qs'>{question}</label>
+          <ul className='options'>
+              {question.options.map((option, i) => (
+                  <li key={i} className="option">
+                      <input type="radio" id={`option-${index}-${i}`} name={`question-${index}`} value={option} onChange={() => handleOptionSelect(index, i)}checked={selectedOptions[index] === i} />
+                      <label htmlFor={`option-${index}-${i}`}>{option}</label>
+                  </li>
+              ))}
+          </ul>
+      </div>
+  )
+}
+
 export default QuizPage;

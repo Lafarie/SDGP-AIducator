@@ -7,7 +7,7 @@ import logo from "./Images/BigLogo.png";
 import app from "./firebase";
 // import { initializeApp } from "firebase/app";
 import { getDatabase, ref, push, onValue, child, set } from "firebase/database";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, signInWithEmailAndPassword, deleteUser} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 // Initialize Realtime Database and get a reference to the service
@@ -97,20 +97,51 @@ function SignUp(){
             const auth = getAuth();
             createUserWithEmailAndPassword(auth, email.current.value, password.current.value) // checks for password and mail format and if user exists.
             .then((userCredential) => {
+
+                sendEmailVerification(auth.currentUser).then(() => {
+                    console.log("Verification email sent")
+                })            
+                .catch(error => {
+                    console.error("Error sending verification email", error)
+                })
+                
                 const user = userCredential.user;
-                alert(user.email + "UserCreated");
-                firstName.current.value = "";
-                lastName.current.value = "";
-                email.current.value = "";
-                password.current.value = "";
-                document.getElementById("terms").checked = false;
-                document.getElementById("CreateAccount").disabled = true;
-                setShowPass(false);
-                console.log(userObj);
-                // push(ref(database, 'users/'), userObj); // pushing data to firebase realtime database. 
-                const reference = ref(database, 'users/' + user.uid);
-                set(reference, userObj);
-                toHome("/surveyStu");
+                alert(user.email + "UserCreated" + ". Please verify your email.");
+
+                let timeelapsed = 0;
+
+                const checkEmailVerificationStatus = setInterval(() => {
+                    user.reload().then(() => {
+                      if (user.emailVerified) {
+                        firstName.current.value = "";
+                        lastName.current.value = "";
+                        email.current.value = "";
+                        password.current.value = "";
+                        document.getElementById("terms").checked = false;
+                        document.getElementById("CreateAccount").disabled = true;
+                        setShowPass(false);
+                        console.log(userObj);
+                        // push(ref(database, 'users/'), userObj); // pushing data to firebase realtime database. 
+                        const reference = ref(database, 'users/' + user.uid);
+                        set(reference, userObj);
+                        toHome("/surveyStu");
+                        // Perform actions when email is verified
+                        clearInterval(checkEmailVerificationStatus);
+                      } else {
+                        timeelapsed++;
+                        if(timeelapsed >= 60){
+                            deleteUser(user).then(()=>{
+                                alert(user.email + " verification failed, User not logged in");
+                            }).catch((error) => {
+                                console.error(error);
+                            })
+                            clearInterval(checkEmailVerificationStatus);
+                        }
+                      }
+                    }).catch((error) => {
+                      console.error('Error reloading user:', error);
+                    });
+                  }, 1000); // Check every 5 seconds
             })
             .catch((error) => {
                 const errorCode = error.code;

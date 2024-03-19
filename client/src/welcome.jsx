@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import "./welcome.css";
 import logo from "./Images/BigLogo.png"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import getCurrentUser from "./currentUser";
 
 function Welcome() {
     return(
@@ -15,6 +16,8 @@ function Welcome() {
 
 function WelcomeContent(){
 
+    let navigate = useNavigate();
+
     useEffect(() => {
         document.body.id = "AccountBody";
         // Clean up function to remove styles on unmount (optional)
@@ -22,6 +25,14 @@ function WelcomeContent(){
             document.body.id = null;
         };
       }, []);
+
+      useEffect(() => {
+        getCurrentUser().then((user) => {
+            if(user !== null){
+                navigate("/home")
+            }
+      })
+      })
 
     return(
         <>   

@@ -52,6 +52,8 @@ function Assistant(){
     const [allresponses, setallresponses] = useState(null);
     const [displayID, setdisplayID] = useState("");
 
+    const [tags, settags] = useState([]);
+
     useEffect(() => { // settign the look of the rate ebutton
         let badbtn = document.getElementById("bad");
         let goodbtn = document.getElementById("good");
@@ -159,6 +161,8 @@ function Assistant(){
                 setresponse(false);           
             } else {
                 document.getElementById("response").innerHTML = data.generated_result;
+                console.log(data.tags);
+                settags(data.tags);
                 setresponse(true);
             }
             setsavedResponsedisable(false);

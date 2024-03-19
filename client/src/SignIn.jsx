@@ -54,7 +54,7 @@ function SignIn() {
         emailP.style.color = "RED";
         emailP.style.display = "block";
 
-        });;
+        });
     }
 
     useEffect(() => {
