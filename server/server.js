@@ -192,8 +192,42 @@ app.post("/post/displaySaved", (req, res) => {
     })
 })
 
-//quiz fetching
-
+app.post('/get/test', (req, res) => {
+    const gradeid = req.body.QuestionDetails.gradeid;
+    const lessonName = req.body.QuestionDetails.lessonName;
+    console.log(req.body.QuestionDetails.gradeid)
+    console.log(lessonName)
+    const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(gradeid)} AND lessonName = '${lessonName}')`;
+    dbconnection.query(query, (err, questionResults) => {
+        if (err) {
+            console.error("Error executing query:", err);
+            res.status(500).json({ message: "Internal server error" });
+        } else {
+            let optionArray = [];
+            Promise.all(questionResults.map(question => {
+                return new Promise((resolve, reject) => {
+                    const optionsQuery = 'SELECT OptionText FROM QuestionOptions WHERE QuestionID = ?';
+                    dbconnection.query(optionsQuery, [question.QuestionID], (err, optionsResults) => {
+                        if (err) {
+                            console.error('Error retrieving question options:', err);
+                            reject('Internal server error');
+                        } else {
+                            const options = optionsResults.map(option => option.OptionText);
+                            console.log(options);
+                            optionArray.push(options);
+                            resolve();
+                        }
+                    });
+                });
+            })).then(() => {
+                res.json({ questions: questionResults, options: optionArray });
+            }).catch(error => {
+                console.error(error);
+                res.status(500).json({ error: 'Internal server error' });
+            });
+        }
+    });
+});
 
 app.listen(3002, () => {
     console.log("listenning on port 3002.")
