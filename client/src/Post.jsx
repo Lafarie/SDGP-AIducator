@@ -30,6 +30,7 @@ function Post() {
       .then((res) => res.json())
       .then((data) => {
         setFirstThread(data.message);
+        console.log(data.message);
         setVote({
           count: data.message[0].UpVotes - data.message[0].DownVotes,
           voted: false,
@@ -51,7 +52,7 @@ function Post() {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
+    const intervalId = setInterval(() => {
       fetch("/api/update/views", {
         method: "POST",
         headers: {
@@ -59,9 +60,13 @@ function Post() {
         },
         body: JSON.stringify({ threadId: threadID }),
       });
-    }, 15000);
-  }, [posts]);
+    }, 20000);
 
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [forumName]);
+
+  //sql query to check if user has voted on thread
   const submitThreadVote = (type) => {
     fetch(
       `/api/check/thread/vote?threadId=${threadID}&userId=${user}&voteType=${type}`
@@ -74,7 +79,7 @@ function Post() {
         }
       });
   };
-
+  //sql query to check if user has voted on post
   const submitPostVote = (type, postID) => {
     fetch(
       `/api/check/post/vote?postId=${postID}&userId=${user}&voteType=${type}`
@@ -88,14 +93,15 @@ function Post() {
       });
   };
 
+  // Define a new component for the post
   const handleThreadVote = (newType) => {
     let newCount = vote.count;
     if (!vote.voted) {
-      newCount += newType === "UpVote" ? 1 : -1;
+      newCount += newType === "UpVotes" ? 1 : -1;
     } else if (vote.type !== newType) {
-      newCount += newType === "UpVote" ? 2 : -2;
+      newCount += newType === "UpVotes" ? 2 : -2;
     } else {
-      newCount += newType === "UpVote" ? -1 : 1;
+      newCount += newType === "¸" ? -1 : 1;
       newType = "Removed";
     }
 
@@ -110,24 +116,24 @@ function Post() {
 
   // Define a new component for the post
   const PostComponent = ({ post }) => {
-    const [vote, setVote] = useState({
+    const [voteP, setVoteP] = useState({
       count: post.UpVotes - post.DownVotes,
       voted: false,
       type: "",
     });
 
     const handleVote = (newType) => {
-      let newCount = vote.count;
-      if (!vote.voted) {
-        newCount += newType === "UpVote" ? 1 : -1;
-      } else if (vote.type !== newType) {
-        newCount += newType === "UpVote" ? 2 : -2;
+      let newCount = voteP.count;
+      if (!voteP.voted) {
+        newCount += newType === "UpVotes" ? 1 : -1;
+      } else if (voteP.type !== newType) {
+        newCount += newType === "UpVotes" ? 2 : -2;
       } else {
-        newCount += newType === "UpVote" ? -1 : 1;
+        newCount += newType === "UpVotes" ? -1 : 1;
         newType = "Removed";
       }
 
-      setVote({
+      setVoteP({
         count: newCount,
         voted: newType !== "Removed",
         type: newType,
@@ -138,23 +144,31 @@ function Post() {
 
     return (
       <div className="thread-post" key={`post-${post.PostID}`}>
-        <div className="post-voting">
+        <div
+          className={`post-voting ${
+            voteP.type === "UpVotes"
+              ? "voted-green"
+              : voteP.type === "DownVotesss"
+              ? "voted-red"
+              : ""
+          }`}
+        >
           <img
             src={upVote}
-            alt="UpVote"
+            alt="UpVotes"
             onClick={() => {
-              handleThreadVote("UpVote");
+              handleVote("UpVotes");
             }}
-            className={post.VoteType === "UpVotes" ? "voted" : ""}
+            className={voteP.type === "UpVotes" ? "voted" : ""}
           />
-          <p>{vote.count}</p>
+          <p>{voteP.count}</p>
           <img
             src={downVote}
-            alt="DownVote"
+            alt="DownVotesss"
             onClick={() => {
-              handleVote("DownVote");
+              handleVote("DownVotesss");
             }}
-            className={post.VoteType === "DownVotes" ? "voted" : ""}
+            className={voteP.type === "DownVotesss" ? "voted" : ""}
           />
         </div>
         <div className="post-container">
@@ -187,12 +201,20 @@ function Post() {
         <div className="forum-page-posts">
           {firstThread.map((thread) => (
             <div className="thread-post" key={`thread-${thread.threadId}`}>
-              <div className="post-voting">
+              <div
+                className={`post-voting ${
+                  vote.type === "UpVotes"
+                    ? "voted-green"
+                    : vote.type === "DownVotesss"
+                    ? "voted-red"
+                    : ""
+                }`}
+              >
                 <img
                   src={upVote}
                   alt="upvote"
                   onClick={() => {
-                    handleThreadVote("UpVote");
+                    handleThreadVote("UpVotes");
                   }}
                 />
                 <p>{vote.count}</p>
@@ -200,7 +222,7 @@ function Post() {
                   src={downVote}
                   alt="downvote"
                   onClick={() => {
-                    handleThreadVote("DownVote");
+                    handleThreadVote("DownVotesss");
                   }}
                 />
               </div>
@@ -224,9 +246,11 @@ function Post() {
             <PostComponent post={post} key={`post-${post.PostID}`} />
           ))}
         </div>
-        <div className="forum-recent-post"><PopularPosts/></div>
+        <div className="forum-recent-post">
+          <PopularPosts />
+        </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }

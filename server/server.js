@@ -510,7 +510,7 @@ app.get("/check/post/vote", (req, res) => {
             console.error("Error executing query:", insertErr);
             res.status(500).json({ message: "Internal server error" });
           } else {
-            res.json({ message: "Post vote added successfully" });
+            res.json({ message: "successful" });
           }
         });
       }
