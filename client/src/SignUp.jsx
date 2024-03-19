@@ -6,7 +6,7 @@ import googleIcon from "./Images/GoogleIcon.svg";
 import logo from "./Images/BigLogo.png";
 import app from "./firebase";
 // import { initializeApp } from "firebase/app";
-import { getDatabase, ref, push, onValue, child, set } from "firebase/database";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, signInWithEmailAndPassword, deleteUser} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 

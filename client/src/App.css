@@ -65,6 +65,7 @@
 #rightCorner{
   background-color: #B8B0B0;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 #navList li{
@@ -172,4 +173,20 @@ footer{
 #facebook-logo{
   width: 30px;
   height: 30px;
+}
+
+#profileSec{
+  position: fixed;
+  right: 5vw;
+  background-color: aliceblue;
+  top: 4vw;
+  display: none;
+  padding: 2vw;
+}
+
+#profileSec h1{
+  margin: 0;
+  margin-bottom: 1vw;
+  font-size: 1.2vw;
+  font-weight: normal;
 }

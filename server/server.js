@@ -38,7 +38,7 @@ var dbconnection = sql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  port: 3306,
+  port: 3307,
 });
 
 function pingdb() {
@@ -633,6 +633,6 @@ app.get("/quiz/questions", (req, res) => {
 });
   
 
-app.listen(3001, () => {
+app.listen(5000, () => {
   console.log("listenning on port 5000.");
 });
