@@ -8,6 +8,7 @@ import getCurrentUser from '../currentUser';
 import app from '../firebase';
 import { getDatabase, ref, onValue} from "firebase/database";
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+import verified from "../Images/verified.svg"
 // import PropTypes from 'prop-types';
 
 function showActivePage(linkpath, url){
@@ -35,6 +36,7 @@ function Navbar() {
   }, []);
 
   return (
+    <>
     <div id={"navBar"}>
       <div id={"left"}>
         <div id={"imageContainer"}>
@@ -53,16 +55,20 @@ function Navbar() {
       </div>
       <div id={"rightCorner"} className='NavLinks' onClick={() => {
         if(showprofile){
-          document.getElementById("profileSec").style.display = "block";
+          document.getElementById("profileSec").style.transform = "translate(0px)"
+          document.getElementById("profileSec").style.filter = "drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.364))";
+          setshowprofile(false);
         } else {
-          document.getElementById("profileSec").style.display = "none";
+          document.getElementById("profileSec").style.transform = "translateY(-100%)"
+          document.getElementById("profileSec").style.filter = "none";
         }
         setshowprofile(!showprofile);
       }}>
         <img src={defaultProfile} alt="profile" id={"profile"}/>
       </div>
-      <ProfileSection id="profileSec"/>
     </div>
+    <ProfileSection id="profileSec"/>
+    </>
   )
 }
 
@@ -81,7 +87,6 @@ function ProfileSection({id}){
             setBaseDetails(user)
             let dbRef = ref(db, "users/" + user.uid)
             onValue(dbRef, (user) => {
-              console.log("Hello")
               setCurrentuser(user.val())
             })
           }
@@ -115,11 +120,21 @@ function ProfileSection({id}){
   return(
     <div id={id}>
       <div id='userDeatils'>
-        <h1>{Currentuser !== null?Currentuser.fname + " " + Currentuser.lname:"User"}</h1>
-        <h1>{BaseDetails !== null?BaseDetails.email:"Email"}</h1>
+        <div className='Userdetails' id='Userheading'>
+          <h1>Profile</h1>
+        </div>
+        <div className='Userdetails'>
+          <h1>{Currentuser !== null?Currentuser.fname + " " + Currentuser.lname:"User"}</h1>
+        </div>
+        <div id='emailDiv' className='Userdetails'>
+          <h1>{BaseDetails !== null?BaseDetails.email:"Email"}</h1>
+          <div id='verifiedDiv'>
+            <img src={verified} alt="verified"/>
+          </div>
+        </div>
       </div>
       <hr id='profileHr'></hr>
-      <h2 onClick={() => {
+      <h2 id='signoutbtn' onClick={() => {
         if(confirm("Do you want to sign out")){
           UserSignOut();
         }
