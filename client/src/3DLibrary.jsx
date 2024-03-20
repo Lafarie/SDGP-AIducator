@@ -18,8 +18,6 @@ const cardData = [
   { id: 10, image: 'https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg',title: 'Card 2', description: 'Description for card 2' },
   { id: 11, image: 'https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg',title: 'Card 1', description: 'Description for card 1' },
   { id: 12, image: 'https://img-new.cgtrader.com/items/2775031/c6a5901f5d/grid/craft-pots-3d-model-obj-fbx-stl.jpg',title: 'Card 2', description: 'Description for card 2' },
-
-
 ];
 
 function Library() {

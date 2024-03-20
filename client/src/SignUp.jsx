@@ -3,12 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import hide from "./Images/eye-password-hide.svg";
 import show from "./Images/eye-password-show.svg";
 import googleIcon from "./Images/GoogleIcon.svg";
-import appleIcon from "./Images/AppleIcon.svg";
 import logo from "./Images/BigLogo.png";
 import app from "./firebase";
 // import { initializeApp } from "firebase/app";
-import { getDatabase, ref, push, onValue } from "firebase/database";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, signInWithEmailAndPassword, deleteUser} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
@@ -28,14 +28,17 @@ function SignUp(){
     const [userpassword, setuserpassword] = useState("");
     const [terms, setterms] = useState(false);
 
+    const [previousUsers, setpreviousUsers] = useState(null)
+
+    const toHome = useNavigate();
+
     const UserRef = ref(database, 'users/');
-    let userData = [];
 
     useEffect(() => { // loading userdata at initial render.
         onValue(UserRef, (user) => {
-            userData = user.val();
+            setpreviousUsers(user.val());
         })
-    })
+    }, [])
 
     useEffect(() => {
         if(firstName.current.value === '' || lastName.current.value === '' || email.current.value === '' || password.current.value === '') {
@@ -57,20 +60,22 @@ function SignUp(){
         let userObj = {
             fname : (firstName.current.value).trim(),
             lname : (lastName.current.value).trim(),
-            email: (email.current.value).trim(),
-            password: password.current.value
+            grade : "",
+            interests : ""
         }
 
         try{
             onValue(UserRef, (user) => {
-                userData = user.val();
+                setpreviousUsers(user.val()); // getting previous users 
             })
 
-            let objectkeys = Object.keys(userData);
-            console.log(objectkeys);
+            console.log(previousUsers);
+
+            let objectkeys = Object.keys(previousUsers);
+            console.log(previousUsers);
             
-            for (let i = 0; i < objectkeys.length; i++){
-                let name = userData[objectkeys[i]].fname + " " + userData[objectkeys[i]].lname;
+            for (let i = 0; i < objectkeys.length; i++){ // checking if username is unique
+                let name = previousUsers[objectkeys[i]].fname + " " + previousUsers[objectkeys[i]].lname;
                 let nameAlert = document.getElementById("nameAlert");
                 if(name.toLowerCase() === (firstName.current.value + " " + lastName.current.value).toLowerCase()) {
                     nameAlert.innerHTML = "*Username already exists";
@@ -90,27 +95,59 @@ function SignUp(){
 
         if(nameValid){
             const auth = getAuth();
-            createUserWithEmailAndPassword(auth, userObj.email, userObj.password) // checks for password and mail format and if user exists.
+            createUserWithEmailAndPassword(auth, email.current.value, password.current.value) // checks for password and mail format and if user exists.
             .then((userCredential) => {
+
+                sendEmailVerification(auth.currentUser).then(() => {
+                    console.log("Verification email sent")
+                })            
+                .catch(error => {
+                    console.error("Error sending verification email", error)
+                })
+                
                 const user = userCredential.user;
-                alert("UserCreated");
-                firstName.current.value = "";
-                lastName.current.value = "";
-                email.current.value = "";
-                password.current.value = "";
-                document.getElementById("terms").checked = false;
-                setShowPass(false);
-                push(ref(database, 'users/'), userObj); // pushing data to firebase realtime database. 
-                emailAlert.style.display = "none";
-                nameAlert.style.display = "none";
-                // ...
+                alert(user.email + "UserCreated" + ". Please verify your email.");
+
+                let timeelapsed = 0;
+
+                const checkEmailVerificationStatus = setInterval(() => {
+                    user.reload().then(() => {
+                      if (user.emailVerified) {
+                        firstName.current.value = "";
+                        lastName.current.value = "";
+                        email.current.value = "";
+                        password.current.value = "";
+                        document.getElementById("terms").checked = false;
+                        document.getElementById("CreateAccount").disabled = true;
+                        setShowPass(false);
+                        console.log(userObj);
+                        // push(ref(database, 'users/'), userObj); // pushing data to firebase realtime database. 
+                        const reference = ref(database, 'users/' + user.uid);
+                        set(reference, userObj);
+                        toHome("/surveyStu");
+                        // Perform actions when email is verified
+                        clearInterval(checkEmailVerificationStatus);
+                      } else {
+                        timeelapsed++;
+                        if(timeelapsed >= 60){
+                            deleteUser(user).then(()=>{
+                                alert(user.email + " verification failed, User not logged in");
+                            }).catch((error) => {
+                                console.error(error);
+                            })
+                            clearInterval(checkEmailVerificationStatus);
+                        }
+                      }
+                    }).catch((error) => {
+                      console.error('Error reloading user:', error);
+                    });
+                  }, 1000); // Check every 5 seconds
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
 
                 let emailAlert = document.getElementById("emailAlert");
-                console.log(errorCode);
+                console.error(errorCode);
 
                 if(errorCode === "auth/invalid-email"){
                     emailAlert.innerHTML = "*Invalid email address";
@@ -123,13 +160,18 @@ function SignUp(){
                     emailAlert.style.color = "RED";
                     emailAlert.style.display = "block"; 
                 }
+
+                if(errorCode == "auth/weak-password"){
+                    passAlert.innerHTML = "*Weak password";
+                    passAlert.style.color = "RED";
+                    passAlert.style.display = "block";
+                }
             });
         }
     }
 
-    useEffect(() => {
-        document.body.id = "SignUpBody";
-        // Clean up function to remove styles on unmount (optional)
+    useEffect(() => { // setting background image
+        document.body.id = "AccountBody";
         return () => {
             document.body.id = null;
         };
@@ -147,34 +189,37 @@ function SignUp(){
                         onChange={() => {
                             setfname(firstName.current.value);
                         }}/>
-                        <input type="text" placeholder="Last Name" ref={lastName} required autoComplete="on" onChange={() => {
+                        <input type="text" placeholder="Last Name" ref={lastName} required onChange={() => {
                             setlname(lastName.current.value);
                         }}/>                     
                     </div>
                     <p id="nameAlert" className="alert">*Username already exists</p>
                     <div id="mailDiv" className="textBoxDiv panelItem">
-                        <input type="text" placeholder="Email Address" ref={email} required autoComplete="on" onChange={() => {
+                        <input type="text" placeholder="Email Address" ref={email} required autoComplete="new-password" onChange={() => {
                             setuseremail(email.current.value);
                         }}/>
                     </div>
-                    <p id="emailAlert" className="alert">*Username already exists</p>
+                    <p id="emailAlert" className="alert">*Account already exists</p>
                     <div id="passDiv" className="textBoxDiv panelItem">
-                        <input id="passwordtxt" type={showPass?"text":"password"} ref={password} required placeholder="Your Password" autoComplete="on"
+                        <input id="passwordtxt" type={showPass?"text":"password"} ref={password} required placeholder="Your Password" autoComplete="new-password"
                         onChange={() => {
                             setuserpassword(password.current.value);
                         }}/>
-                        <img src={showPass?show:hide} onClick={() => {
-                            setShowPass(!showPass);
-                        }}/>
+                        <div id="passIconDiv">
+                            <img alt="password" src={showPass?show:hide} onClick={() => {
+                                setShowPass(!showPass);
+                            }}/>
+                        </div>
                     </div>
+                    <p id="passAlert" className="alert">*Account already exists</p>
                     <button id="CreateAccount" className="panelItem CreateBtn">
                         Create Account
                     </button>
-                    <div>
-                        <input type="checkbox" id="terms" required checked={terms} onClick={() => {
+                    <div id="termsDiv">
+                        <input type="checkbox" id="terms" required defaultChecked={false} onClick={() => {
                             setterms(!terms);
                         }}/>
-                        <label htmlFor="terms" style={{cursor : "pointer", marginLeft: "10px"}}>By submitting the form, you agree to our Terms and Conditions</label>
+                        <label htmlFor="terms" style={{cursor : "pointer", marginLeft: "0.5vw"}}>By submitting the form, you agree to our Terms and Conditions</label>
                     </div>
                     <div id="divider">
                         <div>
@@ -186,18 +231,16 @@ function SignUp(){
                         </div>
                     </div>
                     <div id="googlebtn" className="panelItem SignUpBtns signinbtn">
-                        <img src={googleIcon}/>
+                        <div className="googleImgContainer">
+                            <img src={googleIcon} alt="google logo"/>
+                        </div>
                         <p>Sign in with Google</p>
-                    </div>
-                    <div id="applebtn" className="SignUpBtns signinbtn">
-                        <img src={appleIcon}/>
-                        <p>Sign in with Apple</p>
                     </div>
                 </form>
                 
             </div>  
             <div id="rightdiv" className="panel">
-                <img src={logo}/>
+                <img src={logo} alt=" " />
                 <h1>AIducator</h1>
                 <p>“Make your learning Easier”</p>
             </div>  

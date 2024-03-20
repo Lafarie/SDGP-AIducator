@@ -1,0 +1,136 @@
+#welcomeDiv{
+    margin: auto;
+    display: inline-grid;
+    grid-auto-columns: 1fr;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    column-gap: 5vw;
+    backdrop-filter: blur(120px);
+    background-color: rgba(5, 20, 59, 0.347);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overflow: scroll;
+    background-attachment: fixed;
+    font-size: 0.8vw;
+    row-gap: 0;
+
+}
+#welcomeDiv::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#welcomeDiv {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#welcomeDiv div{
+  text-align: center;
+  margin: auto;
+}
+
+#welcometextDiv h1{
+  font-size: 7vw;
+  color: white;
+  text-shadow: 10px 8px 8px #003366;
+  margin: 0;
+}
+
+#welcometextDiv h2{
+  font-size: 2vw;
+  font-weight: 300;
+  color: #ffffff;
+  margin: 1vw;
+}
+
+#welcometextDiv p{
+  font-size: 1.2vw;
+  font-weight: 300;
+  color: rgb(255, 255, 255);
+  margin: 0;
+}
+
+#textContainer{
+  padding-bottom: 3vw;
+}
+
+#CreateAccountWelcome{
+  padding: 2vw;
+  background-color: #003366;
+  font-size: 1.2vw;
+  width: fit-content;
+  color: white;
+  border-radius: 3vw;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 2px 8px 8px #00000055;
+}
+
+.welcomelinks{
+  text-decoration: none;
+}
+
+#CreateAccountWelcome:hover{
+  background-color: #022951;
+  transform: scale(0.99);
+  box-shadow: none;
+}
+
+#CreateAccountWelcome:active{
+  box-shadow: none;
+}
+
+#welcomeimgdiv img{
+  width: 100%;
+  height: 100%
+}
+
+#welcomeimgdiv {
+  height: 30vw;
+  width: 30vw;
+}
+
+/* Navbar styles */
+
+#WelcomeNavbarDiv{
+  position: fixed;
+  z-index: 200;
+}
+
+#WelcomeNavbarDiv ul{
+  display: flex;
+  left: 0;
+  right: 0;
+  top: 1vw;
+  margin: 0;
+  /* background-color: azure; */
+  color: white;
+  position: fixed;
+  justify-content: end;
+  list-style: none;
+  font-size: 1.2vw;
+  column-gap: 4vw;
+  padding-right: 5vw;
+  cursor: pointer;
+}
+#WelcomeNavbarDiv ul li{
+  transition: 0.2s;
+}
+
+#WelcomeNavbarDiv li{
+  margin-top: 0.5vw;
+  padding: 1.2vw;
+}
+
+#WelcomeNavbarDiv ul li:hover{
+  transform: scale(1.2);
+  text-shadow: 5px 8px 8px#022951;
+}
+
+#loginItem a{
+  text-decoration: none;
+  color: white;
+}
