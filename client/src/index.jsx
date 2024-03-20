@@ -4,7 +4,7 @@ import './index.css';
 import AIAssistant from './AIAssistant'
 import Home from './App';
 import Forum from './Forum';
-import Video from './video';
+import Video from './videoPage';
 import QuizHome from './QuizHome';
 import Library from './3DLibrary';
 import SignUp from './SignUp'
@@ -27,7 +27,7 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<AIAssistant />} />
-      <Route path="/video" element={<Video />} /> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
+      <Route path="/videoPage" element={<Video />} /> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
       <Route path="/quiz" element={<QuizHome />} />
       <Route path="/forum" element={<Forum />} />
       <Route path="/todo" element={<Home />} />
