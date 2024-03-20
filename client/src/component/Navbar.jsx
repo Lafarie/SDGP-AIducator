@@ -1,7 +1,7 @@
 import logo from '../Images/logoAI.svg';
 import defaultProfile from "../Images/defaultProfile.svg"
 import '../App.css';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import getCurrentUsers from '../currentUser';
 import { useEffect, useState } from 'react';
 import getCurrentUser from '../currentUser';
@@ -11,8 +11,8 @@ import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import verified from "../Images/verified.svg"
 // import PropTypes from 'prop-types';
 
-function showActivePage(linkpath, url){
-  if(url === linkpath){
+function showActivePage(linkpath, url) {
+  if (url === linkpath) {
     return "underline";
   } else {
     return "none";
@@ -20,14 +20,14 @@ function showActivePage(linkpath, url){
 }
 
 function Navbar() {
-   let url = useLocation();
+  let url = useLocation();
   let back = useNavigate();
 
   const [showprofile, setshowprofile] = useState(true);
 
   useEffect(() => {
     getCurrentUsers().then((user) => {
-      if(user === null){
+      if (user === null) {
         back("/")
       } else {
         console.log(user.uid)
@@ -40,17 +40,17 @@ function Navbar() {
     <div id={"navBar"}>
       <div id={"left"}>
         <div id={"imageContainer"}>
-          <img src={logo} alt="AIducator logo" id={"logo"}/>
+          <img src={logo} alt="AIducator logo" id={"logo"} />
         </div>
         <Link className='NavLinks' to={"/home"}><h1>AIducator</h1></Link>
       </div>
       <div id={"right"}>
         <ul id={"navList"}>
-          <li><Link className='NavLinks' to={"/home"} style={{textDecoration:showActivePage("/home", url.pathname)}}>HOME</Link></li>
-          <li><Link className='NavLinks' to={"/video"} style={{textDecoration:showActivePage("/video", url.pathname)}}>VIDEOS</Link></li>
-          <li><Link className='NavLinks' to={"/quiz"} style={{textDecoration:showActivePage("/quiz", url.pathname)}}>QUIZ</Link></li>
-          <li><Link className='NavLinks' to={"/forum"} style={{textDecoration:showActivePage("/forum", url.pathname)}}>FORUM</Link></li>
-          <li><Link className='NavLinks' to={"/todo"} style={{textDecoration:showActivePage("/todo", url.pathname)}}>TO-DO</Link></li>
+          <li><Link className='NavLinks' to={"/home"} style={{ textDecoration: showActivePage("/home", url.pathname) }}>HOME</Link></li>
+          <li><Link className='NavLinks' to={"/videoPage"} style={{ textDecoration: showActivePage("/video", url.pathname) }}>VIDEOS</Link></li>
+          <li><Link className='NavLinks' to={"/quiz"} style={{ textDecoration: showActivePage("/quiz", url.pathname) }}>QUIZ</Link></li>
+          <li><Link className='NavLinks' to={"/forum"} style={{ textDecoration: showActivePage("/forum", url.pathname) }}>FORUM</Link></li>
+          <li><Link className='NavLinks' to={"/todo"} style={{ textDecoration: showActivePage("/todo", url.pathname) }}>TO-DO</Link></li>
         </ul>
       </div>
       <div id={"rightCorner"} className='NavLinks' onClick={() => {
@@ -64,7 +64,7 @@ function Navbar() {
         }
         setshowprofile(!showprofile);
       }}>
-        <img src={defaultProfile} alt="profile" id={"profile"}/>
+        <img src={defaultProfile} alt="profile" id={"profile"} />
       </div>
     </div>
     <ProfileSection id="profileSec"/>
@@ -72,7 +72,7 @@ function Navbar() {
   )
 }
 
-function ProfileSection({id}){
+function ProfileSection({ id }) {
 
   const [Currentuser, setCurrentuser] = useState(null);
   const [BaseDetails, setBaseDetails] = useState(null)
@@ -99,14 +99,14 @@ function ProfileSection({id}){
 
   useEffect(() => {
     let navbar = document.getElementById("navBar")
-    if(navbar !== null){
-      document.getElementById(id).style.top = navbar.clientHeight  + "px";
+    if (navbar !== null) {
+      document.getElementById(id).style.top = navbar.clientHeight + "px";
       console.log(navbar.clientHeight)
     }
 
   }, []);
 
-  function UserSignOut(){
+  function UserSignOut() {
     let auth = getAuth();
 
     signOut(auth).then(() => {
@@ -117,7 +117,7 @@ function ProfileSection({id}){
     });
   }
 
-  return(
+  return (
     <div id={id}>
       <div id='userDeatils'>
         <div className='Userdetails' id='Userheading'>
