@@ -223,7 +223,7 @@ function Assistant(){
                 </div>
             </div>
             <div id={'response'}>
-                <p style={{textAlign: "center", lineHeight: "200%", fontSize: "20px"}}>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.
+                <p style={{textAlign: "center", lineHeight: "200%", fontSize: "1vw"}}>Hello there!<br/>I am AIducator an AI assistant here to assist you in your educational journey.
                 <br/><br/>I can answer any educational question you have.<br/>All you gotta do is ask me :D.</p>
             </div> 
             <div id={'rating'}>

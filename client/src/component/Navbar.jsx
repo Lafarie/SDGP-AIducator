@@ -1,17 +1,18 @@
 import logo from '../Images/logoAI.svg';
 import defaultProfile from "../Images/defaultProfile.svg"
 import '../App.css';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import getCurrentUsers from '../currentUser';
 import { useEffect, useState } from 'react';
 import getCurrentUser from '../currentUser';
 import app from '../firebase';
 import { getDatabase, ref, onValue} from "firebase/database";
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+import verified from "../Images/verified.svg"
 // import PropTypes from 'prop-types';
 
-function showActivePage(linkpath, url){
-  if(url === linkpath){
+function showActivePage(linkpath, url) {
+  if (url === linkpath) {
     return "underline";
   } else {
     return "none";
@@ -19,14 +20,14 @@ function showActivePage(linkpath, url){
 }
 
 function Navbar() {
-   let url = useLocation();
+  let url = useLocation();
   let back = useNavigate();
 
   const [showprofile, setshowprofile] = useState(true);
 
   useEffect(() => {
     getCurrentUsers().then((user) => {
-      if(user === null){
+      if (user === null) {
         back("/")
       } else {
         console.log(user.uid)
@@ -35,38 +36,43 @@ function Navbar() {
   }, []);
 
   return (
+    <>
     <div id={"navBar"}>
       <div id={"left"}>
         <div id={"imageContainer"}>
-          <img src={logo} alt="AIducator logo" id={"logo"}/>
+          <img src={logo} alt="AIducator logo" id={"logo"} />
         </div>
         <Link className='NavLinks' to={"/home"}><h1>AIducator</h1></Link>
       </div>
       <div id={"right"}>
         <ul id={"navList"}>
-          <li><Link className='NavLinks' to={"/home"} style={{textDecoration:showActivePage("/home", url.pathname)}}>HOME</Link></li>
-          <li><Link className='NavLinks' to={"/video"} style={{textDecoration:showActivePage("/video", url.pathname)}}>VIDEOS</Link></li>
-          <li><Link className='NavLinks' to={"/quiz"} style={{textDecoration:showActivePage("/quiz", url.pathname)}}>QUIZ</Link></li>
-          <li><Link className='NavLinks' to={"/forum"} style={{textDecoration:showActivePage("/forum", url.pathname)}}>FORUM</Link></li>
-          <li><Link className='NavLinks' to={"/todo"} style={{textDecoration:showActivePage("/todo", url.pathname)}}>TO-DO</Link></li>
+          <li><Link className='NavLinks' to={"/home"} style={{ textDecoration: showActivePage("/home", url.pathname) }}>HOME</Link></li>
+          <li><Link className='NavLinks' to={"/videoPage"} style={{ textDecoration: showActivePage("/video", url.pathname) }}>VIDEOS</Link></li>
+          <li><Link className='NavLinks' to={"/quiz"} style={{ textDecoration: showActivePage("/quiz", url.pathname) }}>QUIZ</Link></li>
+          <li><Link className='NavLinks' to={"/forum"} style={{ textDecoration: showActivePage("/forum", url.pathname) }}>FORUM</Link></li>
+          <li><Link className='NavLinks' to={"/todo"} style={{ textDecoration: showActivePage("/todo", url.pathname) }}>TO-DO</Link></li>
         </ul>
       </div>
       <div id={"rightCorner"} className='NavLinks' onClick={() => {
         if(showprofile){
-          document.getElementById("profileSec").style.display = "block";
+          document.getElementById("profileSec").style.transform = "translate(0px)"
+          document.getElementById("profileSec").style.filter = "drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.364))";
+          setshowprofile(false);
         } else {
-          document.getElementById("profileSec").style.display = "none";
+          document.getElementById("profileSec").style.transform = "translateY(-100%)"
+          document.getElementById("profileSec").style.filter = "none";
         }
         setshowprofile(!showprofile);
       }}>
-        <img src={defaultProfile} alt="profile" id={"profile"}/>
+        <img src={defaultProfile} alt="profile" id={"profile"} />
       </div>
-      <ProfileSection id="profileSec"/>
     </div>
+    <ProfileSection id="profileSec"/>
+    </>
   )
 }
 
-function ProfileSection({id}){
+function ProfileSection({ id }) {
 
   const [Currentuser, setCurrentuser] = useState(null);
   const [BaseDetails, setBaseDetails] = useState(null)
@@ -81,7 +87,6 @@ function ProfileSection({id}){
             setBaseDetails(user)
             let dbRef = ref(db, "users/" + user.uid)
             onValue(dbRef, (user) => {
-              console.log("Hello")
               setCurrentuser(user.val())
             })
           }
@@ -94,14 +99,14 @@ function ProfileSection({id}){
 
   useEffect(() => {
     let navbar = document.getElementById("navBar")
-    if(navbar !== null){
-      document.getElementById(id).style.top = navbar.clientHeight  + "px";
+    if (navbar !== null) {
+      document.getElementById(id).style.top = navbar.clientHeight + "px";
       console.log(navbar.clientHeight)
     }
 
   }, []);
 
-  function UserSignOut(){
+  function UserSignOut() {
     let auth = getAuth();
 
     signOut(auth).then(() => {
@@ -112,14 +117,24 @@ function ProfileSection({id}){
     });
   }
 
-  return(
+  return (
     <div id={id}>
       <div id='userDeatils'>
-        <h1>{Currentuser !== null?Currentuser.fname + " " + Currentuser.lname:"User"}</h1>
-        <h1>{BaseDetails !== null?BaseDetails.email:"Email"}</h1>
+        <div className='Userdetails' id='Userheading'>
+          <h1>Profile</h1>
+        </div>
+        <div className='Userdetails'>
+          <h1>{Currentuser !== null?Currentuser.fname + " " + Currentuser.lname:"User"}</h1>
+        </div>
+        <div id='emailDiv' className='Userdetails'>
+          <h1>{BaseDetails !== null?BaseDetails.email:"Email"}</h1>
+          <div id='verifiedDiv'>
+            <img src={verified} alt="verified"/>
+          </div>
+        </div>
       </div>
       <hr id='profileHr'></hr>
-      <h2 onClick={() => {
+      <h2 id='signoutbtn' onClick={() => {
         if(confirm("Do you want to sign out")){
           UserSignOut();
         }

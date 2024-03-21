@@ -1,89 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './QuizPage.css'; 
-import { useLocation,Link } from 'react-router-dom';
+import { useLocation,Link,useParams } from 'react-router-dom';
 import Navbar from './component/Navbar';
-// import axios from 'axios';
+
+const QuizPage = () => {
+  const { grade, subject, lesson } = useParams();
+  const location = useLocation();
+  const apiUrl = `/quiz/questions?grade=${grade}&lessonName=${encodeURIComponent(lesson)}`;
 
 
-const QuizPage = ({ lesson }) => {
-    const [quizQuestions, setQuizQuestions] = useState([]); // State to store quiz questions
+const [quizQuestions, setQuizQuestions] = useState([]);
+const [selectedOptions, setSelectedOptions] = useState([]);
 
-    useEffect(() => {
-        // Function to fetch quiz questions from the backend
-        const fetchQuizQuestions = async () => {
-          try {
-            // Make an HTTP GET request to fetch quiz questions for the selected lesson
-            const response = await axios.get(`/api/quiz-questions/${lesson}`);
-            // Update the state with the fetched quiz questions
-            setQuizQuestions(response.data);
-          } catch (error) {
-            console.error('Error fetching quiz questions:', error);
-          }
-        };
-
-        // Call the fetchQuizQuestions function when the component mounts
-        fetchQuizQuestions();
-
-    }, [lesson]);
-  // Placeholder for quiz questions
-//   const quizQuestions = [
-
-//     {
-//       question: 'What is the definition of a triangle?',
-//       options: ['A polygon with two sides','A polygon with three sides', 'A polygon with four sides', 'A polygon with five sides'],
-//       correctAnswer: 'A polygon with three sides'
-//     },
-//     {
-//       question: 'The sum of the angles in a triangle?',
-//       options: ['90 degrees', '180 degrees', '270 degrees','360 degrees'],
-//       correctAnswer: '180 degrees'
-//     },
-//     {
-//       question: 'A quadrilateral with all four right angles is called?',
-//       options: ['Square', 'Rectangle', 'Rhombus','Trapezium'],
-//       correctAnswer: 'Square'
-//     },
-//     {
-//         question: 'The opposite angles in a parallelogram?',
-//         options: ['Acute', 'Obtuse', 'Congruent','Supplementary'],
-//         correctAnswer: 'Congruent'
-//       },
-//     {
-//         question: 'The diameter of a circle is twice the length of its?',
-//         options: ['Circumference', 'Radius', 'Area','None of the above'],
-//         correctAnswer: 'Square'
-//     },
-//     {
-//         question: 'If two lines intersect at a right angle, they are considered?',
-//         options: ['Parallel', 'Perpendicular', 'Intersecting','None of the above'],
-//         correctAnswer: 'Square'
-//     },
-//     {
-//         question: 'The measure of a straight angle is?',
-//         options: ['90 degrees', '180 degrees', '270 degrees','360 degrees'],
-//         correctAnswer: '90 degrees'
-//     },
-//     {
-//         question: 'A triangle with all sides equal is called?',
-//         options: ['Scalene', 'Isosceles', 'Equilateral','Right-angled'],
-//         correctAnswer: 'Equilateral'
-//     },
-//     {
-//         question: 'The diagonal of a square divides it into two?',
-//         options: ['Triangles of different areas', 'Triangles of equal areas', 'Rectangles','None of the above'],
-//         correctAnswer: 'Triangles of equal areas'
-//     },
-//     {
-//         question: 'In a right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides. This is known as?',
-//         options: ['Pythagorean theorem', 'Law of cosines', 'Law of sines','Triangle inequality theorem'],
-//         correctAnswer: 'Pythagorean theorem'
-//     },
-//   ];
-
-  let location = useLocation()
-
-  // State to keep track of selected options
-  const [selectedOptions, setSelectedOptions] = useState(new Array(quizQuestions.length).fill(null));
 
   // Function to calculate the number of remaining questions
   const remainingQuestions = quizQuestions.length - selectedOptions.filter(option => option !== null).length;
@@ -131,9 +59,46 @@ const QuizPage = ({ lesson }) => {
     return count;
   }, 0);
 
+
+
   // Function to handle form submission
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
+    try {
+      const response = await fetch('/api/quiz/questions', {
+        questionObj: QuestionObj,
+        selectedOptions: selectedOptions
+      });
+
+      // Handle the response if needed
+      console.log(response.data);
+    } catch (error) {
+      // Handle errors
+      console.error('Error:', error);
+    }
   };
+
+  const [questions, setQuestions]= useState(null)
+  const [ options, setOptions]= useState(null)
+
+  useEffect(()=>{
+    const QuestionObj = {
+      gradeid: location.pathname.split("/")[3].replaceAll("%20", " "),
+      subjectid: location.pathname.split("/")[2].replaceAll("%20", " "),
+      lessonName: location.pathname.split("/")[4].replaceAll("%20", " ")
+    };
+    fetch("/api/get/test", {
+      method: "post", 
+      headers: {"Content-Type" : "application/json"}, 
+      body: JSON.stringify({ 'QuestionDetails':QuestionObj})
+    }).then(response => response.json()).then(data => {
+      console.log(data.options)
+      console.log(data.questions)
+      setQuestions(data.questions)
+      setOptions(data.options)
+    });
+
+  },[]);
+  
 
   return (
     <div>
@@ -144,21 +109,13 @@ const QuizPage = ({ lesson }) => {
             <div className='h02'>{location.pathname.split("/")[4].replaceAll("%20", " ")}
             </div>
             <div className='Question-container'>
-                {/* Rendering quiz questions here */}
-                {quizQuestions.map((question, index) => (
-                <div key={index} className='question'>
-                    <div className='Q-Number'>Question  {`${index + 1}`.padStart(2, '0')}:</div>
-                    <label className='Qs'>{question.question}</label>
-                    <ul className='options'>
-                        {question.options.map((option, i) => (
-                            <li key={i} className="option">
-                                <input type="radio" id={`option-${index}-${i}`} name={`question-${index}`} value={option} onChange={() => handleOptionSelect(index, i)}checked={selectedOptions[index] === i} />
-                                <label htmlFor={`option-${index}-${i}`}>{option}</label>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                ))}
+              {questions === null? <h1>
+                No Questions
+              </h1>:
+              Object.keys(questions).map((question, index)=> (
+                <QuestionContainer index={questions[question].QuestionID} question={questions[question].QuestionText} options={options[question]}/>
+              ))}
+
             </div>
             <div className='Other-Box'>
                 <div className='Remaining-questions'>
@@ -180,22 +137,24 @@ const QuizPage = ({ lesson }) => {
   );
 };
 
-function QuestionContainer(){
+function QuestionContainer({index, question, options}){
 
   return (
       <div key={index} className='question'>
-          <div className='Q-Number'>Question  {`${index + 1}`.padStart(2, '0')}:</div>
+          <div className='Q-Number'>Question  {`${index + 1}`}:</div>
           <label className='Qs'>{question}</label>
           <ul className='options'>
-              {question.options.map((option, i) => (
-                  <li key={i} className="option">
-                      <input type="radio" id={`option-${index}-${i}`} name={`question-${index}`} value={option} onChange={() => handleOptionSelect(index, i)}checked={selectedOptions[index] === i} />
-                      <label htmlFor={`option-${index}-${i}`}>{option}</label>
+              {options.map((option, key) => (
+                  <li key={key} className="option">
+                      <input type="radio" id={`option-${key}`} name={`question-${index}`} value={option}  />
+                      <label htmlFor={`option-${key}`}>{option}</label>
                   </li>
               ))}
           </ul>
       </div>
   )
-}
+};
 
+// onChange={() => handleOptionSelect(index, i)}
+// checked={selectedOptions[index] === i}
 export default QuizPage;
