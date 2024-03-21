@@ -677,7 +677,7 @@ app.post("/update/views", (req, res) => {
 });
 
 app.get("/get/popular-threads", (req, res) => {
-  const query = `SELECT * FROM Threads ORDER BY UpVotes DESC LIMIT 8`;
+  const query = `SELECT * FROM Threads ORDER BY UpVotes DESC LIMIT 5`;
 
   dbconnection.query(query, (err, result) => {
     if (err) {

@@ -11,6 +11,7 @@ export default defineConfig({
         open: true,
         proxy: {
             '/foo' : "",
+
             '/api': {
               target: 'http://localhost:5000',// this is the port where the server is running
               changeOrigin: true,

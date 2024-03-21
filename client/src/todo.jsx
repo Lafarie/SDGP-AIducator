@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import './todo.css';
-// import FullCalendar from '@fullcalendar/react';
-// import dayGridPlugin from '@fullcalendar/daygrid';
-// import interactionPlugin from '@fullcalendar/interaction';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 
 const MyCalendar = ({ events }) => {
     return (
-        <div style={{ width: '948px', height: '437px', borderRadius: '20px', overflow: 'hidden'}}>
+        // styles for the calendar
+        <div style={{ width: '675px', height: '435px', borderRadius: '20px', overflow: 'hidden', color: 'white'}}>   
             <FullCalendar 
                 plugins={[ dayGridPlugin, interactionPlugin ]}
                 initialView="dayGridMonth"
@@ -18,7 +19,7 @@ const MyCalendar = ({ events }) => {
                 dayMaxEvents={true}
                 weekends={true}
                 style={{width: '100%', height: '100%'}}
-                aspectRatio={2.58}            
+                aspectRatio={1.9}      //aspect ratio used to set the height of the dates       
             />   
         </div>
     );
@@ -63,7 +64,6 @@ const ToDo = () => {
         <div >
             <div className="container">
                 <div className="calendarArea">
-                {/* <div className="Todo"> */}
                     <MyCalendar events={events} />
                 </div>
 
@@ -125,7 +125,9 @@ const ToDo = () => {
             </div>
 
             <div className="taskContainer">
-                
+                <div className="topic">
+                    {/* <p>To-Do</p>  this line is used to show to-do in task container */}
+                </div>
             </div>
 
         </div>
