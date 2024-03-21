@@ -26,7 +26,7 @@ let INSTRUCTIONS =
 
 let MODELINSTRUCTIONS = `I want you take the users prompt and then compare it with these topics which are 
                         "Math", "Geography", "Science", "Geometry", "Astronomy", "Geology", "Chemical", "Flora and Fauna", "People" and return the 
-                        tages that relate to the prompt and give them as an array. If the awnser doesnt relate to any topic return a empty array`
+                        tages that relate to the prompt and give them as an comma seperated string. If the awnser doesnt relate to any topic return a empty string`
 
 const moderationUrl = 'https://api.openai.com/v1/moderations'; // Open AI moderation URL
 
@@ -38,7 +38,7 @@ var dbconnection = sql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  port: 3306,
+  port: 3307,
 });
 
 function pingdb() {
@@ -122,6 +122,22 @@ let tablesql =
   "promptrating VARCHAR(10)," +
   "CONSTRAINT q_id_pk PRIMARY KEY (id));";
 
+let modelTable = `CREATE TABLE modelTable 
+    (id INTEGER NOT NULL AUTO_INCREMENT,
+    modelSrc VARCHAR(100) NOT NULL,
+    tagStr VARCHAR(200) NOT NULL,
+    CONSTRAINT model_id_pk PRIMARY KEY (id));`;
+
+// adding models
+let addmodels = `
+INSERT INTO modelTable (modelSrc, tagStr)
+VALUES 
+    ('Cylinder.glb', 'geometry,math'),
+    ('Hexagon.glb', 'geometry,math'),
+    ('Square.glb', 'geometry,math'),
+    ('Triangle.glb', 'geometry,math'),
+    ('Circle.glb', 'geometry,math');`;
+
 dbconnection.query("CREATE DATABASE AIducator", (err, result) => {
   if (err) {
     if (err.errno === 1007) {
@@ -199,6 +215,77 @@ dbconnection.query(threadVotesql, (err, results) => {
   }
 });
 
+function MatchingTags(array1, array2) {
+    let existsCount = 0;
+    for (let i = 0; i < array2.length; i++) {
+        if (array1.indexOf(array2[i]) !== -1) {
+            existsCount++;
+        }
+    }
+    if(existsCount === 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+//fucntion to get what models match
+function getMatchingModels(promptTagArr){
+    return new Promise((resolve, reject) => {
+        let getModels = `SELECT modelSrc, tagStr FROM modelTable;`
+        let modelArray = [];
+
+        dbconnection.query(getModels, (err, results) => {
+            if(err) {
+                console.error(err)
+                reject(err)
+            } else {
+                results.forEach(result => {
+                    let sqltags = result.tagStr.split(",");
+                    if(MatchingTags(promptTagArr, sqltags)){
+                        modelArray.push(result.modelSrc);
+                    }
+                });
+                resolve(modelArray);
+            }
+        })
+    })
+    
+}
+
+dbconnection.query(modelTable, (err, results) => {
+    if(err) {
+        if(err.errno === 1050){
+            console.log("modelTable table already exists");
+        }
+    } else {
+        console.log("modelTable table created successfully");
+    }
+});
+
+let gettingCount = `SELECT COUNT(*) AS count FROM modelTable`;
+
+dbconnection.query(gettingCount, (err, results) => {
+    if(err) {
+        console.error(err)
+    } else {
+        const count = results[0].count;
+        console.log(count);
+
+        if(count === 0){
+            dbconnection.query(addmodels, (err, result) => {
+                if (err) {
+                console.log("Error is adding values")
+                } else {
+                console.log("models added sucessfully");
+                }
+            });
+        } else {
+            console.log("Models already added");
+        }
+    }
+})
+
 async function main(input) {
     const completion = await openai.chat.completions.create({
         messages: [{ "role": "system", "content": INSTRUCTIONS }, { "role": "assistant", "content": input }],
@@ -223,7 +310,6 @@ function getCategories(objectArr) {
             returnArr.push(elements)
         }
     })
-    return returnArr;
 }
 
 let app = new express;
@@ -245,7 +331,18 @@ app.post("/post/prompt", async (req, res) => {
                 let tags = getKeywords(req.body.prompt);
                 let result = (await returnMsg).message;
                 let tagresults = (await tags).message;
-                res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content })
+                let searchArr = [];
+                tagresults.content.split(',').forEach(element => {
+                    let trimmed = element.trim().toLowerCase();
+                    searchArr.push(trimmed)
+                });
+                console.log(searchArr);
+                let modelArray = await getMatchingModels(searchArr).then(result => {
+                    return result;
+                }).catch(err => {
+                    console.error(err);
+                });
+                res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content, "models": modelArray })
             } else {
                 let arr = getCategories(data.results[0].categories)
                 res.json({ "flagged": true, "generated_result": arr })
@@ -629,6 +726,6 @@ app.post('/get/test', (req, res) => {
     });
 });
 
-app.listen(3002, () => {
-    console.log("listenning on port 3002.")
+app.listen(5000, () => {
+    console.log("listenning on port 5000.")
 })
