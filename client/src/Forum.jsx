@@ -17,6 +17,7 @@ function Forum() {
     fetch(`/api/get/forum?forumId=all`)
       .then((res) => res.json())
       .then((data) => {
+        console.log(data.message);
         setForums(data.message);
       })
       .catch((error) => {
