@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./component/Navbar";
 import "./Forum.css";
-import { useLocation } from "react-router-dom";
+import { useLocation , useNavigate} from "react-router-dom";
 import PopularPosts from "./component/PopularPosts";
 import Footer from "./component/Footer";
+import getCurrentUsers from "./currentUser";
+import { ref, onValue, getDatabase, set } from "firebase/database";
+import app from "./firebase";
 
 function CreatePost() {
   let location = useLocation();
@@ -13,10 +16,24 @@ function CreatePost() {
   const [threadID, setThreadID] = useState("");
   const [threadName, setThreadName] = useState("");
   const [forum, setForum] = useState("");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState("");
-  const [file, setFile] = useState("");
+  const [user, setCurrentuser] = useState(1);
+
+  let database = getDatabase(app);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getCurrentUsers().then((Cuser) => {
+      if (Cuser !== null) {
+        let userRef = ref(database, "users/" + Cuser.uid);
+        // console.log(Cuser.uid);
+        setCurrentuser(Cuser.uid);
+        // onValue(userRef, (snapshot) => {
+        //   setCurrentuser(snapshot.val().fname + " " + snapshot.val().lname);
+        //   console.log(snapshot.val().fname + " " + snapshot.val().lname);
+        // })
+      }
+    });
+  }, []);
 
   useEffect(() => {
     let url = location.pathname;
@@ -60,51 +77,79 @@ function CreatePost() {
     e.preventDefault();
     console.log("submit");
     if (type === "forum") {
-      
-          let forumName = document.getElementById("forum-name").value;
-          let description = document.getElementById("forum-description").value;
-          let file = document.getElementById("forum-attach-file").value;
-          fetch("/api/put/create/forum?" + "forumName=" + forumName + "&content=" + description + "&file=" + file)
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data.message);
-            })
-            .catch((error) => {
-              console.error("Error fetching forum data:", error);
-            });
+      let forumName = document.getElementById("forum-name").value;
+      let description = document.getElementById("forum-description").value;
+      // let file = document.getElementById("forum-attach-file").value;
+      fetch(
+        "/api/put/create/forum?" +
+          "forumName=" +
+          forumName +
+          "&content=" +
+          description
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.message);
+        })
+        .catch((error) => {
+          console.error("Error fetching forum data:", error);
+        });
     } else if (type === "thread") {
-      
-          let title = document.getElementById("thread-question-title").value;
-          let content = document.getElementById("thread-content").value;
-          let file = document.getElementById("thread-attach-file").value;
-          let tags = document.getElementById("thread-tags").value;
-          console.log(tags)
-          
-          fetch("/api/put/create/thread?" + "forumID=" + forumID + "&title=" + title + "&content=" +content +"&tags=" +tags)
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data.message);
-            })
-            .catch((error) => {
-              console.error("Error fetching forum data:", error);
-            });
+      let title = document.getElementById("thread-question-title").value;
+      let content = document.getElementById("thread-content").value;
+      // let file = document.getElementById("thread-attach-file").value;
+      let tags = document.getElementById("thread-tags").value;
+      console.log(user);
+      fetch(
+        "/api/put/create/thread?" +
+          "userID=" +
+          user +
+          "&forumID=" +
+          forumID +
+          "&title=" +
+          title +
+          "&content=" +
+          content +
+          "&tags=" +
+          tags
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.message);
+        })
+        .catch((error) => {
+          console.error("Error fetching forum data:", error);
+        });
     } else if (type === "post") {
+      let content = document.getElementById("post-content").value;
+      // let file = document.getElementById("attach-file").value;
+      let tags = document.getElementById("post-tags").value;
+      // console.log(tags)
 
-          let content = document.getElementById("post-content").value;
-          // let file = document.getElementById("attach-file").value;
-          let tags = document.getElementById("post-tags").value;
-          // console.log(tags)
-
-          fetch("/api/put/create/post?" + "threadID=" + threadID + "&content=" + content + "&tags=" + tags)
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data.message);
-            })
-            .catch((error) => {
-              console.error("Error fetching forum data:", error);
-            });
+      fetch(
+        "/api/put/create/post?" +
+          "userID=" +
+          user +
+          "&threadID=" +
+          threadID +
+          "&content=" +
+          content +
+          "&tags=" +
+          tags
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.message);
+        })
+        .catch((error) => {
+          console.error("Error fetching forum data:", error);
+        });
     }
-  }
+
+
+    // To go back
+    navigate(-1);
+  };
 
   if (type === "forum") {
     return (
@@ -121,11 +166,22 @@ function CreatePost() {
                 Forum Name
               </label>
               <br />
-              <input type="text" id="forum-name" name="post-question" required/>
+              <input
+                type="text"
+                id="forum-name"
+                name="post-question"
+                placeholder="Enter Forum Name Here"
+                required
+              />
               <br />
               <label htmlFor="post-content">Description:</label>
               <br />
-              <textarea id="forum-description" name="post-content" required />
+              <textarea
+                id="forum-description"
+                name="post-content"
+                placeholder="Enter Small Description Here For Forum"
+                required
+              />
               {/* <br />
               <label htmlFor="attach-file"> Attach File:
                 <input type="file" id="forum-attach-file" name="attach-file" />
@@ -134,9 +190,11 @@ function CreatePost() {
               <button type="submit">Submit</button>
             </form>
           </div>
-          <div className="side-bar"><PopularPosts/></div>
+          <div className="side-bar">
+            <PopularPosts />
+          </div>
         </div>
-        <Footer/>
+        <Footer />
       </>
     );
   } else if (type === "thread") {
@@ -154,11 +212,22 @@ function CreatePost() {
                 Your Question Title
               </label>
               <br />
-              <input type="text" id="thread-question-title" name="thread-question" required/>
+              <input
+                type="text"
+                id="thread-question-title"
+                name="thread-question"
+                placeholder="Enter Post Title Here"
+                required
+              />
               <br />
               <label htmlFor="thread-content">Messege:</label>
               <br />
-              <textarea id="thread-content" name="thread-content" required />
+              <textarea
+                id="thread-content"
+                name="thread-content"
+                placeholder="Enter Your Post Content Here"
+                required
+              />
               {/* <br />
               <label htmlFor="thread-attach-file">
                 {" "}
@@ -168,13 +237,21 @@ function CreatePost() {
               <br />
               <label htmlFor="thread-tags">Tags:</label>
               <br />
-              <input type="text" id="thread-tags" name="thread-tags" required />
+              <input
+                type="text"
+                id="thread-tags"
+                name="thread-tags"
+                placeholder="Use , to sperate Tags"
+                required
+              />
               <button type="submit">Submit</button>
             </form>
           </div>
-          <div className="side-bar"><PopularPosts/></div>
+          <div className="side-bar">
+            <PopularPosts />
+          </div>
         </div>
-        <Footer/>
+        <Footer />
       </>
     );
   } else if (type === "post") {
@@ -190,7 +267,12 @@ function CreatePost() {
             <form id="create-post-form" onSubmit={handleSubmit}>
               <label htmlFor="post-content">Messege:</label>
               <br />
-              <textarea id="post-content" name="post-content" required />
+              <textarea
+                id="post-content"
+                name="post-content"
+                placeholder="Enter your Reply Here"
+                required
+              />
               {/* <br />
               <label htmlFor="attach-file">
                 {" "}
@@ -200,15 +282,22 @@ function CreatePost() {
               <br />
               <label htmlFor="post-tags">Tags:</label>
               <br />
-              <input type="text" id="post-tags" name="post-tags" required />
+              <input
+                type="text"
+                id="post-tags"
+                name="post-tags"
+                placeholder="Use , to sperate Tags"
+                required
+              />
               <br />
               <button type="submit">Submit</button>
             </form>
           </div>
           <div className="side-bar">
-            <PopularPosts/></div>
+            <PopularPosts />
+          </div>
         </div>
-        <Footer/>
+        <Footer />
       </>
     );
   }

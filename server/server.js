@@ -6,8 +6,7 @@ import sql from "mysql2";
 
 dotenv.config();
 
-let INSTRUCTIONS =
-    `
+let INSTRUCTIONS = `
     Queries about history should be considered education, for example questions about historical people and events in history.
 
     DO NOT answer any personal issues or statements a user might give as a prompt.
@@ -22,13 +21,13 @@ let INSTRUCTIONS =
     Add heading to question answered and have sections for the answers.
     Keep responses to a maximum of 5000 words.
     FOLLOW ALL THESE RULES AT ALL TIMES.
-    `
+    `;
 
 let MODELINSTRUCTIONS = `I want you take the users prompt and then compare it with these topics which are 
                         "Math", "Geography", "Science", "Geometry", "Astronomy", "Geology", "Chemical", "Flora and Fauna", "People" and return the 
-                        tages that relate to the prompt and give them as an array. If the awnser doesnt relate to any topic return a empty array`
+                        tages that relate to the prompt and give them as an array. If the awnser doesnt relate to any topic return a empty array`;
 
-const moderationUrl = 'https://api.openai.com/v1/moderations'; // Open AI moderation URL
+const moderationUrl = "https://api.openai.com/v1/moderations"; // Open AI moderation URL
 
 const openai = new OpenAI({
   apiKey: process.env.API_KEY,
@@ -58,47 +57,47 @@ dbconnection.connect((err) => {
   }
 });
 
+const usersql = `CREATE TABLE Users (
+  UserID VARCHAR(50) PRIMARY KEY,
+  Name VARCHAR(100));`;
+
 const forumsql = `CREATE TABLE Forums (
-  ForumID INT PRIMARY KEY AUTO_INCREMENT,
+  ForumID INT AUTO_INCREMENT PRIMARY KEY,
+  UserID VARCHAR(50),
   Name VARCHAR(100),
-  Description TEXT)`;
+  Description TEXT,
+  FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);`;
 
 const threadsql = `CREATE TABLE Threads (
-  ThreadID INT PRIMARY KEY AUTO_INCREMENT,
-  ForumID INT NOT NULL,
-  UserID INT NOT NULL,
-  Title VARCHAR(255) NOT NULL,
+  ThreadID INT AUTO_INCREMENT PRIMARY KEY,
+  ForumID INT,
+  UserID VARCHAR(50),
+  Title VARCHAR(255),
   CreationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   Views INT DEFAULT 0,
-  Content TEXT NOT NULL,
-  UpVotes INT DEFAULT 0,
-  DownVotes INT DEFAULT 0,
-  Tag VARCHAR(255)
+  Content VARCHAR(255),
+  Tag VARCHAR(255),
+  FOREIGN KEY (UserID) REFERENCES Users(UserID),
+  FOREIGN KEY (ForumID) REFERENCES Forums(ForumID)
 );`;
 
 const postsql = `CREATE TABLE Posts (
-  PostID INT PRIMARY KEY AUTO_INCREMENT,
-  UserID INT NOT NULL,
-  ThreadID INT NOT NULL,
-  Content TEXT NOT NULL,
+  PostID INT AUTO_INCREMENT PRIMARY KEY,
+  UserID VARCHAR(50),
+  ThreadID INT,
+  Content TEXT,
   CreationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UpVotes INT DEFAULT 0,
-  DownVotes INT DEFAULT 0,
-  Tag VARCHAR(255)
+  Tag VARCHAR(255),
+  FOREIGN KEY (UserID) REFERENCES Users(UserID),
+  FOREIGN KEY (ThreadID) REFERENCES Threads(ThreadID)
 );`;
-
-const usersql = `CREATE TABLE Users (
-        UserID INT PRIMARY KEY AUTO_INCREMENT,
-        Username VARCHAR(50),
-        Email VARCHAR(100),
-        Password VARCHAR(100),
-        RegistrationDate TIMESTAMP)`;
 
 const postVotesql = `CREATE TABLE PostVoteTracking (
   VoteID INT AUTO_INCREMENT PRIMARY KEY,
-  UserID INT NOT NULL,
-  PostID INT NOT NULL,
-  VoteType ENUM('UpVote', 'DownVote') NOT NULL,
+  UserID VARCHAR(50),
+  PostID INT,
+  VoteType ENUM('UpVotes', 'DownVotes', 'Removed') DEFAULT NULL,
   VotedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (UserID) REFERENCES Users(UserID),
   FOREIGN KEY (PostID) REFERENCES Posts(PostID)
@@ -106,9 +105,9 @@ const postVotesql = `CREATE TABLE PostVoteTracking (
 
 const threadVotesql = `CREATE TABLE ThreadVoteTracking (
   VoteID INT AUTO_INCREMENT PRIMARY KEY,
-  UserID INT NOT NULL,
-  ThreadID INT NOT NULL,
-  VoteType ENUM('UpVote', 'DownVote') NOT NULL,
+  UserID VARCHAR(50),
+  ThreadID INT,
+  VoteType ENUM('UpVotes', 'DownVotes') DEFAULT NULL,
   VotedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (UserID) REFERENCES Users(UserID),
   FOREIGN KEY (ThreadID) REFERENCES Threads(ThreadID)
@@ -157,6 +156,7 @@ dbconnection.query(usersql, (err, results) => {
   } else {
     console.log("users table created successfully");
   }
+  // console.log(err);
 });
 
 dbconnection.query(threadsql, (err, results) => {
@@ -200,102 +200,131 @@ dbconnection.query(threadVotesql, (err, results) => {
 });
 
 async function main(input) {
-    const completion = await openai.chat.completions.create({
-        messages: [{ "role": "system", "content": INSTRUCTIONS }, { "role": "assistant", "content": input }],
-        model: "gpt-3.5-turbo",
-    });
-    return completion.choices[0];
+  const completion = await openai.chat.completions.create({
+    messages: [
+      { role: "system", content: INSTRUCTIONS },
+      { role: "assistant", content: input },
+    ],
+    model: "gpt-3.5-turbo",
+  });
+  return completion.choices[0];
 }
 
-async function getKeywords(input){
-    const completion = await openai.chat.completions.create({
-        messages: [{ "role": "system", "content": MODELINSTRUCTIONS }, { "role": "assistant", "content": input }],
-        model: "gpt-3.5-turbo",
-    });
-    return completion.choices[0];
+async function getKeywords(input) {
+  const completion = await openai.chat.completions.create({
+    messages: [
+      { role: "system", content: MODELINSTRUCTIONS },
+      { role: "assistant", content: input },
+    ],
+    model: "gpt-3.5-turbo",
+  });
+  return completion.choices[0];
 }
 
 function getCategories(objectArr) {
-    let keyArr = Object.keys(objectArr);
-    let returnArr = [];
-    keyArr.forEach((elements) => {
-        if (objectArr[elements]) {
-            returnArr.push(elements)
-        }
-    })
-    return returnArr;
+  let keyArr = Object.keys(objectArr);
+  let returnArr = [];
+  keyArr.forEach((elements) => {
+    if (objectArr[elements]) {
+      returnArr.push(elements);
+    }
+  });
+  return returnArr;
 }
 
-let app = new express;
+let app = new express();
 
 app.use(bodyParser.json());
 
 app.post("/post/prompt", async (req, res) => {
-    console.log(req.body.prompt); // remove later
-    if (req.body.prompt === "") {
-        res.json({ "generated_result": "I'm sorry but I have not recieved a proper question." })
-    } else {
-        fetch(moderationUrl, {
-            method: "POST",
-            headers: { 'Content-Type': "application/json", 'Authorization': `Bearer ${process.env.API_KEY}` },
-            body: JSON.stringify({ input: req.body.prompt })
-        }).then(response => response.json()).then(async (data) => {
-            if (!data.results[0].flagged) {
-                let returnMsg = main(req.body.prompt);
-                let tags = getKeywords(req.body.prompt);
-                let result = (await returnMsg).message;
-                let tagresults = (await tags).message;
-                res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content })
-            } else {
-                let arr = getCategories(data.results[0].categories)
-                res.json({ "flagged": true, "generated_result": arr })
-            }
-        })
-    }
+  console.log(req.body.prompt); // remove later
+  if (req.body.prompt === "") {
+    res.json({
+      generated_result: "I'm sorry but I have not recieved a proper question.",
+    });
+  } else {
+    fetch(moderationUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.API_KEY}`,
+      },
+      body: JSON.stringify({ input: req.body.prompt }),
+    })
+      .then((response) => response.json())
+      .then(async (data) => {
+        if (!data.results[0].flagged) {
+          let returnMsg = main(req.body.prompt);
+          let tags = getKeywords(req.body.prompt);
+          let result = (await returnMsg).message;
+          let tagresults = (await tags).message;
+          res.json({
+            flagged: false,
+            generated_result: result.content,
+            tags: tagresults.content,
+          });
+        } else {
+          let arr = getCategories(data.results[0].categories);
+          res.json({ flagged: true, generated_result: arr });
+        }
+      });
+  }
 });
 
 app.post("/post/save", async (req, res) => {
-    console.log(req.body.rating); // remove later
-    dbconnection.query(`INSERT INTO querytable(prompt, response, promptrating) VALUES("${req.body.prompt}", '${req.body.response.replaceAll("'", "*")}', "${req.body.rating}");`, (err, result) => {
-        if (err) {
-            console.log(err)
-            res.json({ "message": "could no save conversation", "id": "-1" })
-        } else {
-            console.log("saved")
-            dbconnection.query('SELECT id FROM queryTable ORDER BY id DESC LIMIT 1', (err, result) => { // to get the id of the last entry
-                if (err) {
-                    console.log("Error")
-                } else {
-                    res.json({ "message": "response saved", "id": result[0].id })
-                }
-            })
-        }
-    });
+  console.log(req.body.rating); // remove later
+  dbconnection.query(
+    `INSERT INTO querytable(prompt, response, promptrating) VALUES("${
+      req.body.prompt
+    }", '${req.body.response.replaceAll("'", "*")}', "${req.body.rating}");`,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.json({ message: "could no save conversation", id: "-1" });
+      } else {
+        console.log("saved");
+        dbconnection.query(
+          "SELECT id FROM queryTable ORDER BY id DESC LIMIT 1",
+          (err, result) => {
+            // to get the id of the last entry
+            if (err) {
+              console.log("Error");
+            } else {
+              res.json({ message: "response saved", id: result[0].id });
+            }
+          }
+        );
+      }
+    }
+  );
 });
 
 app.get("/get/responses", (req, res) => {
-    dbconnection.query("SELECT id, prompt, promptrating FROM querytable", (err, result) => {
-        if (err) {
-            console.log("Could not get responses")
-        } else {
-            res.json({ "responseArray": result })
-        }
-    })
-})
+  dbconnection.query(
+    "SELECT id, prompt, promptrating FROM querytable",
+    (err, result) => {
+      if (err) {
+        console.log("Could not get responses");
+      } else {
+        res.json({ responseArray: result });
+      }
+    }
+  );
+});
 
 app.post("/post/unsave", async (req, res) => {
-    let deleteID = req.body.unsaveID;
-    console.log(deleteID) // delete later
-    let deleteQuery = `DELETE FROM querytable WHERE (id = ${deleteID});`
-    dbconnection.query(deleteQuery, (err, result) => {
-        if (err) {
-            res.json({ "message": "Response could not be unsaved" })
-            console.log("Response could not be unsaved")
-        } else {
-            res.json({ "message": "Response unsaved" })
-            console.log("Response unsaved")
-        }
-    })
+  let deleteID = req.body.unsaveID;
+  console.log(deleteID); // delete later
+  let deleteQuery = `DELETE FROM querytable WHERE (id = ${deleteID});`;
+  dbconnection.query(deleteQuery, (err, result) => {
+    if (err) {
+      res.json({ message: "Response could not be unsaved" });
+      console.log("Response could not be unsaved");
+    } else {
+      res.json({ message: "Response unsaved" });
+      console.log("Response unsaved");
+    }
+  });
 });
 
 app.post("/post/displaySaved", (req, res) => {
@@ -339,12 +368,22 @@ app.get("/get/threads", (req, res) => {
   // console.log(threads);
   let query;
 
-  query = `SELECT T.*, COUNT(P.ThreadID) AS PostCount
-  FROM Threads T
-  LEFT JOIN Posts P ON T.ThreadID = P.ThreadID
-  WHERE T.ForumID = ${forumId}
-  GROUP BY T.ThreadID`;
-
+  query = `
+    SELECT 
+      T.*, 
+      COUNT(P.ThreadID) AS PostCount,
+      IFNULL(SUM(CASE WHEN TVT.VoteType = 'UpVotes' THEN 1 ELSE 0 END), 0) AS UpVotes,
+      IFNULL(SUM(CASE WHEN TVT.VoteType = 'DownVotes' THEN 1 ELSE 0 END), 0) AS DownVotes
+    FROM 
+      Threads T
+    LEFT JOIN 
+      Posts P ON T.ThreadID = P.ThreadID
+    LEFT JOIN 
+      ThreadVoteTracking TVT ON T.ThreadID = TVT.ThreadID
+    WHERE 
+      T.ForumID = ${forumId}
+    GROUP BY 
+      T.ThreadID`;
   dbconnection.query(query, (err, result) => {
     if (err) {
       console.error("Error executing query:", err);
@@ -357,17 +396,30 @@ app.get("/get/threads", (req, res) => {
 
 app.get("/get/thread", (req, res) => {
   let thread = req.query.threadId;
+  // console.log(thread);
   let query = `
-    SELECT 
-      T.*, 
-      U.Username,
-      DATE_FORMAT(T.CreationDate, '%Y-%m-%d') AS Date
-    FROM 
-      Threads T
-    JOIN 
-      Users U ON T.UserID = U.UserID
-    WHERE 
-      T.ThreadID = ${thread}`;
+      SELECT 
+        T.*, 
+        U.Username,
+        F.Name,
+        DATE_FORMAT(T.CreationDate, '%Y-%m-%d') AS Date,
+        COUNT(P.ThreadID) AS PostCount,
+        IFNULL(SUM(CASE WHEN TVT.VoteType = 'UpVotes' THEN 1 ELSE 0 END), 0) AS UpVotes,
+        IFNULL(SUM(CASE WHEN TVT.VoteType = 'DownVotes' THEN 1 ELSE 0 END), 0) AS DownVotes
+      FROM 
+        Threads T
+      JOIN 
+        Users U ON T.UserID = U.UserID
+      JOIN 
+        Forums F ON T.ForumID = F.ForumID
+      LEFT JOIN 
+        Posts P ON T.ThreadID = P.ThreadID
+      LEFT JOIN 
+        ThreadVoteTracking TVT ON T.ThreadID = TVT.ThreadID
+      WHERE 
+        T.ThreadID = ${thread}
+      GROUP BY 
+        T.ThreadID`;
 
   dbconnection.query(query, (err, result) => {
     if (err) {
@@ -381,16 +433,33 @@ app.get("/get/thread", (req, res) => {
 
 app.get("/get/posts", (req, res) => {
   let thread = req.query.threadId;
-  // console.log(threads);
-  let query;
+  // console.log(thread);
 
-  query = `SELECT T.Title, F.Name, P.*, CASE
-  WHEN TIMESTAMPDIFF(DAY, P.CreationDate, NOW()) < 1 THEN '0 days ago'
-  WHEN TIMESTAMPDIFF(DAY, P.CreationDate, NOW()) = 1 THEN '1 day ago'
-  ELSE CONCAT(TIMESTAMPDIFF(DAY, P.CreationDate, NOW()), ' days ago')
-END AS TimeAgo, U.Username, U.Email FROM Posts P JOIN Threads T ON P.ThreadID = T.ThreadID JOIN Forums F ON T.ForumID = F.ForumID JOIN Users U ON P.UserID = U.UserID WHERE T.ThreadID = ${thread}`;
+  const query = `SELECT 
+  T.Title, 
+  P.*, 
+  CASE
+    WHEN TIMESTAMPDIFF(DAY, P.CreationDate, NOW()) < 1 THEN '0 days ago'
+    WHEN TIMESTAMPDIFF(DAY, P.CreationDate, NOW()) = 1 THEN '1 day ago'
+    ELSE CONCAT(TIMESTAMPDIFF(DAY, P.CreationDate, NOW()), ' days ago')
+  END AS TimeAgo, 
+  U.Username,
+  IFNULL(SUM(CASE WHEN PVT.VoteType = 'UpVotes' THEN 1 ELSE 0 END), 0) AS UpVotes,
+  IFNULL(SUM(CASE WHEN PVT.VoteType = 'DownVotes' THEN 1 ELSE 0 END), 0) AS DownVotes
+FROM 
+  Posts P 
+JOIN 
+  Threads T ON P.ThreadID = T.ThreadID 
+JOIN 
+  Users U ON P.UserID = U.UserID 
+LEFT JOIN 
+  PostVoteTracking PVT ON P.PostID = PVT.PostID
+WHERE 
+  T.ThreadID = ? 
+GROUP BY 
+  P.PostID`;
 
-  dbconnection.query(query, (err, result) => {
+  dbconnection.query(query, [thread], (err, result) => {
     if (err) {
       console.error("Error executing query:", err);
       res.status(500).json({ message: "Internal server error" });
@@ -417,37 +486,41 @@ app.get("/put/create/forum", (req, res) => {
 
 app.get("/put/create/thread", (req, res) => {
   let forumID = req.query.forumID;
-  // let userID = req.query.userID;
+  let userID = req.query.userID;
   let title = req.query.title;
   let content = req.query.content;
   let tag = req.query.tags;
-  console.log(tag);
+  console.log(userID);
 
   let query;
 
-  query = `INSERT INTO Threads (ForumID, UserID, Title, CreationDate, Views, Content, UpVotes, DownVotes, Tag)
-  VALUES (?, 1, ?, current_timestamp(), 0, ?, 0, 0, ?);`;
+  query = `INSERT INTO Threads (ForumID, UserID, Title, CreationDate, Views, Content, Tag)
+  VALUES (?, ?, ?, current_timestamp(), 0, ?, ?);`;
 
-  dbconnection.query(query, [forumID, title, content, tag], (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).json({ message: "Internal server error" });
+  dbconnection.query(
+    query,
+    [forumID, userID, title, content, tag],
+    (err, result) => {
+      if (err) {
+        console.error("Error executing query:", err);
+        res.status(500).json({ message: "Internal server error" });
+      }
     }
-  });
+  );
 });
 
 app.get("/put/create/post", (req, res) => {
-  // let userID = req.query.userID;
-
+  let userID = req.query.userID;
   let threadID = req.query.threadID;
   let content = req.query.content;
   let tag = req.query.tags;
 
+  // console.log(threadID);
   let query;
 
-  query = `INSERT INTO Posts (UserID, ThreadID, Content, CreationDate, UpVotes, DownVotes, Tag)VALUES ( 1, ?, ?, current_timestamp(), 0, 0, ?);`;
+  query = `INSERT INTO Posts (UserID, ThreadID, Content, CreationDate, Tag)VALUES ( ?, ?, ?, current_timestamp(), ?);`;
 
-  dbconnection.query(query, [threadID, content, tag], (err, result) => {
+  dbconnection.query(query, [userID, threadID, content, tag], (err, result) => {
     if (err) {
       console.error("Error executing query:", err);
       res.status(500).json({ message: "Internal server error" });
@@ -455,34 +528,27 @@ app.get("/put/create/post", (req, res) => {
   });
 });
 
-app.get("/update/post/vote", (req, res) => {
-  let postID = req.query.postId;
-  let vote = req.query.vote;
+app.post("/post/create/user", (req, res) => {
+  let uid = req.body.uid;
+  let username = req.body.username;
+  // console.log(uid);
+  // console.log(username);
 
-  let query;
+  let query = `SELECT * FROM Users WHERE UserID = ?`;
 
-  query = `UPDATE Posts SET ${vote} = ${vote} + 1 WHERE PostID = ${postID}`;
-
-  dbconnection.query(query, (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-});
-
-app.get("/update/thread/vote", (req, res) => {
-  let ThreadID = req.query.threadId;
-  let vote = req.query.vote;
-
-  let query;
-
-  query = `UPDATE Threads SET ${vote} = ${vote} + 1 WHERE ThreadID = ${ThreadID}`;
-
-  dbconnection.query(query, (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).json({ message: "Internal server error" });
+  dbconnection.query(query, [uid], (err, result) => {
+    if (result.length === 0) {
+      let insertQuery = `INSERT INTO Users (UserID, Name) VALUES (?, ?)`;
+      dbconnection.query(insertQuery, [uid, username], (err, result) => {
+        if (err) {
+          console.error("Error executing query:", err);
+          res.status(500).json({ message: "Internal server error" });
+        } else {
+          res.json({ message: "User created successfully" });
+        }
+      });
+    } else {
+      res.json({ message: "User already exists" });
     }
   });
 });
@@ -492,7 +558,7 @@ app.get("/check/post/vote", (req, res) => {
   let userID = req.query.userId;
   let voteType = req.query.voteType;
 
-  let checkQuery = `SELECT * FROM PostVoteTracking WHERE PostID = ${postID} AND UserID = ${userID}`;
+  let checkQuery = `SELECT * FROM PostVoteTracking WHERE PostID = ${postID} AND UserID = '${userID}'`;
   dbconnection.query(checkQuery, (checkErr, checkResult) => {
     if (checkErr) {
       console.error("Error executing query:", checkErr);
@@ -500,7 +566,7 @@ app.get("/check/post/vote", (req, res) => {
     } else {
       if (checkResult.length > 0) {
         // Update existing vote
-        let updateQuery = `UPDATE PostVoteTracking SET VoteType = '${voteType}', VotedAt = CURRENT_TIMESTAMP WHERE PostID = ${postID} AND UserID = ${userID}`;
+        let updateQuery = `UPDATE PostVoteTracking SET VoteType = '${voteType}', VotedAt = CURRENT_TIMESTAMP WHERE PostID = ${postID} AND UserID = '${userID}'`;
         dbconnection.query(updateQuery, (updateErr, updateResult) => {
           if (updateErr) {
             console.error("Error executing query:", updateErr);
@@ -511,7 +577,7 @@ app.get("/check/post/vote", (req, res) => {
         });
       } else {
         // Insert new vote
-        let insertQuery = `INSERT INTO PostVoteTracking (UserID, PostID, VoteType) VALUES (${userID}, ${postID}, '${voteType}')`;
+        let insertQuery = `INSERT INTO PostVoteTracking (UserID, PostID, VoteType) VALUES ('${userID}', ${postID}, '${voteType}')`;
         dbconnection.query(insertQuery, (insertErr, insertResult) => {
           if (insertErr) {
             console.error("Error executing query:", insertErr);
@@ -528,10 +594,10 @@ app.get("/check/post/vote", (req, res) => {
 // Method to check and update values in the ThreadVoteTracking table
 app.get("/check/thread/vote", (req, res) => {
   let threadID = req.query.threadId;
-  let userID = req.query.userId; // Assuming you have the user ID
-  let voteType = req.query.voteType; // Assuming you have the vote type (UpVote or DownVote)
+  let userID = req.query.userId; 
+  let voteType = req.query.voteType; 
 
-  let checkQuery = `SELECT * FROM ThreadVoteTracking WHERE ThreadID = ${threadID} AND UserID = ${userID}`;
+  let checkQuery = `SELECT * FROM ThreadVoteTracking WHERE ThreadID = ${threadID} AND UserID = '${userID}'`;
   dbconnection.query(checkQuery, (checkErr, checkResult) => {
     if (checkErr) {
       console.error("Error executing query:", checkErr);
@@ -539,7 +605,7 @@ app.get("/check/thread/vote", (req, res) => {
     } else {
       if (checkResult.length > 0) {
         // Update existing vote
-        let updateQuery = `UPDATE ThreadVoteTracking SET VoteType = '${voteType}', VotedAt = CURRENT_TIMESTAMP WHERE ThreadID = ${threadID} AND UserID = ${userID}`;
+        let updateQuery = `UPDATE ThreadVoteTracking SET VoteType = '${voteType}', VotedAt = CURRENT_TIMESTAMP WHERE ThreadID = ${threadID} AND UserID = '${userID}'`;
         dbconnection.query(updateQuery, (updateErr, updateResult) => {
           if (updateErr) {
             console.error("Error executing query:", updateErr);
@@ -550,7 +616,7 @@ app.get("/check/thread/vote", (req, res) => {
         });
       } else {
         // Insert new vote
-        let insertQuery = `INSERT INTO ThreadVoteTracking (UserID, ThreadID, VoteType) VALUES (${userID}, ${threadID}, '${voteType}')`;
+        let insertQuery = `INSERT INTO ThreadVoteTracking (UserID, ThreadID, VoteType) VALUES ('${userID}', ${threadID}, '${voteType}')`;
         dbconnection.query(insertQuery, (insertErr, insertResult) => {
           if (insertErr) {
             console.error("Error executing query:", insertErr);
@@ -569,7 +635,7 @@ app.post("/update/views", (req, res) => {
 
   const query = `UPDATE Threads SET Views = Views + 1 WHERE ThreadID = ?`;
 
-  dbconnection.query(query,[threadID],(err, result) => {
+  dbconnection.query(query, [threadID], (err, result) => {
     if (err) {
       console.error("Error executing query:", err);
       res.status(500).json({ message: "Internal server error" });
@@ -580,55 +646,138 @@ app.post("/update/views", (req, res) => {
 });
 
 app.get("/get/popular-threads", (req, res) => {
-  const query = `SELECT * FROM Threads ORDER BY UpVotes DESC LIMIT 5`;
+  const query = `
+    SELECT 
+      T.*, 
+      COUNT(TVT.ThreadID) AS UpVotes 
+    FROM 
+      Threads T 
+    LEFT JOIN 
+      ThreadVoteTracking TVT ON T.ThreadID = TVT.ThreadID 
+    WHERE 
+      TVT.VoteType = 'UpVotes' 
+    GROUP BY 
+      T.ThreadID 
+    ORDER BY 
+      UpVotes DESC 
+    LIMIT 
+      8`;
 
   dbconnection.query(query, (err, result) => {
     if (err) {
       console.error("Error executing query:", err);
       res.status(500).json({ message: "Internal server error" });
     } else {
-      res.json({ message: result });
+      if (result.length != 0) {
+        res.json({ message: result });
+      } else {
+        const query = `SELECT * FROM Threads ORDER BY Views DESC LIMIT 8`;
+        dbconnection.query(query, (err, result) => {
+          if (err) {
+            console.error("Error executing query:", err);
+            res.status(500).json({ message: "Internal server error" });
+          } else {
+            res.json({ message: result });
+          }
+        });
+      }
     }
   });
 });
 
-app.post('/get/test', (req, res) => {
-    const gradeid = req.body.QuestionDetails.gradeid;
-    const lessonName = req.body.QuestionDetails.lessonName;
-    console.log(req.body.QuestionDetails.gradeid)
-    console.log(lessonName)
-    const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(gradeid)} AND lessonName = '${lessonName}')`;
-    dbconnection.query(query, (err, questionResults) => {
-        if (err) {
-            console.error("Error executing query:", err);
-            res.status(500).json({ message: "Internal server error" });
-        } else {
-            let optionArray = [];
-            Promise.all(questionResults.map(question => {
-                return new Promise((resolve, reject) => {
-                    const optionsQuery = 'SELECT OptionText FROM QuestionOptions WHERE QuestionID = ?';
-                    dbconnection.query(optionsQuery, [question.QuestionID], (err, optionsResults) => {
-                        if (err) {
-                            console.error('Error retrieving question options:', err);
-                            reject('Internal server error');
-                        } else {
-                            const options = optionsResults.map(option => option.OptionText);
-                            console.log(options);
-                            optionArray.push(options);
-                            resolve();
-                        }
-                    });
-                });
-            })).then(() => {
-                res.json({ questions: questionResults, options: optionArray });
-            }).catch(error => {
-                console.error(error);
-                res.status(500).json({ error: 'Internal server error' });
-            });
-        }
-    });
+app.post("/get/test", (req, res) => {
+  const gradeid = req.body.QuestionDetails.gradeid;
+  const lessonName = req.body.QuestionDetails.lessonName;
+  console.log(req.body.QuestionDetails.gradeid);
+  console.log(lessonName);
+  const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(
+    gradeid
+  )} AND lessonName = '${lessonName}')`;
+  dbconnection.query(query, (err, questionResults) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      let optionArray = [];
+      Promise.all(
+        questionResults.map((question) => {
+          return new Promise((resolve, reject) => {
+            const optionsQuery =
+              "SELECT OptionText FROM QuestionOptions WHERE QuestionID = ?";
+            dbconnection.query(
+              optionsQuery,
+              [question.QuestionID],
+              (err, optionsResults) => {
+                if (err) {
+                  console.error("Error retrieving question options:", err);
+                  reject("Internal server error");
+                } else {
+                  const options = optionsResults.map(
+                    (option) => option.OptionText
+                  );
+                  console.log(options);
+                  optionArray.push(options);
+                  resolve();
+                }
+              }
+            );
+          });
+        })
+      )
+        .then(() => {
+          res.json({ questions: questionResults, options: optionArray });
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "Internal server error" });
+        });
+    }
+  });
+});
+
+app.post("/get/quiz", (req, res) => {
+  const gradeid = req.body.QuestionDetails.gradeid;
+  const lessonName = req.body.QuestionDetails.lessonName;
+  const query = `SELECT
+          QQ.QuestionID,
+          QQ.QuestionText,
+          QQ.LessonID,
+          QQ.CorrectAnswerIndex,
+          GROUP_CONCAT(QO.OptionText) AS OptionTexts
+      FROM
+          QuizQuestions QQ
+      JOIN
+          QuestionOptions QO ON QQ.QuestionID = QO.QuestionID
+      WHERE
+          QQ.LessonID IN (
+              SELECT LessonID
+              FROM Lessons
+              WHERE grade = ${parseInt(gradeid)}
+              AND lessonName = '${lessonName}'
+          )
+      GROUP BY
+          QQ.QuestionID,
+          QQ.QuestionText,
+          QQ.LessonID,
+          QQ.CorrectAnswerIndex;`;
+  dbconnection.query(query, (err, questionResults) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      // const questions = questionResults.map(question => ({
+      //     QuestionID: question.QuestionID,
+      //     QuestionText: question.QuestionText,
+      //     CorrectAnswerIndex: question.CorrectAnswerIndex,
+      //     Options: question.OptionTexts.split(',') // Split OptionTexts into an array of options
+      // }));
+      // res.json({ questions: questions });
+
+      res.json({ message: questionResults });
+    }
+  });
 });
 
 app.listen(3002, () => {
-    console.log("listenning on port 3002.")
-})
+  console.log("listenning on port 3002.");
+});
