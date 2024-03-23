@@ -7,13 +7,23 @@ import upVote from "./Images/upVote.svg";
 import downVote from "./Images/downVote.svg";
 import Footer from "./component/Footer";
 import PopularPosts from "./component/PopularPosts";
+import getCurrentUser from "./currentUser";
 
 function Post() {
   const [posts, setPosts] = useState([]);
   const [forumName, setForumName] = useState("");
   const [threadID, setThreadID] = useState("");
   const [firstThread, setFirstThread] = useState([]);
-  const [user, setUser] = useState(1);
+  const [user, setCurrentuser] = useState(1);
+
+  useEffect(() => {
+    getCurrentUser().then((Cuser) => {
+      if (Cuser !== null) {
+        setCurrentuser(Cuser.uid);
+      }
+    });
+  });
+
   const [vote, setVote] = useState({
     count: 0,
     voted: false,
@@ -30,67 +40,70 @@ function Post() {
       .then((res) => res.json())
       .then((data) => {
         setFirstThread(data.message);
-        console.log(data.message);
+        // console.log(data.message);
+        setForumName(data.message[0].Name);
         setVote({
           count: data.message[0].UpVotes - data.message[0].DownVotes,
           voted: false,
           type: "",
         });
-        console.log(data.message);
       });
 
     fetch(`/api/get/posts?threadId=${threadID}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.message);
-        setPosts(data.message);
-        setForumName(data.message[0].Title);
+        if (data.message.length > 0) {
+          // console.log(data.message);
+          setPosts(data.message);
+        }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
+  // useEffect(()=>{
+  //   fetch(`/api//get/forum?forumId=${threadID}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data.message);
+  //       setPosts(data.message);
+  //       setForumName(data.message[0].Title);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // },[firstThread])
+
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    setTimeout(() => {
       fetch("/api/update/views", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ threadId: threadID }),
+      }).catch((error) => {
+        console.error("Error fetching data:", error);
       });
     }, 20000);
-
-    // Clear interval on component unmount
-    return () => clearInterval(intervalId);
   }, [forumName]);
 
   //sql query to check if user has voted on thread
   const submitThreadVote = (type) => {
     fetch(
       `/api/check/thread/vote?threadId=${threadID}&userId=${user}&voteType=${type}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message === "successful") {
-          fetch(`/api/update/thread/vote?threadId=${threadID}&vote=${type}`);
-          console.log("Thread-Voted");
-        }
-      });
+    ).catch((error) => {
+      console.error("Error fetching data:", error);
+    });
   };
   //sql query to check if user has voted on post
   const submitPostVote = (type, postID) => {
     fetch(
       `/api/check/post/vote?postId=${postID}&userId=${user}&voteType=${type}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message === "successful") {
-          console.log("Post-Voted");
-          fetch(`/api/update/post/vote?postId=${postID}&vote=${type}`);
-        }
-      });
+    ).catch((error) => {
+      console.error("Error fetching data:", error);
+    });
   };
 
   // Define a new component for the post
@@ -101,7 +114,7 @@ function Post() {
     } else if (vote.type !== newType) {
       newCount += newType === "UpVotes" ? 2 : -2;
     } else {
-      newCount += newType === "¸" ? -1 : 1;
+      newCount += newType === "UpVotes" ? -1 : 1;
       newType = "Removed";
     }
 
@@ -111,7 +124,7 @@ function Post() {
       type: newType,
     });
 
-    submitThreadVote(newType, threadID.threadID);
+    submitThreadVote(newType);
   };
 
   // Define a new component for the post
@@ -148,7 +161,7 @@ function Post() {
           className={`post-voting ${
             voteP.type === "UpVotes"
               ? "voted-green"
-              : voteP.type === "DownVotesss"
+              : voteP.type === "DownVotes"
               ? "voted-red"
               : ""
           }`}
@@ -164,23 +177,23 @@ function Post() {
           <p>{voteP.count}</p>
           <img
             src={downVote}
-            alt="DownVotesss"
+            alt="DownVotes"
             onClick={() => {
-              handleVote("DownVotesss");
+              handleVote("DownVotes");
             }}
-            className={voteP.type === "DownVotesss" ? "voted" : ""}
+            className={voteP.type === "DownVotes" ? "voted" : ""}
           />
         </div>
         <div className="post-container">
-          <div className="post-title-bar">
-            <img src={Logo} alt="" />
-          </div>
-          <div className="post-info">
-            <p>Posted by: {post.Username}</p>
-            <p>Replyed: {post.TimeAgo}</p>
-          </div>
           <div className="post-body">
             <p>{post.Content}</p>
+          </div>
+          <div className="post-user-details">
+            <div className="post-info">
+              <p>Posted by: {post.Username}</p>
+              <p>Replyed: {post.TimeAgo}</p>
+            </div>
+            <img src={Logo} alt="" />
           </div>
         </div>
       </div>
@@ -205,7 +218,7 @@ function Post() {
                 className={`post-voting ${
                   vote.type === "UpVotes"
                     ? "voted-green"
-                    : vote.type === "DownVotesss"
+                    : vote.type === "DownVotes"
                     ? "voted-red"
                     : ""
                 }`}
@@ -222,29 +235,32 @@ function Post() {
                   src={downVote}
                   alt="downvote"
                   onClick={() => {
-                    handleThreadVote("DownVotesss");
+                    handleThreadVote("DownVotes");
                   }}
                 />
               </div>
               <div className="post-container">
-                <div className="post-title-bar">
+                <div className="thread-title-bar">
                   <h2>{thread.Title}</h2>
                   <img src={Logo} alt="" />
                 </div>
-                <div className="post-info">
+                <div className="thread-info">
                   <p>Posted by: {thread.Username}</p>
                   <p>Posted on: {thread.Date}</p>
                 </div>
                 <div className="post-body">
                   <p>{thread.Content}</p>
-                  <p id="post-tag">Tags: {thread.Tag}</p>
+                 
                 </div>
+                <p id="post-tag">Tags: {thread.Tag}</p>
               </div>
             </div>
           ))}
-          {posts.map((post) => (
-            <PostComponent post={post} key={`post-${post.PostID}`} />
-          ))}
+          {Array.isArray(posts) && posts.length > 0
+            ? posts.map((post) => (
+                <PostComponent post={post} key={`post-${post.PostID}`} />
+              ))
+            : ""}
         </div>
         <div className="forum-recent-post">
           <PopularPosts />

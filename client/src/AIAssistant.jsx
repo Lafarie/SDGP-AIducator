@@ -53,6 +53,7 @@ function Assistant(){
     const [displayID, setdisplayID] = useState("");
 
     const [tags, settags] = useState([]);
+    const [models, setmodels] = useState(null);
 
     useEffect(() => { // settign the look of the rate ebutton
         let badbtn = document.getElementById("bad");
@@ -163,6 +164,8 @@ function Assistant(){
                 document.getElementById("response").innerHTML = data.generated_result;
                 console.log(data.tags);
                 settags(data.tags);
+                setmodels(data.models);
+                console.log(data.models);
                 setresponse(true);
             }
             setsavedResponsedisable(false);
@@ -269,9 +272,25 @@ function Assistant(){
         </div>
         <div id={"models"} className={'frames'}>
             <h1>3D models</h1>
+            <div id='Innermodels'>
+                {models === null ? <p>No models to display</p> : models.map(src => (
+                    <ModelViewer src={src}/>
+                ))}
+            </div>
         </div>
       </div>
       </>
+    )
+}
+
+function ModelViewer({src}) {
+    return (
+    <div className='modelContainer'>
+        <model-viewer
+            src={"/Models/" + src}
+            camera-controls
+        ></model-viewer>
+    </div>
     )
 }
 
