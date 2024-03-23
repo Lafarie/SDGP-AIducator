@@ -18,7 +18,7 @@
   grid-template-columns: auto auto fit-content(60px);
   column-gap: 10px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.541));
-  z-index: 500;
+  z-index: 600;
 }
 
 #navList{
@@ -180,6 +180,7 @@ footer{
   right: 2vw;
   background-color: white;
   top: 4vw;
+  z-index: 500;
   /* display: none; */
   transform: translateY(-100%);
   padding: 2vw 2vw 1vw 2vw;
