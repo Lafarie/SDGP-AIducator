@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import sql from "mysql2";
+import fs from 'fs';
 
 dotenv.config();
 
@@ -135,11 +136,11 @@ VALUES
     ('Cylinder.glb', 'Cylinder', 'geometry,math'),
     ('Hexagon.glb', 'Hexagon', 'geometry,math'),
     ('square.glb', 'Square', 'geometry,math'),
-    ('Triangle.glb', 'Triangle', 'geometry,math'),
+    ('Triangle.glb', 'Rectangle', 'geometry,math'),
     ('Circle.glb', 'Circle', 'geometry,math'),
     ('beaker.glb', 'Beaker', 'science,chemical'),
     ('conical.glb', 'Conical FLask', 'science,chemical'),
-    ('earth.glb', 'Earth', 'geography,geology,science,astronomy'),
+    ('earth.glb', 'Earth', 'geography,geology,astronomy'),
     ('FlatFlask.glb', 'Flat FLask', 'science,chemical'),
     ('GCylinder.glb', 'Graduated Cylinder', 'science,chemical'),
     ('testTube.glb', 'Test Tube', 'science,chemical'),
