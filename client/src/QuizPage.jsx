@@ -1,160 +1,170 @@
-import React, { useState, useEffect } from 'react';
-import './QuizPage.css'; 
-import { useLocation,Link,useParams } from 'react-router-dom';
-import Navbar from './component/Navbar';
+import React, { useEffect, useState } from "react";
+import "./QuizPage.css";
+import { useLocation, Link, useParams } from "react-router-dom";
+import Navbar from "./component/Navbar";
 
 const QuizPage = () => {
   const { grade, subject, lesson } = useParams();
   const location = useLocation();
-  const apiUrl = `/quiz/questions?grade=${grade}&lessonName=${encodeURIComponent(lesson)}`;
 
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [totalScore, setTotalScore] = useState(0);
+  const [remainingQuestions, setRemainingQuestions] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(900); // 15 minutes in seconds
 
-const [quizQuestions, setQuizQuestions] = useState([]);
-const [selectedOptions, setSelectedOptions] = useState([]);
+  useEffect(() => {
+    const QuestionObj = {
+      gradeid: grade.replaceAll("%20", " "),
+      subjectid: subject.replaceAll("%20", " "),
+      lessonName: lesson.replaceAll("%20", " "),
+    };
+    fetch("/api/get/quiz", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ QuestionDetails: QuestionObj }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setQuestions(data.message);
+        setRemainingQuestions(data.message.length);
+      });
+  }, [grade, subject, lesson]);
 
+  const handleNext = () => {
+    if (selectedOption !== null) {
+      // Calculate score if the answer is correct
+      const currentQuestion = questions[currentQuestionIndex];
+      const correctAnswerIndex = currentQuestion.CorrectAnswerIndex;
+      if (selectedOption === correctAnswerIndex) {
+        setTotalScore((prevScore) => prevScore + 10);
+      }
 
-  // Function to calculate the number of remaining questions
-  const remainingQuestions = quizQuestions.length - selectedOptions.filter(option => option !== null).length;
-
-  // Function to handle radio button selection
-  const handleOptionSelect = (questionIndex, optionIndex) => {
-    const updatedOptions = [...selectedOptions];
-    updatedOptions[questionIndex] = optionIndex;
-    setSelectedOptions(updatedOptions);
+      // Move to the next question
+      const nextQuestionIndex = currentQuestionIndex + 1;
+      if (nextQuestionIndex < questions.length) {
+        setCurrentQuestionIndex(nextQuestionIndex);
+        setSelectedOption(null);
+      } else {
+        // End of quiz
+        setSubmitted(true);
+      }
+    }
   };
 
-   // Remaining time state
-   const [remainingTime, setRemainingTime] = useState(300); // 5 minutes in seconds
-
-   // Function to format time to display as mm:ss
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
   };
 
-  // Effect to update remaining time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setRemainingTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
-    // Cleanup function to clear the interval when component unmounts
     return () => clearInterval(timer);
   }, []);
 
-  // Calculate total score
-  const totalScore = selectedOptions.reduce((total, optionIndex, index) => {
-    if (optionIndex !== null && quizQuestions[index].options[optionIndex] === quizQuestions[index].correctAnswer) {
-      return total + 10;
-    }
-    return total;
-  }, 0);
-
-  //Calculate number of correct answerss
-  const correctAnswers = selectedOptions.reduce((count, optionIndex, index) => {
-    if (optionIndex !== null && quizQuestions[index].options[optionIndex] === quizQuestions[index].correctAnswer) {
-      return count + 1;
-    }
-    return count;
-  }, 0);
-
-
-
-  // Function to handle form submission
-  const handleSubmit = async() => {
-    try {
-      const response = await fetch('/api/quiz/questions', {
-        questionObj: QuestionObj,
-        selectedOptions: selectedOptions
-      });
-
-      // Handle the response if needed
-      console.log(response.data);
-    } catch (error) {
-      // Handle errors
-      console.error('Error:', error);
-    }
-  };
-
-  const [questions, setQuestions]= useState(null)
-  const [ options, setOptions]= useState(null)
-
-  useEffect(()=>{
-    const QuestionObj = {
-      gradeid: location.pathname.split("/")[3].replaceAll("%20", " "),
-      subjectid: location.pathname.split("/")[2].replaceAll("%20", " "),
-      lessonName: location.pathname.split("/")[4].replaceAll("%20", " ")
-    };
-    fetch("/api/get/test", {
-      method: "post", 
-      headers: {"Content-Type" : "application/json"}, 
-      body: JSON.stringify({ 'QuestionDetails':QuestionObj})
-    }).then(response => response.json()).then(data => {
-      console.log(data.options)
-      console.log(data.questions)
-      setQuestions(data.questions)
-      setOptions(data.options)
-    });
-
-  },[]);
-  
-
   return (
     <div>
-        <Navbar></Navbar>
-        <div className='first-container'>
-            <div className='h01'>Grade {location.pathname.split("/")[3].replaceAll("%20", " ")} - {location.pathname.split("/")[2].replaceAll("%20", " ")} 
-            </div>
-            <div className='h02'>{location.pathname.split("/")[4].replaceAll("%20", " ")}
-            </div>
-            <div className='Question-container'>
-              {questions === null? <h1>
-                No Questions
-              </h1>:
-              Object.keys(questions).map((question, index)=> (
-                <QuestionContainer index={questions[question].QuestionID} question={questions[question].QuestionText} options={options[question]}/>
-              ))}
-
-            </div>
-            <div className='Other-Box'>
-                <div className='Remaining-questions'>
-                    <p className='QR-label'>Questions Remaining : </p>
-                    {remainingQuestions}
-                </div>
-                <div className='Time-remaining'>
-                    <p className='Time-label'>Time Remaining :</p>
-                    {formatTime(remainingTime)}
-                </div>
-            </div>
-            <div className='Submit-box'>
-                <div className='Submit'>
-                    <Link to={`/quiz-results?score=${totalScore}&correct=${correctAnswers}`} style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>Submit</Link>
-                </div>
-            </div>
+      <Navbar />
+      <div className="first-container">
+        <div className="h01">
+          Grade {grade} - {subject}
         </div>
+        <div className="h02">{lesson}</div>
+        <div className="Question-container">
+          {questions.length > 0 && currentQuestionIndex < questions.length && (
+            <Question
+              question={questions[currentQuestionIndex]}
+              selectedOption={selectedOption}
+              setSelectedOption={setSelectedOption}
+            />
+          )}
+          {submitted && (
+            <div className="submission-message">
+              <h2>Quiz submitted!</h2>
+              <p>Total Score: {totalScore}</p>
+            </div>
+          )}
+        </div>
+        <div className="sticky-container">
+          <div className="Other-Box">
+            <div className="Remaining-questions">
+              <p className="QR-label">Questions Remaining : </p>
+              {remainingQuestions - currentQuestionIndex - 1}
+            </div>
+            <div className="Time-remaining">
+              <p className="Time-label">Time Remaining :</p>
+              {formatTime(remainingTime)}
+            </div>
+          </div>
+          <div className="NextButton-box">
+            {!submitted && (
+              <div className="Next">
+                <button
+                  onClick={handleNext}
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-function QuestionContainer({index, question, options}){
+const Question = ({ question, selectedOption, setSelectedOption }) => {
+  const [questionTitle, setQuestion] = useState("");
+  const [answers, setAnswers] = useState([]);
+
+  useEffect(() => {
+    if (question) {
+      setQuestion(question.QuestionText);
+      setAnswers(
+        question.OptionTexts.split(",").map((answer) => answer.trim())
+      );
+    }
+  }, [question]);
 
   return (
-      <div key={index} className='question'>
-          <div className='Q-Number'>Question  {`${index + 1}`}:</div>
-          <label className='Qs'>{question}</label>
-          <ul className='options'>
-              {options.map((option, key) => (
-                  <li key={key} className="option">
-                      <input type="radio" id={`option-${key}`} name={`question-${index}`} value={option}  />
-                      <label htmlFor={`option-${key}`}>{option}</label>
-                  </li>
-              ))}
-          </ul>
-      </div>
-  )
+    <div className="question">
+      <div className="Q-Number">Question:</div>
+      <label className="Qs">{questionTitle}</label>
+      <ul className="options">
+        {answers.map((answer, index) => (
+          <li key={index} className="option">
+            <input
+              type="radio"
+              id={`option-${answer}`}
+              name={`question-${answer}`}
+              value={answer}
+              checked={selectedOption === index}
+              onChange={() => setSelectedOption(index)}
+            />
+            <label
+              className={selectedOption === index ? "blue" : ""}
+              htmlFor={`option-${answer}`}
+            >
+              {answer}
+            </label>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
-// onChange={() => handleOptionSelect(index, i)}
-// checked={selectedOptions[index] === i}
 export default QuizPage;
