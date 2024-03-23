@@ -202,6 +202,7 @@ createDatabase()
   .then(() => createTable(postsql, "Posts"))
   .then(() => createTable(postVotesql, "PostVoteTracking"))
   .then(() => createTable(threadVotesql, "Thread Vote"))
+  .then(() => createTable(tablesql, "queryTable"))
   .catch((err) => {
     console.error("An error occurred:", err);
   });
