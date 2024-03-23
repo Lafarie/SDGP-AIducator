@@ -9,7 +9,7 @@ dotenv.config();
 let INSTRUCTIONS =
     `
     Queries about history should be considered education, for example questions about historical people and events in history.
-
+    ANSWER SPECIFICALLY WHAT THE USER ASKS.
     DO NOT answer any personal issues or statements a user might give as a prompt.
     DO NOT give advice to users if they ask any issues outside an academic sense.
     Give the answers in a very informative way, do not make them concise.
@@ -125,18 +125,27 @@ let tablesql =
 let modelTable = `CREATE TABLE modelTable 
     (id INTEGER NOT NULL AUTO_INCREMENT,
     modelSrc VARCHAR(100) NOT NULL,
+    modelName VARCHAR(200),
     tagStr VARCHAR(200) NOT NULL,
     CONSTRAINT model_id_pk PRIMARY KEY (id));`;
 
 // adding models
 let addmodels = `
-INSERT INTO modelTable (modelSrc, tagStr)
+INSERT INTO modelTable (modelSrc, modelName, tagStr)
 VALUES 
-    ('Cylinder.glb', 'geometry,math'),
-    ('Hexagon.glb', 'geometry,math'),
-    ('Square.glb', 'geometry,math'),
-    ('Triangle.glb', 'geometry,math'),
-    ('Circle.glb', 'geometry,math');`;
+    ('Cylinder.glb', 'Cylinder', 'geometry,math'),
+    ('Hexagon.glb', 'Hexagon', 'geometry,math'),
+    ('square.glb', 'Square', 'geometry,math'),
+    ('Triangle.glb', 'Triangle', 'geometry,math'),
+    ('Circle.glb', 'Circle', 'geometry,math'),
+    ('beaker.glb', 'Mountain', 'geography,geology'),
+    ('conical.glb', 'Mountain', 'geography,geology'),
+    ('earth.glb', 'Mountain', 'geography,geology'),
+    ('FlatFlask.glb', 'Mountain', 'geography,geology'),
+    ('GCylinder.glb', 'Mountain', 'geography,geology'),
+    ('testTube.glb', 'Mountain', 'geography,geology'),
+    ('mountain.glb', 'Mountain', 'geography,geology')
+    ;`;
 
 dbconnection.query("CREATE DATABASE AIducator", (err, result) => {
   if (err) {
@@ -232,7 +241,7 @@ function MatchingTags(array1, array2) {
 //fucntion to get what models match
 function getMatchingModels(promptTagArr){
     return new Promise((resolve, reject) => {
-        let getModels = `SELECT modelSrc, tagStr FROM modelTable;`
+        let getModels = `SELECT modelSrc, tagStr, modelName FROM modelTable;`
         let modelArray = [];
 
         dbconnection.query(getModels, (err, results) => {
@@ -243,7 +252,7 @@ function getMatchingModels(promptTagArr){
                 results.forEach(result => {
                     let sqltags = result.tagStr.split(",");
                     if(MatchingTags(promptTagArr, sqltags)){
-                        modelArray.push(result.modelSrc);
+                        modelArray.push(result.modelSrc + "," + result.modelName);
                     }
                 });
                 resolve(modelArray);
@@ -342,6 +351,7 @@ app.post("/post/prompt", async (req, res) => {
                 }).catch(err => {
                     console.error(err);
                 });
+                console.log(modelArray)
                 res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content, "models": modelArray })
             } else {
                 let arr = getCategories(data.results[0].categories)

@@ -6,6 +6,7 @@ import good from './Images/good.svg';
 import bad from './Images/bad.svg';
 import goodfill from './Images/goodfilled.svg';
 import badfill from './Images/badfilled.svg';
+import closeModeView from './Images/closeModelView.svg'
 
 import getCurrentUser from './currentUser';
 
@@ -54,6 +55,9 @@ function Assistant(){
 
     const [tags, settags] = useState([]);
     const [models, setmodels] = useState(null);
+
+    const [displayModel, setdisplayModel] = useState("")
+    const [displayModelName, setdisplayModelName] = useState("")
 
     useEffect(() => { // settign the look of the rate ebutton
         let badbtn = document.getElementById("bad");
@@ -273,23 +277,56 @@ function Assistant(){
         <div id={"models"} className={'frames'}>
             <h1>3D models</h1>
             <div id='Innermodels'>
-                {models === null ? <p>No models to display</p> : models.map(src => (
-                    <ModelViewer src={src}/>
+                {models === null || models.length === 0? <div id='noModelsHeading'><p>No models to display</p></div>: models.map((src, index) => (
+                    <ModelViewer src={src.split(",")[0]} name={src.split(",")[1]} setmodel={setdisplayModel} setname={setdisplayModelName}/>
                 ))}
             </div>
         </div>
       </div>
+      <ModelViewerLarge src={displayModel} name={displayModelName}/>
       </>
     )
 }
 
-function ModelViewer({src}) {
+function ModelViewer({src, name, setmodel, setname}) {
+
+    const [hovered, setHovered] = useState(true);
     return (
-    <div className='modelContainer'>
+    <>
+    <div id={name} className='modelContainer' onClick={() => {
+        setmodel(src);
+        setname(name);
+        let modelviewerPlatform = document.getElementById("modelContainerLarge");
+        if(modelviewerPlatform !== null){
+            if(!hovered){
+                modelviewerPlatform.style.display = "none"
+            } else {
+                modelviewerPlatform.style.display = "block";
+            }
+        }
+    }}>
         <model-viewer
             src={"/Models/" + src}
             camera-controls
         ></model-viewer>
+        <p>{name}</p>
+    </div>
+    </>
+    )
+}
+
+function ModelViewerLarge({src, name}){
+    return (
+    <div id='modelContainerLarge'>
+        <model-viewer
+            src={"/Models/" + src}
+            camera-controls
+        ><p id='displaymodelName'>{name}</p>
+        <div id='close' onClick={() => {
+            let modelviewerPlatform = document.getElementById("modelContainerLarge");
+            modelviewerPlatform.style.display = "none";
+        }}><img src={closeModeView}/></div>
+        </model-viewer>
     </div>
     )
 }
