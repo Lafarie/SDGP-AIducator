@@ -38,7 +38,7 @@ var dbconnection = sql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  port: 3306,
+  port: 3307,
 });
 
 function pingdb() {
@@ -122,6 +122,8 @@ let tablesql =
   "promptrating VARCHAR(10)," +
   "CONSTRAINT q_id_pk PRIMARY KEY (id));";
 
+  //create table here - Paboda 
+
 dbconnection.query("CREATE DATABASE AIducator", (err, result) => {
   if (err) {
     if (err.errno === 1007) {
@@ -198,6 +200,8 @@ dbconnection.query(threadVotesql, (err, results) => {
     console.log("threadVote table created successfully");
   }
 });
+
+// table connection here - Paboda
 
 async function main(input) {
     const completion = await openai.chat.completions.create({
