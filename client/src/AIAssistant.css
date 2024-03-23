@@ -197,3 +197,48 @@
 #Innermodels{
     text-align: center;
 }
+
+#noModelsHeading{
+    justify-content: center;
+    height: 100%;
+}
+#noModelsHeading p{
+    margin-top: auto;
+}
+
+#modelContainerLarge{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    background-color: #d9d9d9;
+    border: 0.4vw solid white;
+    height: 70%;
+    width: 70%;
+    filter: drop-shadow(2px 2px 20px rgba(0, 0, 0, 0.364));
+    border-radius: 1vw;
+}
+
+#modelContainerLarge model-viewer{
+    width: calc(100% - 4vw);
+    height: calc(100% - 4vw);
+    margin: 2vw;
+}
+
+#displaymodelName{
+    font-size: 2vw;
+    margin: 2vw;
+}
+
+#close{
+    cursor: pointer;
+    position: fixed;
+    top: 2vw;
+    right: 2vw;
+    transition: 0.2s;
+}
+
+#close:hover{
+    transform: scale(1.12);
+}

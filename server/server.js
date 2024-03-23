@@ -8,7 +8,7 @@ dotenv.config();
 
 let INSTRUCTIONS = `
     Queries about history should be considered education, for example questions about historical people and events in history.
-
+    ANSWER SPECIFICALLY WHAT THE USER ASKS.
     DO NOT answer any personal issues or statements a user might give as a prompt.
     DO NOT give advice to users if they ask any issues outside an academic sense.
     Give the answers in a very informative way, do not make them concise.
@@ -124,18 +124,27 @@ let tablesql =
 let modelTable = `CREATE TABLE modelTable 
     (id INTEGER NOT NULL AUTO_INCREMENT,
     modelSrc VARCHAR(100) NOT NULL,
+    modelName VARCHAR(200),
     tagStr VARCHAR(200) NOT NULL,
     CONSTRAINT model_id_pk PRIMARY KEY (id));`;
 
 // adding models
 let addmodels = `
-INSERT INTO modelTable (modelSrc, tagStr)
+INSERT INTO modelTable (modelSrc, modelName, tagStr)
 VALUES 
-    ('Cylinder.glb', 'geometry,math'),
-    ('Hexagon.glb', 'geometry,math'),
-    ('Square.glb', 'geometry,math'),
-    ('Triangle.glb', 'geometry,math'),
-    ('Circle.glb', 'geometry,math');`;
+    ('Cylinder.glb', 'Cylinder', 'geometry,math'),
+    ('Hexagon.glb', 'Hexagon', 'geometry,math'),
+    ('square.glb', 'Square', 'geometry,math'),
+    ('Triangle.glb', 'Triangle', 'geometry,math'),
+    ('Circle.glb', 'Circle', 'geometry,math'),
+    ('beaker.glb', 'Beaker', 'science,chemical'),
+    ('conical.glb', 'Conical FLask', 'science,chemical'),
+    ('earth.glb', 'Earth', 'geography,geology,science,astronomy'),
+    ('FlatFlask.glb', 'Flat FLask', 'science,chemical'),
+    ('GCylinder.glb', 'Graduated Cylinder', 'science,chemical'),
+    ('testTube.glb', 'Test Tube', 'science,chemical'),
+    ('mountain.glb', 'Mountain', 'geography,geology')
+    ;`;
 
 dbconnection.query("CREATE DATABASE AIducator", (err, result) => {
   if (err) {
@@ -197,24 +206,36 @@ createDatabase()
   });
 
 
-function MatchingTags(array1, array2) {
-    let existsCount = 0;
-    for (let i = 0; i < array2.length; i++) {
-        if (array1.indexOf(array2[i]) !== -1) {
-            existsCount++;
+// table connection here - Paboda
+
+async function main(input) {
+    const completion = await openai.chat.completions.create({
+        messages: [{ "role": "system", "content": INSTRUCTIONS }, { "role": "assistant", "content": input }],
+        model: "gpt-3.5-turbo",
+    });
+    return completion.choices[0];
+}
+
+function MatchingTags(array1, array2){
+    let count = 0;
+    array1.forEach(element => {
+        if(array2.indexOf(element) !== -1){
+            count ++;
         }
-    }
-    if(existsCount === 0) {
-        return false;
-    } else {
+    })
+
+    if(count >= 1){
         return true;
+    } else {
+        return false;
     }
+
 }
 
 //fucntion to get what models match
 function getMatchingModels(promptTagArr){
     return new Promise((resolve, reject) => {
-        let getModels = `SELECT modelSrc, tagStr FROM modelTable;`
+        let getModels = `SELECT modelSrc, tagStr, modelName FROM modelTable;`
         let modelArray = [];
 
         dbconnection.query(getModels, (err, results) => {
@@ -225,7 +246,7 @@ function getMatchingModels(promptTagArr){
                 results.forEach(result => {
                     let sqltags = result.tagStr.split(",");
                     if(MatchingTags(promptTagArr, sqltags)){
-                        modelArray.push(result.modelSrc);
+                        modelArray.push(result.modelSrc + "," + result.modelName);
                     }
                 });
                 resolve(modelArray);
@@ -268,16 +289,16 @@ dbconnection.query(gettingCount, (err, results) => {
     }
 })
 
-async function main(input) {
-  const completion = await openai.chat.completions.create({
-    messages: [
-      { role: "system", content: INSTRUCTIONS },
-      { role: "assistant", content: input },
-    ],
-    model: "gpt-3.5-turbo",
-  });
-  return completion.choices[0];
-}
+// async function main(input) {
+//   const completion = await openai.chat.completions.create({
+//     messages: [
+//       { role: "system", content: INSTRUCTIONS },
+//       { role: "assistant", content: input },
+//     ],
+//     model: "gpt-3.5-turbo",
+//   });
+//   return completion.choices[0];
+// }
 
 async function getKeywords(input) {
   const completion = await openai.chat.completions.create({
@@ -330,6 +351,7 @@ app.post("/post/prompt", async (req, res) => {
                 }).catch(err => {
                     console.error(err);
                 });
+                console.log(modelArray)
                 res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content, "models": modelArray })
             } else {
                 let arr = getCategories(data.results[0].categories)
