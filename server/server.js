@@ -137,12 +137,12 @@ VALUES
     ('square.glb', 'Square', 'geometry,math'),
     ('Triangle.glb', 'Triangle', 'geometry,math'),
     ('Circle.glb', 'Circle', 'geometry,math'),
-    ('beaker.glb', 'Mountain', 'geography,geology'),
-    ('conical.glb', 'Mountain', 'geography,geology'),
-    ('earth.glb', 'Mountain', 'geography,geology'),
-    ('FlatFlask.glb', 'Mountain', 'geography,geology'),
-    ('GCylinder.glb', 'Mountain', 'geography,geology'),
-    ('testTube.glb', 'Mountain', 'geography,geology'),
+    ('beaker.glb', 'Beaker', 'science,chemical'),
+    ('conical.glb', 'Conical FLask', 'science,chemical'),
+    ('earth.glb', 'Earth', 'geography,geology,science,astronomy'),
+    ('FlatFlask.glb', 'Flat FLask', 'science,chemical'),
+    ('GCylinder.glb', 'Graduated Cylinder', 'science,chemical'),
+    ('testTube.glb', 'Test Tube', 'science,chemical'),
     ('mountain.glb', 'Mountain', 'geography,geology')
     ;`;
 
@@ -232,6 +232,22 @@ async function main(input) {
         model: "gpt-3.5-turbo",
     });
     return completion.choices[0];
+}
+
+function MatchingTags(array1, array2){
+    let count = 0;
+    array1.forEach(element => {
+        if(array2.indexOf(element) !== -1){
+            count ++;
+        }
+    })
+
+    if(count >= 1){
+        return true;
+    } else {
+        return false;
+    }
+
 }
 
 //fucntion to get what models match
