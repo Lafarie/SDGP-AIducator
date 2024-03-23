@@ -38,7 +38,7 @@ var dbconnection = sql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  port: 3307,
+  port: 3306,
 });
 
 function pingdb() {
@@ -172,17 +172,6 @@ dbconnection.query(tablesql, (err, result) => {
     console.log("query table created successfully");
   }
 });
-
-const sqlQueries = fs.readFileSync('./AIducator-Quiz.sql', 'utf8');
-
-const queries = sqlQueries.split(';');
-
-queries.forEach((query) => {
-    dbconnection.query(query, function (err, result) {
-      if (err) throw err;
-    });
-})
-
 
 // Execute SQL queries to create tables
 dbconnection.query(usersql, (err, results) => {
