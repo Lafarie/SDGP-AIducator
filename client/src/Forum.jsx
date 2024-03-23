@@ -6,6 +6,7 @@ import ForumIcon from "./Images/ForumIcon.svg";
 import Navbar from "./component/Navbar";
 import PopularPosts from "./component/PopularPosts";
 import Footer from "./component/Footer";
+import { Link } from "react-router-dom";
 
 function Forum() {
   const [forums, setForums] = useState([]);
@@ -50,6 +51,9 @@ function Forum() {
         <Navbar />
         <div className="forum-page-top-bar">
           <h1 className="forum-title">Forum</h1>
+          <Link to={"/create/forum/0"} id="create-post-button">
+          Create Forum
+        </Link>
         </div>
         <div className="search-bar">
           <input
@@ -100,8 +104,8 @@ function Forum() {
                 if (forum.ForumID === currentID) {
                   return (
                     <div key={forum.ForumID}>
-                      <div className="img">
-                        <img src={'/forumImg/'+ Math.floor(Math.random() * 6) + '.jpeg'} alt="" />
+                      <div className="img" style={{backgroundImage : 'url(/forumImg/'+ Math.floor(Math.random() * 6) + '.jpeg)'}}>
+                        {/* <img src={'/forumImg/'+ Math.floor(Math.random() * 6) + '.jpeg'} alt="" /> */}
                       </div>
                       <div className="forum-long-details">
                         <h2>{forum.Name}</h2>
