@@ -268,16 +268,16 @@ dbconnection.query(gettingCount, (err, results) => {
     }
 })
 
-async function main(input) {
-  const completion = await openai.chat.completions.create({
-    messages: [
-      { role: "system", content: INSTRUCTIONS },
-      { role: "assistant", content: input },
-    ],
-    model: "gpt-3.5-turbo",
-  });
-  return completion.choices[0];
-}
+// async function main(input) {
+//   const completion = await openai.chat.completions.create({
+//     messages: [
+//       { role: "system", content: INSTRUCTIONS },
+//       { role: "assistant", content: input },
+//     ],
+//     model: "gpt-3.5-turbo",
+//   });
+//   return completion.choices[0];
+// }
 
 async function getKeywords(input) {
   const completion = await openai.chat.completions.create({
