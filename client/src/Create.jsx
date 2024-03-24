@@ -41,7 +41,7 @@ function CreatePost() {
     let id = url.split("/")[3];
 
     if (type === "forum") {
-      setForum(id);
+      // setForum(id);
     } else if (type === "thread") {
       setForumID(id);
     } else if (type === "post") {
