@@ -1,15 +1,15 @@
-// import express from "express";
-// import bodyParser from "body-parser";
-// import OpenAI from "openai";
-// import dotenv from "dotenv";
-// import sql from "mysql";
+import express from "express";
+import bodyParser from "body-parser";
+import OpenAI from "openai";
+import dotenv from "dotenv";
+import sql from "mysql2";
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const OpenAI = require("openai");
-const dotenv = require("dotenv");
-const sql = require("mysql");
-// const dbconnection = require("./dbconnection");
+// const express = require("express");
+// const bodyParser = require("body-parser");
+// const OpenAI = require("openai");
+// const dotenv = require("dotenv");
+// const sql = require("mysql2");
+
 
 dotenv.config();
 
@@ -58,7 +58,7 @@ setInterval(pingdb, 40000);
 
 dbconnection.connect((err) => {
   if (err) {
-    console.log(err);
+    // console.log(err);
   } else {
     console.log("connected");
   }
@@ -167,12 +167,12 @@ dbconnection.query("CREATE DATABASE AIducator", (err, result) => {
 
 dbconnection.changeUser({ database: "AIducator" }); // selecting databse after creation
 
-const createTable = (sql, tableName) => {
+const createTable = async (sql, tableName) => {
   return new Promise((resolve, reject) => {
     dbconnection.query(sql, (err) => {
       if (err) {
         if (err.errno === 1050) {
-          console.log(`${tableName} table already exists`);
+          // console.log(`${tableName} table already exists`);
           resolve();
         } else {
           console.error(`Error creating ${tableName} table:`, err);
@@ -237,6 +237,7 @@ function MatchingTags(array1, array2) {
   }
 }
 
+
 //fucntion to get what models match
 function getMatchingModels(promptTagArr) {
   return new Promise((resolve, reject) => {
@@ -264,7 +265,7 @@ function getMatchingModels(promptTagArr) {
 dbconnection.query(modelTable, (err, results) => {
   if (err) {
     if (err.errno === 1050) {
-      console.log("modelTable table already exists");
+      // console.log("modelTable table already exists");
     }
   } else {
     console.log("modelTable table created successfully");
@@ -553,20 +554,22 @@ GROUP BY
   });
 });
 
-app.get("/put/create/forum", (req, res) => {
-  let forumName = req.query.forumName;
-  let forumDescription = req.query.content;
-  let query;
-
-  query = `INSERT INTO Forums (Name, Description) VALUES (?, ?)`;
-
-  dbconnection.query(query, [forumName, forumDescription], (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
+app.get("/put/create/forum", async (req, res) => {
+  try {
+    let forumName = req.query.forumName;
+    let forumDescription = req.query.content;
+    let query = `INSERT INTO Forums (Name, Description) VALUES (?, ?)`;
+    
+    // Assuming dbconnection.query supports promises
+    const result = await dbconnection.query(query, [forumName, forumDescription]);
+    
+    res.json({ message: "Forum created successfully" });
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
+
 
 app.get("/put/create/thread", (req, res) => {
   let forumID = req.query.forumID;
@@ -769,6 +772,7 @@ app.get("/get/popular-threads", (req, res) => {
   });
 });
 
+
 app.post('/get/test', (req, res) => {
   const gradeid = req.body.QuestionDetails.gradeid;
   const lessonName = req.body.QuestionDetails.lessonName;
@@ -842,7 +846,8 @@ app.post("/get/quiz", (req, res) => {
 });
 
 
-
 app.listen(3002, () => {
   console.log("listenning on port 3002.");
 });
+
+// module.exports = app;
