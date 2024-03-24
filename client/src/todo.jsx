@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import './todo.css';
 import Navbar from './component/Navbar';
+import Footer from './component/Footer';
 
 const MyCalendar = ({ events, onDateClick }) => {
     return (
@@ -34,9 +35,7 @@ const ToDo = ({}) => {
     const [taskTime,  setTaskTime] = useState('');
     const [events, setEvents] = useState([]);
     const [tasks, setTasks] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(''); //selected date on the calendar
-    const calendarRef = useRef(null); //reference to the calendar instance
-
+    
     const handleTaskNameChange = (e) => {
         setTaskName(e.target.value);
     };
@@ -65,92 +64,17 @@ const ToDo = ({}) => {
 
         setEvents([...events, newEvent]);
 
-        const newTask = {
-            name: taskName,
-            date: taskDate,
-            completed: false,
-        };
-
-        setTasks([...tasks, newTask]);
-
         setTaskName('');
         setTaskDate('');
         setTaskTime('');
+
+        const newTask = {
+            name: taskName,
+            date: taskDate,
+        };
+
+        setTasks([...tasks, newTask]);
     };
-
-
-        // const newEvent = {
-        //     title: taskName,
-        //     start: taskDate + 'T' + taskTime,
-        //     end: taskDate + 'T' + taskTime,
-        //     rendering: 'background',
-        //     color: 'red',
-        // };
-
-        // setEvents([...events, newEvent]);
-
-        //  const newTask = {
-        //     name: taskName,
-        //     completed: false,
-        //  };
-
-        //  setTasks([...tasks, newTask]);
-
-        // setTaskName('');
-        // setTaskDate('');
-        // setTaskTime('');
-    // };
-
-    const handleDateClick = (info) => {
-        setSelectedDate(info.dateStr);
-    };
-
-    const renderTasksForSelectedDate = () => {
-        const filteredTasks = tasks.filter(task => task.date === selectedDate);
-
-        if (filteredTasks.length > 0) {
-            return (
-                <div>
-                    <div>
-                        <p>TO-DO LIST - {selectedDate}</p>
-                    </div>
-                    {filteredTasks.map((task, index) => (
-                        <p key={index}>{task.name}</p>
-                        ))}
-                    </div>
-                );
-            } else {
-                return (
-                    <div>
-                        <div>
-                            <p>No Tasks for {selectedDate}</p>
-                        </div>
-                    </div>
-                );
-            }
-    };
-
-
-
-    useEffect (() => {
-    //trigger click event on the calendar to highlight the newly added event
-        if (calendarRef.current && taskDate && taskTime) {
-            const newEvent = {
-                title: taskName,
-                start: taskDate + 'T' + taskTime,
-                end: taskDate + 'T' + taskTime,
-                rendering: 'background',
-                color: 'red',
-            };
-            calendarRef.current.getApi().addEvent(newEvent);
-        }
-    }, [events]);
-
-    // const handleTaskCheckBoxChange = (index) => {
-    //     const updatedTasks = [...tasks];
-    //     updatedTasks[index].completed = !updatedTasks[index].completed;
-    //     setTasks(updatedTasks);
-    // }
 
     return (
         <body className="ToDo">
@@ -179,51 +103,28 @@ const ToDo = ({}) => {
                             <input type='time' value={taskTime} onChange={handleTaskTimeChange}  required/>
                         </div>
 
-
-                        {/* const Toggle = () => {
-                            const [isChecked, setIsChecked] = useState(false);
-
-                            const handleSwitch =  () => {
-                                setIsChecked(!isChecked);
-                        };
-
-                        return (
-                                <div className="switch">
-                                    <input 
-                                    type="checkbox" 
-                                    className="toggleContainer" 
-                                    id="toggle" checked= {isChecked} 
-                                    onChange={handleSwitch}
-                                    />
-
-
-                                <label htmlFor="">Remind Me </label>
-                                    <div  className="switch">
-                                    <input type="checkbox" name=""/>
-                                    <span className="toggle round"></span>
-                                    </div>
-                                </div>  
-                            );
-                        }; */}
-
-                        
-
-
-                        <br/>
                         <div>
-                        <button type='submit'>Create</button>
+                            <button type='submit'>Create</button>
                         </div>
                     </form>
                 </div>
             </div>
-
-            <div className="taskContainer">
-                {selectedDate && renderTasksForSelectedDate()}
-            </div>
-
+                <div className="taskContainer">
+                    <p className="topic">TO-DO LIST</p>
+                    <br />
+                        {tasks.map((task, index) => (
+                            <div key={index} className="checkboxContainer">
+                                <input type="checkbox"/>
+                                <label >{task.name} ~ {task.date}</label>                                
+                            </div>
+                        ))}
+                </div>
+            
         </div>
+        <Footer />
         </body>
     );
 }
+
 
 export default ToDo;
