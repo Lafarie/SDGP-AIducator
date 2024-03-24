@@ -44,7 +44,7 @@ var dbconnection = sql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  port: 3307,
+  port: 3306,
 });
 
 function pingdb() {
