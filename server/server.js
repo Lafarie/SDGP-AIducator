@@ -592,43 +592,115 @@ app.get("/get/popular-threads", (req, res) => {
   });
 });
 
-app.post('/get/test', (req, res) => {
+// app.post("/get/test", (req, res) => {
+//     const gradeid = req.body.QuestionDetails.gradeid;
+//     const lessonName = req.body.QuestionDetails.lessonName;
+//     console.log(req.body.QuestionDetails.gradeid)
+//     const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(gradeid)} AND lessonName = '${lessonName}')`;
+//     dbconnection.query(query, (err, result) => {
+//       if (err) {
+//         console.error("Error executing query:", err);
+//         res.status(500).json({ message: "Internal server error" });
+//       } else {
+//         res.json({message : result});
+//         console.log(result)
+//       }
+//     });
+//   });
+
+// app.post('/get/quiz', (req, res) => {
+//     const gradeid = req.body.QuestionDetails.gradeid;
+//     const lessonName = req.body.QuestionDetails.lessonName;
+//     console.log(req.body.QuestionDetails.gradeid)
+//     console.log(lessonName)
+//     const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(gradeid)} AND lessonName = '${lessonName}')`;
+//     dbconnection.query(query, (err, questionResults) => {
+//         if (err) {
+//             console.error("Error executing query:", err);
+//             res.status(500).json({ message: "Internal server error" });
+//         } else {
+//             let optionArray = [];
+//             let totalScore = 0;
+//             let correctAnswers = 0;
+//             Promise.all(questionResults.map(question => {
+//                 return new Promise((resolve, reject) => {
+//                     const optionsQuery = 'SELECT OptionText FROM QuestionOptions WHERE QuestionID = ?';
+//                     dbconnection.query(optionsQuery, [question.QuestionID], (err, optionsResults) => {
+                       
+//                         if (err) {
+//                             console.error('Error retrieving question options:', err);
+//                             reject('Internal server error');
+//                         } else {
+//                             const options = optionsResults.map(option => option.OptionText);
+//                             console.log(options);
+//                             optionArray.push(options);
+//                             if (question.CorrectAnswerIndex !== null) {
+//                                 totalScore++; // Increment total score for each question
+//                                 if (options[question.CorrectAnswerIndex] === question.Answer) {
+//                                     correctAnswers++; // Increment correct answers count if the selected option is correct
+//                                 }
+//                             }
+//                             resolve();
+//                         }
+//                     });
+//                 });
+//             })).then(() => {
+//                 res.json({ questions: questionResults, options: optionArray, totalScore: totalScore, correctAnswers: correctAnswers} );
+//             }).catch(error => {
+//                 console.error(error);
+//                 res.status(500).json({ error: 'Internal server error' });
+//             });
+//         }
+//     });
+// });
+
+app.post('/get/quiz', (req, res) => {
     const gradeid = req.body.QuestionDetails.gradeid;
     const lessonName = req.body.QuestionDetails.lessonName;
-    console.log(req.body.QuestionDetails.gradeid)
-    console.log(lessonName)
-    const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(gradeid)} AND lessonName = '${lessonName}')`;
+    const query = 
+    `SELECT 
+            QQ.QuestionID, 
+            QQ.QuestionText, 
+            QQ.LessonID, 
+            QQ.CorrectAnswerIndex, 
+            GROUP_CONCAT(QO.OptionText) AS OptionTexts
+        FROM 
+            QuizQuestions QQ
+        JOIN 
+            QuestionOptions QO ON QQ.QuestionID = QO.QuestionID
+        WHERE 
+            QQ.LessonID IN (
+                SELECT LessonID 
+                FROM Lessons 
+                WHERE grade = ${parseInt(gradeid)} 
+                AND lessonName = '${lessonName}'
+            )
+        GROUP BY 
+            QQ.QuestionID, 
+            QQ.QuestionText, 
+            QQ.LessonID, 
+            QQ.CorrectAnswerIndex;`
+    ;
     dbconnection.query(query, (err, questionResults) => {
         if (err) {
             console.error("Error executing query:", err);
             res.status(500).json({ message: "Internal server error" });
         } else {
-            let optionArray = [];
-            Promise.all(questionResults.map(question => {
-                return new Promise((resolve, reject) => {
-                    const optionsQuery = 'SELECT OptionText FROM QuestionOptions WHERE QuestionID = ?';
-                    dbconnection.query(optionsQuery, [question.QuestionID], (err, optionsResults) => {
-                        if (err) {
-                            console.error('Error retrieving question options:', err);
-                            reject('Internal server error');
-                        } else {
-                            const options = optionsResults.map(option => option.OptionText);
-                            console.log(options);
-                            optionArray.push(options);
-                            resolve();
-                        }
-                    });
-                });
-            })).then(() => {
-                res.json({ questions: questionResults, options: optionArray });
-            }).catch(error => {
-                console.error(error);
-                res.status(500).json({ error: 'Internal server error' });
-            });
+            // const questions = questionResults.map(question => ({
+            //     QuestionID: question.QuestionID,
+            //     QuestionText: question.QuestionText,
+            //     CorrectAnswerIndex: question.CorrectAnswerIndex,
+            //     Options: question.OptionTexts.split(',') // Split OptionTexts into an array of options
+            // }));
+            // res.json({ questions: questions });
+
+            res.json({message:questionResults});
         }
     });
 });
 
-app.listen(3002, () => {
-    console.log("listenning on port 3002.")
+
+
+app.listen(3001, () => {
+    console.log("listenning on port 3001.")
 })
