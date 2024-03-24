@@ -3,7 +3,7 @@ import './index.css';
 import AIAssistant from './AIAssistant'
 import Home from './App';
 import Forum from './Forum';
-import Video from './VideoPage';
+import Video from './videoPage';
 import QuizHome from './QuizHome';
 import Library from './3DLibrary';
 import ForumPage from './ForumPage';

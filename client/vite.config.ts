@@ -13,7 +13,7 @@ export default defineConfig({
             '/foo' : "",
 
             '/api': {
-              target: 'http://localhost:3001',// this is the port where the server is running
+              target: 'http://localhost:3002',// this is the port where the server is running
               changeOrigin: true,
               rewrite: (path) => path.replace(/^\/api/, ''),
             },
