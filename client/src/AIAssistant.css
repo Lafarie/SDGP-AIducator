@@ -8,6 +8,7 @@
     margin-top: 100px;
     display: inline-grid;
     grid-template-columns:20% 50% auto;
+    justify-content: space-between;
     column-gap: 10px;
     font-size: 0.9vw;
 }
@@ -31,6 +32,10 @@
 .savedResponseClass:hover, .selectedResponse{
     background-color: #003366;
     color: white;
+}
+#savedResponsesContainer{
+    padding: 1vw 2vw;
+    text-align: center;
 }
 
 
@@ -144,6 +149,11 @@
     text-align: justify;
 }
 
+#models{
+    width: fit-content;
+    padding: 1vw 4vw;
+}
+
 #response li{
     margin-bottom: 3px;
 }
@@ -154,4 +164,81 @@
     column-gap: 10px;
     margin: 0;
     float: right;
+}
+
+#models{
+    min-width: 15vw;
+    text-align: center;
+}
+
+.modelContainer{
+    background-color: white;
+    width: fit-content;
+    min-width: 10vw;
+    margin-bottom: 2vw;
+    padding: 2vw;
+    margin: 2vw auto;
+    border-radius: 1vw;
+    filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.3));
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modelContainer:hover{
+    filter: none;
+    transform: scale(0.95);
+}
+
+.modelContainer model-viewer{
+    width: 10vw;
+    padding: 1vw;
+}
+
+#Innermodels{
+    text-align: center;
+}
+
+#noModelsHeading{
+    justify-content: center;
+    height: 100%;
+}
+#noModelsHeading p{
+    margin-top: auto;
+}
+
+#modelContainerLarge{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    background-color: #d9d9d9;
+    border: 0.4vw solid white;
+    height: 70%;
+    width: 70%;
+    filter: drop-shadow(2px 2px 20px rgba(0, 0, 0, 0.364));
+    border-radius: 1vw;
+}
+
+#modelContainerLarge model-viewer{
+    width: calc(100% - 4vw);
+    height: calc(100% - 4vw);
+    margin: 2vw;
+}
+
+#displaymodelName{
+    font-size: 2vw;
+    margin: 2vw;
+}
+
+#close{
+    cursor: pointer;
+    position: fixed;
+    top: 2vw;
+    right: 2vw;
+    transition: 0.2s;
+}
+
+#close:hover{
+    transform: scale(1.12);
 }

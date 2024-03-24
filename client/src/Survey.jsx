@@ -30,6 +30,7 @@ export function StudentSurvey(){
       }, []);
 
     const [math, setmath] = useState(false);
+    const [comp, setcomp] = useState(false);
     const [geography, setgeography] = useState(false);
     const [science, setscience] = useState(false);
     const [geometry, setgeometry] = useState(false);
@@ -41,8 +42,10 @@ export function StudentSurvey(){
 
     const [usergrade, setusergrade] = useState("default");
 
+    // Array of interests users can select from.
     let interestArr = [
         {name: "Math", setFunc: () => {setmath(!math)}, state: math},
+        {name: "Compute Science", setFunc: () => {setcomp(!comp)}, state:comp},
         {name: "Geography", setFunc: () => {setgeography(!geography)}, state: geography}, 
         {name: "Science", setFunc: () => {setscience(!science)}, state: science}, 
         {name: "Geometry", setFunc: () => {setgeometry(!geometry)}, state: geometry},  

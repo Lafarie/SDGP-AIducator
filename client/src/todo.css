@@ -1,47 +1,57 @@
+/* the body style to stop scrolling of the page */
+.ToDo {
+    overflow-x: hidden;
+    font-family: "Inria Sans";
+    /* overflow-y: hidden; */
+
+}
+
 .form {
-    width: 984px;
-    height: 424px;
+    width: 800px;
+    height: 350px;
     border-radius: 20px;
-    background-color: #003366;  
-    margin: 0 auto;
+    background-color: #003366; 
 }
 
 .form h2 {
     color: #FFF;
     font-family: "Inria Sans";
-    font-size: 32px;
-    margin: 15px 0px 0px 3%;
-
+    font-size: 28px;
+    margin-left: 30px;
+    /* margin: 15px 0px 0px 50px; */
 }
 
 .taskLabel {
     color: #FFF;
     font-family: "Inria Sans";
     font-weight: 700;
-    font-size: 24px;
-    margin: 15px 0px 15px 3%;
+    font-size: 22px;
+    margin-left: 30px;
+    /* margin: 15px 0px 15px 30px; */
 }
 
 .form input {
-    margin: 15px 0px 15px 3%;
-    width: 895px;
+    /* margin: 15px 0px 15px 50px; */
+    margin-left: 30px;
+    width: 700px;
     border-radius: 0;
     background-color: #003366;
     border: none;
-    padding: 8px;
+    padding: 5px;
     background-clip: content-box;
     box-shadow: inset 0 0 5px 0 #FFF;
-    border-radius: 5px;
+    border-radius: 10px;
+    color: #FFF;
 }
 
 .form button {
-    margin-left: 3%;
+    margin-left: 610px;
     font-family: "Inria Sans";
     color: #003366;
     cursor: pointer;
     border-radius: 10px;
-    width: 159px;
-    height: 48px;
+    width: 130px;
+    height: 40px;
     font-size: 24px;
 }
 
@@ -49,11 +59,30 @@
     .form {
         width: 90%;
         max-width: none;
+    }
+    
+    .form h2, 
+    .taskLabel,
+    .form input,
+    .form button {
+        margin-left: 5%;
+    }
+
+    .form input {
+        max-width: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .form h2,
+    .taskLabel,
+    .form input,
+    .form button {
+        margin-left: 10%;
     }    
 }
 
 /* SWITCH START */
-
 .switch {
     position: relative;
     display: inline-block;
@@ -69,7 +98,6 @@
     width: 0;
     height: 0;
 }
-
 
 .toggle {
     position: absolute;
@@ -121,42 +149,35 @@ input:checked + .toggle:before {
 /* SWITCH END */
 
 
-/* .ToDo {
-    width: 984px;
-    height: 497px;
-    border-radius: 20px;
-    background: rgb(31, 47, 89);
-} */
-
-/* .ToDo {
-    width: 984px;
-    height: 497px;
-    border-radius: 20px;
-    background: #003366;
-    
-} */
-
 .calendarArea {
     background-color: #003366;
-    width: 984px;
-    height: 437px;
+    width: 800px;
+    height: 350px;
     border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 100px;
 }
 
 .container {
-    margin: 0 0 0 50%;
+    margin: 0 0 0 650px;
 }
 
 .taskContainer {
-    width: 708px;
-    height: 904px;
+    width: 550px;
+    height: 722px;
     flex-shrink: 0;
     border-radius: 20px;
     background: #D9D9D9;
-    margin: -900px -80px 0 30px;
+    margin: -724px 0 0 50px;
+}
+
+.topic p {
+    font-family: "Inria Sans";
+    font-size: 20px;
+    padding: 70px 0 0 30px;
+    font-weight: bold;
 }
 
 

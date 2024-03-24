@@ -126,8 +126,8 @@ body {
   flex-direction: column;
   width: 27%;
   object-fit: contain;
-  min-height: 500px; 
-  max-height: 500px;
+  min-height: 520px; 
+  max-height: 520px;
   background-color: #D9D9D9;
   border-right: 1px solid #D9D9D9;
   padding: 20px;
@@ -170,6 +170,8 @@ body {
   height: 250px;
   border-radius: 10px;
   background-color: #f5f5f5;
+  background-size: cover;
+  background-position: center;
 }
 
 .side-bar .forum-long-details {
@@ -513,6 +515,11 @@ p {
 } */
 
 
+.post-profile{
+  margin-left: 0;
+  width: 10%;
+}
+
 
 .thread-post{
   display: flex;
@@ -555,11 +562,11 @@ p {
   /* background-color: #f5f5f5; */
 }
 
-.post-title-bar h2{
+.thread-title-bar h2{
   margin: 10px 0px 10px 10px;
  }
 
-.post-title-bar{
+.thread-title-bar{
   display: flex;
   flex-direction: row;
   object-fit: contain;
@@ -568,7 +575,7 @@ p {
   /* background-color: #f5f5f5; */
 }
 
-.post-title-bar img{
+.thread-title-bar img{
   width: 10%;
   height: 50px;
   /* margin: 10px 0px 10px 0px; */
@@ -582,32 +589,96 @@ p {
 
 }
 
-.post-info{
+
+
+.post-title-bar{
+  width: 10%;
+  height: 50px;
+  /* margin: 10px 0px 10px 0px; */
+  margin-left: auto;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  /* padding: 10px; */
+  color: #fff;
+  cursor: pointer;
+}
+
+.thread-info{
   display: flex;
   flex-direction: row;
   width: 90%;
-  height: 100%;
-  margin: 10px 0px 10px 10px;
+  gap: 10px;
+  height: 50%;
+  margin: 0px 0px 10px 9px;
   border-radius: 20px;
   /* background-color: #f5f5f5; */
 
 }
 
-.post-info p{
+.thread-info p{
   padding: 3px;
-  margin: 10px 0px 10px 10px;
+  margin: 0px 0px 10px 0px;
   background-color: #f5f5f5;
-  /* font-size: 1.2rem; */
+  font-size: 0.9rem;
   color: #333;
   border-radius: 5px;
 }
 
+.post-user-details{
+  display: flex;
+  flex-direction: row;
+  width: 33%;
+  object-fit: contain;
+  margin-left: auto;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+}
+
+.post-user-details p{
+  /* margin: 10px 0px 10px 10px; */
+  font-size: 1rem;
+  color: #333;
+}
+
+.post-user-details img{
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  padding: 10px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.post-info{
+  display: flex;
+  flex-direction: column;
+  /* width: 90%; */
+  object-fit: contain;
+  margin: 10px 0px 10px 10px;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+}
+
+
+
 .post-body{
   display: flex;
   flex-direction: column;
+  margin: 5px;
   width: 95%;
   height: auto;
+  min-height: 50px;
   border-radius: 5px;
+}
+
+.post-body p{
+  margin: 5px;
+  font-size: 1.2rem;
+  color: #333;
 }
 
 #post-tag{
