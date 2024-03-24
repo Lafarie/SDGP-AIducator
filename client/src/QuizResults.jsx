@@ -2,7 +2,6 @@ import React, { useEffect,useState } from 'react';
 import './QuizResults.css'; 
 import Navbar from './component/Navbar';
 import defaultProfile from "./Images/defaultProfile.svg";
-import Arrow from "./Images/ArrowIcon.png";
 import { useLocation } from 'react-router-dom';
 import getCurrentUser from './currentUser';
 import { getDatabase, ref, onValue} from "firebase/database";
@@ -22,6 +21,7 @@ const QuizResults = () => {
     const [userGrade, setUserGrade] = useState("");
     const [Currentuser, setCurrentuser] = useState(null);
     const [BaseDetails, setBaseDetails] = useState(null);
+    const [remarks,setRemarks]= useState("");
 
     let db = getDatabase(app)
 
@@ -43,7 +43,16 @@ const QuizResults = () => {
           .catch((error) => {
             console.error(error);
           });
-      }, []);
+
+          // Set remarks based on total score
+        if (totalScore >= 50) {
+            setRemarks("Keep up the good work!");
+        } else {
+            setRemarks("Needs improvement!");
+        }
+
+
+      }, [totalScore]);
 
     
 
@@ -84,7 +93,7 @@ const QuizResults = () => {
             <div className="column">
                 <div className="Remarks-box">
                     <label className='Remarks'>Remarks</label>
-                    <input type='text' className='RemarksInput'/>
+                    <label className='feedback'>{remarks}</label>
                 </div>
             </div>
         </div>

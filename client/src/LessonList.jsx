@@ -19,33 +19,33 @@ const LessonList = () => {
       'Lesson 1: Geometry',
       'Lesson 2: Pythagorean Relations',
       'Lesson 3: Factors',
-      'Lesson 4: Fractions',
-      'Lesson 5: Area',
-      'Lesson 6: Angles of Triangles',
-      'Lesson 7: Graphs',
-      'Lesson 8: Sets',
-      'Lesson 9: Volume and Capacity',
-      'Lesson 10: Loci and constructions',
-      'Lesson 11: Perimeter',
-      'Lesson 12: Mass',
-      'Lesson 13: Symmetry',
-      'Lesson 14: Scale Diagrams',
-      'Lesson 15: Angles of Polygons',
+      // 'Lesson 4: Fractions',
+      // 'Lesson 5: Area',
+      // 'Lesson 6: Angles of Triangles',
+      // 'Lesson 7: Graphs',
+      // 'Lesson 8: Sets',
+      // 'Lesson 9: Volume and Capacity',
+      // 'Lesson 10: Loci and constructions',
+      // 'Lesson 11: Perimeter',
+      // 'Lesson 12: Mass',
+      // 'Lesson 13: Symmetry',
+      // 'Lesson 14: Scale Diagrams',
+      // 'Lesson 15: Angles of Polygons',
     ],
     Geography: [
       'Lesson 1 : Nature of the earth ',
       'Lesson 2 : The solar system',
       'Lesson 3 : Topography',
-      'Lesson 4 : Landscapes',
+      // 'Lesson 4 : Landscapes',
     ],
     Science: [
       'Lesson 1 : Life cycles of living organisms',
       'Lesson 2 : Magnets ',
       'Lesson 3 : Plant parts and functions',
-      'Lesson 4 : Electrolysis',
-      'Lesson 5 : Density',
-      'Lesson 6 : Reflection and refraction of waves',
-      'Lesson 7 : Simple machines',
+      // 'Lesson 4 : Electrolysis',
+      // 'Lesson 5 : Density',
+      // 'Lesson 6 : Reflection and refraction of waves',
+      // 'Lesson 7 : Simple machines',
     ],
   };
 
@@ -55,33 +55,33 @@ const LessonList = () => {
       'Lesson 1: Geometry',
       'Lesson 2: Pythagorean Relations',
       'Lesson 3: Factors',
-      'Lesson 4: Fractions',
-      'Lesson 5: Area',
-      'Lesson 6: Angles of Triangles',
-      'Lesson 7: Graphs',
-      'Lesson 8: Sets',
-      'Lesson 9: Volume and Capacity',
-      'Lesson 10: Loci and constructions',
-      'Lesson 11: Perimeter',
-      'Lesson 12: Mass',
-      'Lesson 13: Symmetry',
-      'Lesson 14: Scale Diagrams',
-      'Lesson 15: Angles of Polygons',
+      // 'Lesson 4: Fractions',
+      // 'Lesson 5: Area',
+      // 'Lesson 6: Angles of Triangles',
+      // 'Lesson 7: Graphs',
+      // 'Lesson 8: Sets',
+      // 'Lesson 9: Volume and Capacity',
+      // 'Lesson 10: Loci and constructions',
+      // 'Lesson 11: Perimeter',
+      // 'Lesson 12: Mass',
+      // 'Lesson 13: Symmetry',
+      // 'Lesson 14: Scale Diagrams',
+      // 'Lesson 15: Angles of Polygons',
     ],
     Geography: [
       'Lesson 1 : Nature of the earth ',
       'Lesson 2 : The solar system',
       'Lesson 3 : Topography',
-      'Lesson 4 : Landscapes',
+      // 'Lesson 4 : Landscapes',
     ],
     Science: [
       'Lesson 1 : Life cycles of living organisms',
       'Lesson 2 : Magnets ',
       'Lesson 3 : Plant parts and functions',
-      'Lesson 4 : Electrolysis',
-      'Lesson 5 : Density',
-      'Lesson 6 : Reflection and refraction of waves',
-      'Lesson 7 : Simple machines',
+      // 'Lesson 4 : Electrolysis',
+      // 'Lesson 5 : Density',
+      // 'Lesson 6 : Reflection and refraction of waves',
+      // 'Lesson 7 : Simple machines',
     ],
   };
 
@@ -112,7 +112,11 @@ const LessonList = () => {
         </div>
         <div className="lesson-list">
           {lessons.map((lesson, index) => (
-            <Link key={index} to={location.pathname + "/" + lesson}><button key={index} className={`lesson-button ${index % 2 === 0 ? 'even' : 'odd'}`}>{lesson}</button></Link>
+            <div key={index} className="lesson-item">
+              <Link to={location.pathname + "/" + lesson}>
+                <button className="lesson-button">{lesson}</button>
+              </Link>
+            </div>
           ))}
         </div>
       </div>
