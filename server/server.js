@@ -8,7 +8,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const OpenAI = require("openai");
 const dotenv = require("dotenv");
-const sql = require("mysql");
+const sql = require("mysql2");
 // const dbconnection = require("./dbconnection");
 
 dotenv.config();
@@ -44,7 +44,7 @@ var dbconnection = sql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  port: 3306,
+  port: 3307,
 });
 
 function pingdb() {
@@ -843,6 +843,6 @@ app.post("/get/quiz", (req, res) => {
 
 
 
-app.listen(3002, () => {
+app.listen(5000, () => {
   console.log("listenning on port 3002.");
 });
