@@ -19,7 +19,10 @@
     margin-bottom: 1vw;
     border-radius: 50%;
     margin-top: 2vh;
-    border: #003366;
+    border: 5px solid #003366;
+    overflow: hidden;
+    width: 140px; 
+    height: 140px; 
 }
 
 .N-Questions {
@@ -71,21 +74,9 @@
     margin-bottom: 5vh;
     width: 33.5vw; 
     max-width: 40vw; 
-    height: 37vh;
+    height: 30vh;
     color: #ffff;
     border-radius: 1vw;
-    font-weight: bold;
-    margin-top: 3vh;
-}
-
-.QandA {
-    background-color: #003366;
-    grid-column: 2;
-    margin-bottom: 1vh;
-    height: 8vh;
-    color: #ffff;
-    border-radius: 3.5vh;
-    width: 30vw;
     font-weight: bold;
     margin-top: 3vh;
 }
@@ -95,64 +86,36 @@
     grid-column: 3;
     width: 30vw; 
     max-width: 40vw; 
-    height: 70vh;
+    height: 25vh;
     margin-bottom: 1vh;
     color: #ffff;
     border-radius: 1vw;
     font-weight: bold;
-    margin-top: 2vh;
-}
-
-.TextInput {
-    margin-bottom: 1vh;
-    margin-left: 4vw;
+    margin-top: 27.5vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .Name-box, .Email-box, .Grade-box {
     margin-bottom: 5vh;
     margin-top: 5.5vh;
     margin-left: 2vw;
-    font-size: 2vw;
-}
-
-.NameInput, .EmailInput {
-    margin-left: 4vw;
-    width: 18vw;
-    height: 2vh;
-}
-
-.GradeInput {
-    width: 2vw;
-    margin-left: 4vw;
-}
-
-#Arrow {
-    width: 2.5vw;
-    margin-left: 3vw;
-    margin-top: 2vh;
-    height: 2.5vw;
-}
-
-.QandA-label {
-    margin-left: 5.5vw;
-    margin-top: 0.75vh;
-    margin-bottom: 1.5vh;
     font-size: 1.5vw;
+    white-space: nowrap;
 }
 
-.RemarksInput {
-    width: 25vw;
-    height: 58vh;
-    margin-left: 2vw;
+.feedback{
+    font-size: x-large;
     margin-top: 2vh;
-    border-radius: 1vw;
 }
 
 .Remarks {
-    margin-left: 10vw;
-    margin-top: 2vh;
-    font-size: 2.5vw;
+    margin-top: 3vh;
+    font-size: 2vw;
     text-align: center;
+    margin-bottom: 3vh;
+    text-decoration: underline;
 }
 
 .CorrectLabel {

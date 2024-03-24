@@ -51,17 +51,18 @@
     background-color: #D9D9D9;
   }
   .grade-label {
-    font-size: 16px;
+    font-size: 24px;
     font-weight: bold;
     margin-left: -450px;
-    margin-top: 30px;
+    margin-top: 40px;
+    margin-bottom: 20px;
   }
   .lesson-list {
-    margin-top: 20px;
+    margin-top: 40px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr); 
     column-gap: 100px; 
-    row-gap: 20px;
+    row-gap: 40px;
+    margin-left: -385px;
   }
 
   .lesson-button {

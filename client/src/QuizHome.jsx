@@ -24,10 +24,6 @@ const QuizHome = () => {
     setSelectedLesson(null);
   };
 
-  // const handleLessonClick = (lesson) => {
-  //   setSelectedLesson(lesson);
-  // };
-
   function handleLesson(lesson){
     setSelectedLesson(lesson);
   }
