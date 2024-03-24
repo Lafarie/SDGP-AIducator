@@ -1,9 +1,3 @@
-import express from "express";
-import bodyParser from "body-parser";
-import OpenAI from "openai";
-import dotenv from "dotenv";
-import sql from "mysql2";
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const OpenAI = require("openai");
