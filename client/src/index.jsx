@@ -3,7 +3,7 @@ import './index.css';
 import AIAssistant from './AIAssistant'
 import Home from './App';
 import Forum from './Forum';
-import Video from './videoPage';
+import Video from './VideoPage';
 import QuizHome from './QuizHome';
 import Library from './3DLibrary';
 import ForumPage from './ForumPage';
@@ -34,7 +34,7 @@ root.render(
     <Routes>
       <Route path="/" element={<Welcome />} />
       <Route path="/home" element={<AIAssistant />} />
-      <Route path="/videoPage" element={<Video />} /> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
+      <Route path="/VideoPage" element={<Video />} /> {/*Add the required element to be rendered in the element attribute (according to the path specified)*/}
       <Route path="/quiz" element={<QuizHome />} />
       <Route path="/forum" element={<Forum />} />
       <Route path="/todo" element={<Todo />} />

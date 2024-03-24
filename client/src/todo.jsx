@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react";
-import './todo.css';
-import Navbar from './component/Navbar';
+import React, { useEffect, useRef, useState } from "react";
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import './todo.css';
+import Navbar from './component/Navbar';
+import Footer from './component/Footer';
 
 const MyCalendar = ({ events, onDateClick }) => {
     return (
@@ -21,7 +22,8 @@ const MyCalendar = ({ events, onDateClick }) => {
                 weekends={true}
                 style={{width: '100%', height: '100%'}}
                 aspectRatio={3.9}      //aspect ratio used to set the height of the dates   
-                eventClick={onDateClick}    
+                eventClick={onDateClick} 
+                key={JSON.stringify(events)}
             />   
         </div>
     );
@@ -33,8 +35,7 @@ const ToDo = ({}) => {
     const [taskTime,  setTaskTime] = useState('');
     const [events, setEvents] = useState([]);
     const [tasks, setTasks] = useState([]);
-    const calendarRef = useRef(null); //reference to the calendar instance
-
+    
     const handleTaskNameChange = (e) => {
         setTaskName(e.target.value);
     };
@@ -50,47 +51,35 @@ const ToDo = ({}) => {
     const handleCreateTask = (e) => {
         e.preventDefault();
 
+        const startDate = new Date(taskDate + 'T' + taskTime);
+        const endDate = new Date(taskDate + 'T' + taskTime);
+
         const newEvent = {
-            start: taskDate,
-            // end: taskDate + 'T' + taskTime,
+            title: taskName,
+            start: startDate,
+            end: endDate,
             rendering: 'background',
             color: 'red',
         };
 
-        // console.log('New Event: ', newEvent);
-
         setEvents([...events, newEvent]);
-
-         const newTask = {
-            name: taskName,
-            completed: false,
-         };
-
-         setTasks([...tasks, newTask]);
 
         setTaskName('');
         setTaskDate('');
         setTaskTime('');
+
+        const newTask = {
+            name: taskName,
+            date: taskDate,
+        };
+
+        setTasks([...tasks, newTask]);
     };
 
-    //trigger click event on the calendar to highlight the newly added event
-    if (calendarRef.current) {
-        calendarRef.current.getApi().dispatch({
-            type: 'dateClick',
-            date: taskDate
-        });
-    }
-
-    const handleTaskCheckBoxChange = (index) => {
-        const updatedTasks = [...tasks];
-        updatedTasks[index].completed = !updatedTasks[index].completed;
-        setTasks(updatedTasks);
-    }
-    
     return (
-        <body className="ToDo">
-        {/* <Navbar />     */}
-        <div >
+        <div className="ToDo">
+        <Navbar />    
+        <div className="layout">
             <div className="container">
                 <div className="calendarArea">
                     <MyCalendar events={events} />
@@ -114,53 +103,28 @@ const ToDo = ({}) => {
                             <input type='time' value={taskTime} onChange={handleTaskTimeChange}  required/>
                         </div>
 
-
-                        {/* const Toggle = () => {
-                            const [isChecked, setIsChecked] = useState(false);
-
-                            const handleSwitch =  () => {
-                                setIsChecked(!isChecked);
-                        };
-
-                        return (
-                                <div className="switch">
-                                    <input 
-                                    type="checkbox" 
-                                    className="toggleContainer" 
-                                    id="toggle" checked= {isChecked} 
-                                    onChange={handleSwitch}
-                                    />
-
-
-                                <label htmlFor="">Remind Me </label>
-                                    <div  className="switch">
-                                    <input type="checkbox" name=""/>
-                                    <span className="toggle round"></span>
-                                    </div>
-                                </div>  
-                            );
-                        }; */}
-
-                        
-
-
-                        <br/>
                         <div>
-                        <button type='submit'>Create</button>
+                            <button type='submit'>Create</button>
                         </div>
                     </form>
                 </div>
             </div>
-
-            <div className="taskContainer">
-                <div className="topic">
-                    <p>TO-DO LIST</p>
+                <div className="taskContainer">
+                    <p className="topic">TO-DO LIST</p>
+                    <br />
+                        {tasks.map((task, index) => (
+                            <div key={index} className="checkboxContainer">
+                                <input type="checkbox"/>
+                                <label >{task.name} ~ {task.date}</label>                                
+                            </div>
+                        ))}
                 </div>
-            </div>
-
+            
         </div>
-        </body>
+        <Footer />
+        </div>
     );
 }
+
 
 export default ToDo;

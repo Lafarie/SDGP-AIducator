@@ -86,14 +86,17 @@
 /* Footer */
 
 footer{
-  margin-top: 200px;
+  /* margin-top: 200px; */
   background-color: #003366;
   color: white;
   text-align: center;
   padding: 20px 0 0px 0;
   bottom: 0;
   width: 100%;
-  filter: drop-shadow(0px -4px 4px rgba(0, 0, 0, 0.541));
+  height: fit-content;
+  /* filter: drop-shadow(0px -4px 2px rgba(0, 0, 0, 0.541)); */
+  overflow: hidden;
+  padding-bottom: 1vw;
 }
 
 #footer-row{
@@ -156,12 +159,14 @@ footer{
   justify-content: center;
   align-items: center;
   margin: 10px;
+  height: 2vw;
   gap: 20px;
 }
 
 #logo-inside img{
   cursor: pointer;
-  width: 18%;
+  width: 100%;
+  height: 100%;
 }
 
 #footer-aiducator-logo{

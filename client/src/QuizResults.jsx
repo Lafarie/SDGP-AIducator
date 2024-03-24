@@ -1,16 +1,51 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import './QuizResults.css'; 
 import Navbar from './component/Navbar';
 import defaultProfile from "./Images/defaultProfile.svg";
 import Arrow from "./Images/ArrowIcon.png";
 import { useLocation } from 'react-router-dom';
+import getCurrentUser from './currentUser';
+import { getDatabase, ref, onValue} from "firebase/database";
+import { getAuth } from "firebase/auth";
+import app from './firebase';
+
 
 
 const QuizResults = () => {
     const location = useLocation();
     const urlParams = new URLSearchParams(location.search);
     const totalScore = urlParams.get('score');
-    const correctAnswers = urlParams.get('correct');
+    const correctAnswers = Math.floor(totalScore / 10);
+
+    const [username, setUsername] = useState("");
+    const [usermail, setUsermail] = useState("");
+    const [userGrade, setUserGrade] = useState("");
+    const [Currentuser, setCurrentuser] = useState(null);
+    const [BaseDetails, setBaseDetails] = useState(null);
+
+    let db = getDatabase(app)
+
+    useEffect(() => {
+        const start = performance.now();
+        getCurrentUser()
+          .then((user) => {
+            if (user) {
+              setBaseDetails(user);
+              let userId = user.uid;
+              let dbRef = ref(db, "users/" + user.uid);
+              onValue(dbRef, (user) => {
+                setCurrentuser(user.val());
+              });
+              const end = performance.now() - start;
+              console.log(end);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }, []);
+
+    
 
   return (
     <div>
@@ -36,21 +71,14 @@ const QuizResults = () => {
                 </div>
                 <div className="details-box">
                     <div className='Name-box'>
-                        <label className='Name'>Name:</label>
-                        <input type="text" className="NameInput" />
+                        <label className='Name'>Name: {Currentuser === null? "User Name" : Currentuser.fname + " " + Currentuser.lname}</label>
                     </div>
                     <div className='Email-box'>
-                        <label className='Email'>Email:</label>
-                        <input type="text" className="EmailInput" />
+                        <label className='Name'>Email: {BaseDetails === null? "User Email" : BaseDetails.email}</label>
                     </div>
                     <div className='Grade-box'>
-                        <label className='Grade'>Grade:</label>
-                        <input type="text" className="GradeInput" />
+                        <label className='Name'>Grade: {Currentuser === null? "User Grade" : Currentuser.grade.split("e")[1]}</label>
                     </div>
-                </div>
-                <div className="QandA">
-                    <label className='QandA-label'>Questions and answers</label>
-                    <img src={Arrow} alt='arrow' id={"Arrow"}/>
                 </div>
             </div>
             <div className="column">
