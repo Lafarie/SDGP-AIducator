@@ -21,7 +21,6 @@
     font-family: "Inria Sans";
     font-size: 28px;
     margin-left: 30px;
-    /* margin: 15px 0px 0px 50px; */
 }
 
 .taskLabel {
@@ -30,11 +29,9 @@
     font-weight: 700;
     font-size: 22px;
     margin-left: 30px;
-    /* margin: 15px 0px 15px 30px; */
 }
 
 .form input {
-    /* margin: 15px 0px 15px 50px; */
     margin-left: 30px;
     width: 700px;
     border-radius: 0;
@@ -102,7 +99,7 @@
 
 .fc-daygrid-event {
     background-color: #012a53;
-    color: #FFF; /* You can adjust the text color of events if needed */
+    color: #FFF; 
 }
 
 .container {
@@ -143,12 +140,22 @@
 }
 
 .checkboxContainer input:checked {
-    /* background-color: #003366; */
     color: #003366;
 }
 
 .checkboxContainer input:hover {
     cursor: pointer;
+}
+
+.deleteButton {
+    font-family: "Inria Sans";
+    color: #003366;
+    background-color: #FFF;
+    cursor: pointer;
+    border-radius: 20px;
+    width: 80px;
+    height: 23px;
+    font-size: 12px;
 }
 
 
