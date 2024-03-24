@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./QuizPage.css";
 import { useLocation, Link, useParams } from "react-router-dom";
 import Navbar from "./component/Navbar";
+import Footer from "./component/Footer";
 
 const QuizPage = () => {
   const { grade, subject, lesson } = useParams();
@@ -127,6 +128,7 @@ const QuizPage = () => {
           )}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
@@ -151,6 +153,7 @@ const Question = ({ question, selectedOption, setSelectedOption, currentQuestion
   const questionNumber = currentQuestionIndex + 1;
 
   return (
+    <>
     <div className="question">
       <div className="Q-Number">Question {formatQuestionNumber(questionNumber)}</div>
       <label className="Qs">{questionTitle}</label>
@@ -175,6 +178,8 @@ const Question = ({ question, selectedOption, setSelectedOption, currentQuestion
         ))}
       </ul>
     </div>
+   
+    </>
   );
 };
 

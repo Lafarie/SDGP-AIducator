@@ -8,6 +8,7 @@ import Navbar from './component/Navbar';
 import LessonList from './LessonList';
 import QuizPage from './QuizPage';
 import { Link } from 'react-router-dom';
+import Footer from './component/Footer';
 
 const QuizHome = () => {
 
@@ -98,6 +99,7 @@ const QuizHome = () => {
             <QuizPage lesson={selectedLesson} />
           </div>
         )}
+        <Footer/>
       </div>
   );
 }
