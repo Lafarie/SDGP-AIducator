@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import './AIAssistant.css';
 import Navbar from './component/Navbar';
+import Footer from './component/Footer';
 import sendIcon from './Images/sendicon.svg';
 import good from './Images/good.svg';
 import bad from './Images/bad.svg';
@@ -11,8 +12,7 @@ import closeModeView from './Images/closeModelView.svg'
 import getCurrentUser from './currentUser';
 
 var responseInt = 0;
-
-// white response generates cannot view saved responses. (implement)
+var timeElapsed = 0; // for testing purposes
 
 function untilRespond(element){
     let msg = "Wait a moment";
@@ -23,7 +23,10 @@ function untilRespond(element){
             msg = msg.substring(0, msg.length - 3)
             element.innerHTML = (msg += ".");
         }
+        timeElapsed ++; // for testing purposes
         }, 1000);
+
+        return timeElapsed;
 }
 
 
@@ -88,6 +91,7 @@ function Assistant(){
     }, [displayID])
 
     useEffect(() => {
+        const start = performance.now();
         fetch("/api/get/responses").then(response => response.json()).then((data) => {
             setallresponses(data.responseArray.map((savedresponse) => (
                 <div key={savedresponse.id} id={savedresponse.id} value={savedresponse.id} className='savedResponseClass' onClick={()=> {
@@ -108,6 +112,9 @@ function Assistant(){
                 }}>{savedresponse.prompt}</div>
             )));
         });
+        const end = performance.now() - start;
+
+        console.log(end); // for performance reasons
     }, [saved])
 
     useEffect(() => { // to set the look of the save button
@@ -176,6 +183,7 @@ function Assistant(){
             setgenerateButton(false);
             settextBox(false);
             clearInterval(responseInt);
+            console.log("Time takes to respond " + timeElapsed + " seconds")
         });
     }
 
@@ -278,12 +286,13 @@ function Assistant(){
             <h1>3D models</h1>
             <div id='Innermodels'>
                 {models === null || models.length === 0? <div id='noModelsHeading'><p>No models to display</p></div>: models.map((src, index) => (
-                    <ModelViewer src={src.split(",")[0]} name={src.split(",")[1]} setmodel={setdisplayModel} setname={setdisplayModelName}/>
+                    <ModelViewer key={index} src={src.split(",")[0]} name={src.split(",")[1]} setmodel={setdisplayModel} setname={setdisplayModelName}/>
                 ))}
             </div>
         </div>
       </div>
       <ModelViewerLarge src={displayModel} name={displayModelName}/>
+      <Footer/>
       </>
     )
 }

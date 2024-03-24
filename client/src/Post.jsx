@@ -53,7 +53,6 @@ function Post() {
       .then((res) => res.json())
       .then((data) => {
         if (data.message.length > 0) {
-          // console.log(data.message);
           setPosts(data.message);
         }
       })

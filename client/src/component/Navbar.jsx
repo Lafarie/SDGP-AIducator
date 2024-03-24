@@ -6,8 +6,8 @@ import getCurrentUsers from "../currentUser";
 import { useEffect, useState } from "react";
 import getCurrentUser from "../currentUser";
 import app from "../firebase";
-import { getDatabase, ref, onValue, set } from "firebase/database";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getDatabase, ref, onValue} from "firebase/database";
+import { getAuth, signOut } from "firebase/auth";
 import verified from "../Images/verified.svg";
 // import PropTypes from 'prop-types';
 
@@ -140,6 +140,7 @@ function ProfileSection({ id }) {
   let db = getDatabase(app);
 
   useEffect(() => {
+    const start = performance.now();
     getCurrentUser()
       .then((user) => {
         if (user) {
@@ -162,8 +163,9 @@ function ProfileSection({ id }) {
                 console.error("An error occurred:", error);
               }
             });
-            // console.log(user.val());
           });
+          const end = performance.now() - start;
+          console.log(end);
         }
       })
       .catch((error) => {
