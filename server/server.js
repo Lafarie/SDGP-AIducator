@@ -1,9 +1,15 @@
-import express from "express";
-import bodyParser from "body-parser";
-import OpenAI from "openai";
-import dotenv from "dotenv";
-import sql from "mysql2";
-import fs from 'fs';
+// import express from "express";
+// import bodyParser from "body-parser";
+// import OpenAI from "openai";
+// import dotenv from "dotenv";
+// import sql from "mysql";
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const OpenAI = require("openai");
+const dotenv = require("dotenv");
+const sql = require("mysql");
+// const dbconnection = require("./dbconnection");
 
 dotenv.config();
 
@@ -26,7 +32,7 @@ let INSTRUCTIONS = `
 
 let MODELINSTRUCTIONS = `I want you take the users prompt and then compare it with these topics which are 
                         "Math", "Geography", "Science", "Geometry", "Astronomy", "Geology", "Chemical", "Flora and Fauna", "People" and return the 
-                        tages that relate to the prompt and give them as an comma seperated string. If the awnser doesnt relate to any topic return a empty string`
+                        tages that relate to the prompt and give them as an comma seperated string. If the awnser doesnt relate to any topic return a empty string`;
 
 const moderationUrl = "https://api.openai.com/v1/moderations"; // Open AI moderation URL
 
@@ -161,7 +167,6 @@ dbconnection.query("CREATE DATABASE AIducator", (err, result) => {
 
 dbconnection.changeUser({ database: "AIducator" }); // selecting databse after creation
 
-
 const createTable = (sql, tableName) => {
   return new Promise((resolve, reject) => {
     dbconnection.query(sql, (err) => {
@@ -207,89 +212,89 @@ createDatabase()
     console.error("An error occurred:", err);
   });
 
-
 // table connection here - Paboda
 
 async function main(input) {
-    const completion = await openai.chat.completions.create({
-        messages: [{ "role": "system", "content": INSTRUCTIONS }, { "role": "assistant", "content": input }],
-        model: "gpt-3.5-turbo",
-    });
-    return completion.choices[0];
+  const completion = await openai.chat.completions.create({
+    messages: [
+      { role: "system", content: INSTRUCTIONS },
+      { role: "assistant", content: input },
+    ],
+    model: "gpt-3.5-turbo",
+  });
+  return completion.choices[0];
 }
 
-function MatchingTags(array1, array2){
-    let count = 0;
-    array1.forEach(element => {
-        if(array2.indexOf(element) !== -1){
-            count ++;
-        }
-    })
-
-    if(count >= 1){
-        return true;
-    } else {
-        return false;
+function MatchingTags(array1, array2) {
+  let count = 0;
+  array1.forEach((element) => {
+    if (array2.indexOf(element) !== -1) {
+      count++;
     }
+  });
 
+  if (count >= 1) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 //fucntion to get what models match
-function getMatchingModels(promptTagArr){
-    return new Promise((resolve, reject) => {
-        let getModels = `SELECT modelSrc, tagStr, modelName FROM modelTable;`
-        let modelArray = [];
+function getMatchingModels(promptTagArr) {
+  return new Promise((resolve, reject) => {
+    let getModels = `SELECT modelSrc, tagStr, modelName FROM modelTable;`;
+    let modelArray = [];
 
-        dbconnection.query(getModels, (err, results) => {
-            if(err) {
-                console.error(err)
-                reject(err)
-            } else {
-                results.forEach(result => {
-                    let sqltags = result.tagStr.split(",");
-                    if(MatchingTags(promptTagArr, sqltags)){
-                        modelArray.push(result.modelSrc + "," + result.modelName);
-                    }
-                });
-                resolve(modelArray);
-            }
-        })
-    })
-    
+    dbconnection.query(getModels, (err, results) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        results.forEach((result) => {
+          let sqltags = result.tagStr.split(",");
+          if (MatchingTags(promptTagArr, sqltags)) {
+            modelArray.push(result.modelSrc + "," + result.modelName);
+          }
+        });
+        resolve(modelArray);
+      }
+    });
+  });
 }
 
 dbconnection.query(modelTable, (err, results) => {
-    if(err) {
-        if(err.errno === 1050){
-            console.log("modelTable table already exists");
-        }
-    } else {
-        console.log("modelTable table created successfully");
+  if (err) {
+    if (err.errno === 1050) {
+      console.log("modelTable table already exists");
     }
+  } else {
+    console.log("modelTable table created successfully");
+  }
 });
 
 let gettingCount = `SELECT COUNT(*) AS count FROM modelTable`;
 
 dbconnection.query(gettingCount, (err, results) => {
-    if(err) {
-        console.error(err)
-    } else {
-        const count = results[0].count;
-        console.log(count);
+  if (err) {
+    console.error(err);
+  } else {
+    const count = results[0].count;
+    console.log(count);
 
-        if(count === 0){
-            dbconnection.query(addmodels, (err, result) => {
-                if (err) {
-                console.log("Error is adding values")
-                } else {
-                console.log("models added sucessfully");
-                }
-            });
+    if (count === 0) {
+      dbconnection.query(addmodels, (err, result) => {
+        if (err) {
+          console.log("Error is adding values");
         } else {
-            console.log("Models already added");
+          console.log("models added sucessfully");
         }
+      });
+    } else {
+      console.log("Models already added");
     }
-})
+  }
+});
 
 // async function main(input) {
 //   const completion = await openai.chat.completions.create({
@@ -314,13 +319,13 @@ async function getKeywords(input) {
 }
 
 function getCategories(objectArr) {
-    let keyArr = Object.keys(objectArr);
-    let returnArr = [];
-    keyArr.forEach((elements) => {
-        if (objectArr[elements]) {
-            returnArr.push(elements)
-        }
-    })
+  let keyArr = Object.keys(objectArr);
+  let returnArr = [];
+  keyArr.forEach((elements) => {
+    if (objectArr[elements]) {
+      returnArr.push(elements);
+    }
+  });
 }
 
 let app = new express();
@@ -328,39 +333,53 @@ let app = new express();
 app.use(bodyParser.json());
 
 app.post("/post/prompt", async (req, res) => {
-    console.log(req.body.prompt); // remove later
-    if (req.body.prompt === "") {
-        res.json({ "generated_result": "I'm sorry but I have not recieved a proper question." })
-    } else {
-        fetch(moderationUrl, {
-            method: "POST",
-            headers: { 'Content-Type': "application/json", 'Authorization': `Bearer ${process.env.API_KEY}` },
-            body: JSON.stringify({ input: req.body.prompt })
-        }).then(response => response.json()).then(async (data) => {
-            if (!data.results[0].flagged) {
-                let returnMsg = main(req.body.prompt);
-                let tags = getKeywords(req.body.prompt);
-                let result = (await returnMsg).message;
-                let tagresults = (await tags).message;
-                let searchArr = [];
-                tagresults.content.split(',').forEach(element => {
-                    let trimmed = element.trim().toLowerCase();
-                    searchArr.push(trimmed)
-                });
-                console.log(searchArr);
-                let modelArray = await getMatchingModels(searchArr).then(result => {
-                    return result;
-                }).catch(err => {
-                    console.error(err);
-                });
-                console.log(modelArray)
-                res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content, "models": modelArray })
-            } else {
-                let arr = getCategories(data.results[0].categories)
-                res.json({ "flagged": true, "generated_result": arr })
-            }
-        })
-    }
+  console.log(req.body.prompt); // remove later
+  if (req.body.prompt === "") {
+    res.json({
+      generated_result: "I'm sorry but I have not recieved a proper question.",
+    });
+  } else {
+    fetch(moderationUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.API_KEY}`,
+      },
+      body: JSON.stringify({ input: req.body.prompt }),
+    })
+      .then((response) => response.json())
+      .then(async (data) => {
+        if (!data.results[0].flagged) {
+          let returnMsg = main(req.body.prompt);
+          let tags = getKeywords(req.body.prompt);
+          let result = (await returnMsg).message;
+          let tagresults = (await tags).message;
+          let searchArr = [];
+          tagresults.content.split(",").forEach((element) => {
+            let trimmed = element.trim().toLowerCase();
+            searchArr.push(trimmed);
+          });
+          console.log(searchArr);
+          let modelArray = await getMatchingModels(searchArr)
+            .then((result) => {
+              return result;
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+          console.log(modelArray);
+          res.json({
+            flagged: false,
+            generated_result: result.content,
+            tags: tagresults.content,
+            models: modelArray,
+          });
+        } else {
+          let arr = getCategories(data.results[0].categories);
+          res.json({ flagged: true, generated_result: arr });
+        }
+      });
+  }
 });
 
 app.post("/post/save", async (req, res) => {
@@ -490,28 +509,29 @@ app.get("/get/thread", (req, res) => {
   let thread = req.query.threadId;
   // console.log(thread);
   let query = `
-      SELECT 
-        T.*, 
-        U.Username,
-        F.Name,
-        DATE_FORMAT(T.CreationDate, '%Y-%m-%d') AS Date,
-        COUNT(P.ThreadID) AS PostCount,
-        IFNULL(SUM(CASE WHEN TVT.VoteType = 'UpVotes' THEN 1 ELSE 0 END), 0) AS UpVotes,
-        IFNULL(SUM(CASE WHEN TVT.VoteType = 'DownVotes' THEN 1 ELSE 0 END), 0) AS DownVotes
-      FROM 
-        Threads T
-      JOIN 
-        Users U ON T.UserID = U.UserID
-      JOIN 
-        Forums F ON T.ForumID = F.ForumID
-      LEFT JOIN 
-        Posts P ON T.ThreadID = P.ThreadID
-      LEFT JOIN 
-        ThreadVoteTracking TVT ON T.ThreadID = TVT.ThreadID
-      WHERE 
-        T.ThreadID = ${thread}
-      GROUP BY 
-        T.ThreadID`;
+  SELECT 
+  T.*, 
+  U.Name AS UserName,
+  F.Name AS ForumName,
+  DATE_FORMAT(T.CreationDate, '%Y-%m-%d') AS Date,
+  COUNT(DISTINCT P.PostID) AS PostCount,
+  IFNULL(SUM(CASE WHEN TVT.VoteType = 'UpVotes' THEN 1 ELSE 0 END), 0) AS UpVotes,
+  IFNULL(SUM(CASE WHEN TVT.VoteType = 'DownVotes' THEN 1 ELSE 0 END), 0) AS DownVotes
+FROM 
+  Threads T
+JOIN 
+  Users U ON T.UserID = U.UserID
+JOIN 
+  Forums F ON T.ForumID = F.ForumID
+LEFT JOIN 
+  Posts P ON T.ThreadID = P.ThreadID
+LEFT JOIN 
+  ThreadVoteTracking TVT ON T.ThreadID = TVT.ThreadID
+WHERE 
+  T.ThreadID = ${thread}
+GROUP BY 
+  T.ThreadID;
+`;
 
   dbconnection.query(query, (err, result) => {
     if (err) {
@@ -535,7 +555,7 @@ app.get("/get/posts", (req, res) => {
     WHEN TIMESTAMPDIFF(DAY, P.CreationDate, NOW()) = 1 THEN '1 day ago'
     ELSE CONCAT(TIMESTAMPDIFF(DAY, P.CreationDate, NOW()), ' days ago')
   END AS TimeAgo, 
-  U.Username,
+  U.Name,
   IFNULL(SUM(CASE WHEN PVT.VoteType = 'UpVotes' THEN 1 ELSE 0 END), 0) AS UpVotes,
   IFNULL(SUM(CASE WHEN PVT.VoteType = 'DownVotes' THEN 1 ELSE 0 END), 0) AS DownVotes
 FROM 
@@ -547,7 +567,7 @@ JOIN
 LEFT JOIN 
   PostVoteTracking PVT ON P.PostID = PVT.PostID
 WHERE 
-  T.ThreadID = ? 
+  T.ThreadID = ?
 GROUP BY 
   P.PostID`;
 
@@ -686,8 +706,8 @@ app.get("/check/post/vote", (req, res) => {
 // Method to check and update values in the ThreadVoteTracking table
 app.get("/check/thread/vote", (req, res) => {
   let threadID = req.query.threadId;
-  let userID = req.query.userId; 
-  let voteType = req.query.voteType; 
+  let userID = req.query.userId;
+  let voteType = req.query.voteType;
 
   let checkQuery = `SELECT * FROM ThreadVoteTracking WHERE ThreadID = ${threadID} AND UserID = '${userID}'`;
   dbconnection.query(checkQuery, (checkErr, checkResult) => {
@@ -869,6 +889,8 @@ app.post("/get/quiz", (req, res) => {
     }
   });
 });
+
+module.exports = app;
 
 app.listen(3002, () => {
   console.log("listenning on port 3002.");
