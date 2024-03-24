@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 
 
 // Importing CSS files
-import './VideoPage.css';
+import './videoPage.css';
 
 // Importing Nav bar component
 import Navbar from './component/Navbar';
+
+//Importing Footer component
+import Footer from "./component/Footer";
 
 const VideoPage = () => {
     const [videos, setVideos] = useState([]);
@@ -61,7 +64,12 @@ const VideoPage = () => {
                 <p className="p2">dsgsdgsdgsdgsdgsdg</p>
             </div>
 
+            <Footer />
+
         </div >
+
+
+
     );
 };
 

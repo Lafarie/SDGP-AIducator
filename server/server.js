@@ -211,84 +211,84 @@ createDatabase()
 // table connection here - Paboda
 
 async function main(input) {
-    const completion = await openai.chat.completions.create({
-        messages: [{ "role": "system", "content": INSTRUCTIONS }, { "role": "assistant", "content": input }],
-        model: "gpt-3.5-turbo",
-    });
-    return completion.choices[0];
+  const completion = await openai.chat.completions.create({
+    messages: [{ "role": "system", "content": INSTRUCTIONS }, { "role": "assistant", "content": input }],
+    model: "gpt-3.5-turbo",
+  });
+  return completion.choices[0];
 }
 
-function MatchingTags(array1, array2){
-    let count = 0;
-    array1.forEach(element => {
-        if(array2.indexOf(element) !== -1){
-            count ++;
-        }
-    })
-
-    if(count >= 1){
-        return true;
-    } else {
-        return false;
+function MatchingTags(array1, array2) {
+  let count = 0;
+  array1.forEach(element => {
+    if (array2.indexOf(element) !== -1) {
+      count++;
     }
+  })
+
+  if (count >= 1) {
+    return true;
+  } else {
+    return false;
+  }
 
 }
 
 //fucntion to get what models match
-function getMatchingModels(promptTagArr){
-    return new Promise((resolve, reject) => {
-        let getModels = `SELECT modelSrc, tagStr, modelName FROM modelTable;`
-        let modelArray = [];
+function getMatchingModels(promptTagArr) {
+  return new Promise((resolve, reject) => {
+    let getModels = `SELECT modelSrc, tagStr, modelName FROM modelTable;`
+    let modelArray = [];
 
-        dbconnection.query(getModels, (err, results) => {
-            if(err) {
-                console.error(err)
-                reject(err)
-            } else {
-                results.forEach(result => {
-                    let sqltags = result.tagStr.split(",");
-                    if(MatchingTags(promptTagArr, sqltags)){
-                        modelArray.push(result.modelSrc + "," + result.modelName);
-                    }
-                });
-                resolve(modelArray);
-            }
-        })
+    dbconnection.query(getModels, (err, results) => {
+      if (err) {
+        console.error(err)
+        reject(err)
+      } else {
+        results.forEach(result => {
+          let sqltags = result.tagStr.split(",");
+          if (MatchingTags(promptTagArr, sqltags)) {
+            modelArray.push(result.modelSrc + "," + result.modelName);
+          }
+        });
+        resolve(modelArray);
+      }
     })
-    
+  })
+
 }
 
 dbconnection.query(modelTable, (err, results) => {
-    if(err) {
-        if(err.errno === 1050){
-            console.log("modelTable table already exists");
-        }
-    } else {
-        console.log("modelTable table created successfully");
+  if (err) {
+    if (err.errno === 1050) {
+      console.log("modelTable table already exists");
     }
+  } else {
+    console.log("modelTable table created successfully");
+  }
 });
 
 let gettingCount = `SELECT COUNT(*) AS count FROM modelTable`;
 
 dbconnection.query(gettingCount, (err, results) => {
-    if(err) {
-        console.error(err)
-    } else {
-        const count = results[0].count;
-        console.log(count);
+  if (err) {
+    console.error(err)
+  } else {
+    const count = results[0].count;
+    console.log(count);
 
-        if(count === 0){
-            dbconnection.query(addmodels, (err, result) => {
-                if (err) {
-                console.log("Error is adding values")
-                } else {
-                console.log("models added sucessfully");
-                }
-            });
+    if (count === 0) {
+      dbconnection.query(addmodels, (err, result) => {
+        if (err) {
+          console.log("Error is adding values")
         } else {
-            console.log("Models already added");
+          console.log("models added sucessfully");
         }
+      });
+    } else {
+      console.log("Models already added");
     }
+  }
 })
 
 // async function main(input) {
@@ -314,13 +314,13 @@ async function getKeywords(input) {
 }
 
 function getCategories(objectArr) {
-    let keyArr = Object.keys(objectArr);
-    let returnArr = [];
-    keyArr.forEach((elements) => {
-        if (objectArr[elements]) {
-            returnArr.push(elements)
-        }
-    })
+  let keyArr = Object.keys(objectArr);
+  let returnArr = [];
+  keyArr.forEach((elements) => {
+    if (objectArr[elements]) {
+      returnArr.push(elements)
+    }
+  })
 }
 
 let app = new express();
@@ -328,46 +328,45 @@ let app = new express();
 app.use(bodyParser.json());
 
 app.post("/post/prompt", async (req, res) => {
-    console.log(req.body.prompt); // remove later
-    if (req.body.prompt === "") {
-        res.json({ "generated_result": "I'm sorry but I have not recieved a proper question." })
-    } else {
-        fetch(moderationUrl, {
-            method: "POST",
-            headers: { 'Content-Type': "application/json", 'Authorization': `Bearer ${process.env.API_KEY}` },
-            body: JSON.stringify({ input: req.body.prompt })
-        }).then(response => response.json()).then(async (data) => {
-            if (!data.results[0].flagged) {
-                let returnMsg = main(req.body.prompt);
-                let tags = getKeywords(req.body.prompt);
-                let result = (await returnMsg).message;
-                let tagresults = (await tags).message;
-                let searchArr = [];
-                tagresults.content.split(',').forEach(element => {
-                    let trimmed = element.trim().toLowerCase();
-                    searchArr.push(trimmed)
-                });
-                console.log(searchArr);
-                let modelArray = await getMatchingModels(searchArr).then(result => {
-                    return result;
-                }).catch(err => {
-                    console.error(err);
-                });
-                console.log(modelArray)
-                res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content, "models": modelArray })
-            } else {
-                let arr = getCategories(data.results[0].categories)
-                res.json({ "flagged": true, "generated_result": arr })
-            }
-        })
-    }
+  console.log(req.body.prompt); // remove later
+  if (req.body.prompt === "") {
+    res.json({ "generated_result": "I'm sorry but I have not recieved a proper question." })
+  } else {
+    fetch(moderationUrl, {
+      method: "POST",
+      headers: { 'Content-Type': "application/json", 'Authorization': `Bearer ${process.env.API_KEY}` },
+      body: JSON.stringify({ input: req.body.prompt })
+    }).then(response => response.json()).then(async (data) => {
+      if (!data.results[0].flagged) {
+        let returnMsg = main(req.body.prompt);
+        let tags = getKeywords(req.body.prompt);
+        let result = (await returnMsg).message;
+        let tagresults = (await tags).message;
+        let searchArr = [];
+        tagresults.content.split(',').forEach(element => {
+          let trimmed = element.trim().toLowerCase();
+          searchArr.push(trimmed)
+        });
+        console.log(searchArr);
+        let modelArray = await getMatchingModels(searchArr).then(result => {
+          return result;
+        }).catch(err => {
+          console.error(err);
+        });
+        console.log(modelArray)
+        res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content, "models": modelArray })
+      } else {
+        let arr = getCategories(data.results[0].categories)
+        res.json({ "flagged": true, "generated_result": arr })
+      }
+    })
+  }
 });
 
 app.post("/post/save", async (req, res) => {
   console.log(req.body.rating); // remove later
   dbconnection.query(
-    `INSERT INTO querytable(prompt, response, promptrating) VALUES("${
-      req.body.prompt
+    `INSERT INTO querytable(prompt, response, promptrating) VALUES("${req.body.prompt
     }", '${req.body.response.replaceAll("'", "*")}', "${req.body.rating}");`,
     (err, result) => {
       if (err) {
@@ -686,8 +685,8 @@ app.get("/check/post/vote", (req, res) => {
 // Method to check and update values in the ThreadVoteTracking table
 app.get("/check/thread/vote", (req, res) => {
   let threadID = req.query.threadId;
-  let userID = req.query.userId; 
-  let voteType = req.query.voteType; 
+  let userID = req.query.userId;
+  let voteType = req.query.voteType;
 
   let checkQuery = `SELECT * FROM ThreadVoteTracking WHERE ThreadID = ${threadID} AND UserID = '${userID}'`;
   dbconnection.query(checkQuery, (checkErr, checkResult) => {
@@ -778,40 +777,40 @@ app.get("/get/popular-threads", (req, res) => {
 });
 
 app.post('/get/test', (req, res) => {
-    const gradeid = req.body.QuestionDetails.gradeid;
-    const lessonName = req.body.QuestionDetails.lessonName;
-    console.log(req.body.QuestionDetails.gradeid)
-    console.log(lessonName)
-    const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(gradeid)} AND lessonName = '${lessonName}')`;
-    dbconnection.query(query, (err, questionResults) => {
-        if (err) {
-            console.error("Error executing query:", err);
-            res.status(500).json({ message: "Internal server error" });
-        } else {
-            let optionArray = [];
-            Promise.all(questionResults.map(question => {
-                return new Promise((resolve, reject) => {
-                    const optionsQuery = 'SELECT OptionText FROM QuestionOptions WHERE QuestionID = ?';
-                    dbconnection.query(optionsQuery, [question.QuestionID], (err, optionsResults) => {
-                        if (err) {
-                            console.error('Error retrieving question options:', err);
-                            reject('Internal server error');
-                        } else {
-                            const options = optionsResults.map(option => option.OptionText);
-                            console.log(options);
-                            optionArray.push(options);
-                            resolve();
-                        }
-                    });
-                });
-            })).then(() => {
-                res.json({ questions: questionResults, options: optionArray });
-            }).catch(error => {
-                console.error(error);
-                res.status(500).json({ error: 'Internal server error' });
-            });
-        }
-    });
+  const gradeid = req.body.QuestionDetails.gradeid;
+  const lessonName = req.body.QuestionDetails.lessonName;
+  console.log(req.body.QuestionDetails.gradeid)
+  console.log(lessonName)
+  const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(gradeid)} AND lessonName = '${lessonName}')`;
+  dbconnection.query(query, (err, questionResults) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      let optionArray = [];
+      Promise.all(questionResults.map(question => {
+        return new Promise((resolve, reject) => {
+          const optionsQuery = 'SELECT OptionText FROM QuestionOptions WHERE QuestionID = ?';
+          dbconnection.query(optionsQuery, [question.QuestionID], (err, optionsResults) => {
+            if (err) {
+              console.error('Error retrieving question options:', err);
+              reject('Internal server error');
+            } else {
+              const options = optionsResults.map(option => option.OptionText);
+              console.log(options);
+              optionArray.push(options);
+              resolve();
+            }
+          });
+        });
+      })).then(() => {
+        res.json({ questions: questionResults, options: optionArray });
+      }).catch(error => {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+      });
+    }
+  });
 });
 
 app.post("/get/quiz", (req, res) => {
@@ -859,6 +858,6 @@ app.post("/get/quiz", (req, res) => {
 
 
 
-app.listen(3001, () => {
-  console.log("listenning on port 3001.");
+app.listen(3002, () => {
+  console.log("listenning on port 3002.");
 });
