@@ -107,7 +107,6 @@ const QuizPage = () => {
             <div className="Remaining-questions">
               <p className="QR-label">Questions Remaining : </p>
               {remainingQuestions - currentQuestionIndex - 1}
-          )}
         </div>
         <div className="sticky-container">
           <div className="Other-Box">
@@ -161,7 +160,6 @@ const QuizPage = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
  
@@ -179,31 +177,6 @@ const Question = ({ question, selectedOption, setSelectedOption }) => {
   }, [question]);
  
   return (
-    <div className="question">
-      <div className="Q-Number">Question:</div>
-      <label className="Qs">{questionTitle}</label>
-      <ul className="options">
-        {answers.map((answer, index) => (
-          <li key={index} className="option">
-            <input
-              type="radio"
-              id={`option-${answer}`}
-              name={`question-${answer}`}
-              value={answer}
-              checked={selectedOption === index}
-              onChange={() => setSelectedOption(index)}
-            />
-            <label
-              className={selectedOption === index ? "blue" : ""}
-              htmlFor={`option-${answer}`}
-            >
-              {answer}
-            </label>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
     <div className="question">
       <div className="Q-Number">Question:</div>
       <label className="Qs">{questionTitle}</label>
