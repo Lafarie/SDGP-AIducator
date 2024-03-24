@@ -61,6 +61,9 @@ const QuizPage = () => {
     return `${mins.toString().padStart(2, "0")}:${secs
       .toString()
       .padStart(2, "0")}`;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
   };
  
   useEffect(() => {
@@ -104,7 +107,37 @@ const QuizPage = () => {
             <div className="Remaining-questions">
               <p className="QR-label">Questions Remaining : </p>
               {remainingQuestions - currentQuestionIndex - 1}
+          )}
+        </div>
+        <div className="sticky-container">
+          <div className="Other-Box">
+            <div className="Remaining-questions">
+              <p className="QR-label">Questions Remaining : </p>
+              {remainingQuestions - currentQuestionIndex - 1}
             </div>
+            <div className="Time-remaining">
+              <p className="Time-label">Time Remaining :</p>
+              {formatTime(remainingTime)}
+            </div>
+          </div>
+          <div className="NextButton-box">
+            {!submitted && (
+              <div className="Next">
+                <button
+                  onClick={handleNext}
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
             <div className="Time-remaining">
               <p className="Time-label">Time Remaining :</p>
               {formatTime(remainingTime)}
@@ -146,6 +179,31 @@ const Question = ({ question, selectedOption, setSelectedOption }) => {
   }, [question]);
  
   return (
+    <div className="question">
+      <div className="Q-Number">Question:</div>
+      <label className="Qs">{questionTitle}</label>
+      <ul className="options">
+        {answers.map((answer, index) => (
+          <li key={index} className="option">
+            <input
+              type="radio"
+              id={`option-${answer}`}
+              name={`question-${answer}`}
+              value={answer}
+              checked={selectedOption === index}
+              onChange={() => setSelectedOption(index)}
+            />
+            <label
+              className={selectedOption === index ? "blue" : ""}
+              htmlFor={`option-${answer}`}
+            >
+              {answer}
+            </label>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
     <div className="question">
       <div className="Q-Number">Question:</div>
       <label className="Qs">{questionTitle}</label>

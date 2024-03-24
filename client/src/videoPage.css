@@ -1,0 +1,64 @@
+.card {
+    font-family: 'Inria Sans', sans-serif;
+    display: flex;
+    margin: 0 auto;
+    /* Center the cards horizontally */
+    max-width: 85%;
+    /* Set a maximum width for the cards */
+    padding: 0 20px;
+    /* Add some padding to the cards */
+}
+
+.video-slide-container {
+
+    margin: 0 auto;
+    /* Center the container horizontally */
+    width: 85%;
+    /* Set a maximum width for the container */
+}
+
+.cardbody {
+    text-align: left;
+    margin-left: 5%;
+    /* Adjust the left margin as needed */
+    flex: 1;
+    /* Make the card body flex-grow to fill available space */
+}
+
+.First-Heading {
+    text-align: left;
+    margin-left: 20px;
+    /* Adjust the left margin as needed */
+}
+
+.videoButton {
+    width: 100%;
+    z-index: 1;
+    /* Ensure the button stays above other elements */
+}
+
+.videoPannel {
+    position: relative;
+    width: 85%;
+    /* Make the panel fill the container */
+    height: 0;
+    /* Set height to 0 initially */
+    padding-top: 56.25%;
+    /* Maintain aspect ratio (16:9) */
+    overflow: hidden;
+}
+
+.videoPannel iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin-left: 5%;
+    margin-right: 5%;
+    border: 0;
+}
+
+.slick-arrow {
+    display: none;
+}

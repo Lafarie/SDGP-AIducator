@@ -123,7 +123,7 @@ function ForumPage() {
                 </div>
                 <div className="post-details">
                   <h2>{thread.Title}</h2>
-                  <p>{thread.Content}</p>
+                  <p>{thread.Content.length > 85 ? thread.Content.slice(0, 85) + '...' : thread.Content}</p>
                 </div>
               </div>
             );
