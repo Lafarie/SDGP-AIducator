@@ -3,7 +3,6 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import sql from "mysql2";
-import fs from 'fs';
 
 dotenv.config();
 
@@ -38,7 +37,7 @@ var dbconnection = sql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  port: 3306,
+  port: 3307,
 });
 
 function pingdb() {
@@ -218,7 +217,7 @@ async function main(input) {
     return completion.choices[0];
 }
 
-function MatchingTags(array1, array2){
+export function MatchingTags(array1, array2){
     let count = 0;
     array1.forEach(element => {
         if(array2.indexOf(element) !== -1){
@@ -290,17 +289,6 @@ dbconnection.query(gettingCount, (err, results) => {
         }
     }
 })
-
-// async function main(input) {
-//   const completion = await openai.chat.completions.create({
-//     messages: [
-//       { role: "system", content: INSTRUCTIONS },
-//       { role: "assistant", content: input },
-//     ],
-//     model: "gpt-3.5-turbo",
-//   });
-//   return completion.choices[0];
-// }
 
 async function getKeywords(input) {
   const completion = await openai.chat.completions.create({
@@ -857,14 +845,6 @@ app.post("/get/quiz", (req, res) => {
       console.error("Error executing query:", err);
       res.status(500).json({ message: "Internal server error" });
     } else {
-      // const questions = questionResults.map(question => ({
-      //     QuestionID: question.QuestionID,
-      //     QuestionText: question.QuestionText,
-      //     CorrectAnswerIndex: question.CorrectAnswerIndex,
-      //     Options: question.OptionTexts.split(',') // Split OptionTexts into an array of options
-      // }));
-      // res.json({ questions: questions });
-
       res.json({ message: questionResults });
     }
   });
