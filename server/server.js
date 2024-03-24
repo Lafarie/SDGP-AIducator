@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import sql from "mysql2";
+import fs from 'fs';
 
 dotenv.config();
 
@@ -37,7 +38,7 @@ var dbconnection = sql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  port: 3307,
+  port: 3306,
 });
 
 function pingdb() {
@@ -135,11 +136,11 @@ VALUES
     ('Cylinder.glb', 'Cylinder', 'geometry,math'),
     ('Hexagon.glb', 'Hexagon', 'geometry,math'),
     ('square.glb', 'Square', 'geometry,math'),
-    ('Triangle.glb', 'Triangle', 'geometry,math'),
+    ('Triangle.glb', 'Rectangle', 'geometry,math'),
     ('Circle.glb', 'Circle', 'geometry,math'),
     ('beaker.glb', 'Beaker', 'science,chemical'),
     ('conical.glb', 'Conical FLask', 'science,chemical'),
-    ('earth.glb', 'Earth', 'geography,geology,science,astronomy'),
+    ('earth.glb', 'Earth', 'geography,geology,astronomy'),
     ('FlatFlask.glb', 'Flat FLask', 'science,chemical'),
     ('GCylinder.glb', 'Graduated Cylinder', 'science,chemical'),
     ('testTube.glb', 'Test Tube', 'science,chemical'),
@@ -160,69 +161,52 @@ dbconnection.query("CREATE DATABASE AIducator", (err, result) => {
 
 dbconnection.changeUser({ database: "AIducator" }); // selecting databse after creation
 
-// Execute SQL queries to create tables - sathindu
-dbconnection.query(tablesql, (err, result) => {
-  // creating table
-  if (err) {
-    if (err.errno === 1050) {
-      console.log("query table already exists");
-    }
-  } else {
-    console.log("query table created successfully");
-  }
-});
 
-// Execute SQL queries to create tables
-dbconnection.query(usersql, (err, results) => {
-  if (err) {
-    if (err.errno === 1050) {
-      console.log("users table already exists");
-    }
-  } else {
-    console.log("users table created successfully");
-  }
-  // console.log(err);
-});
+const createTable = (sql, tableName) => {
+  return new Promise((resolve, reject) => {
+    dbconnection.query(sql, (err) => {
+      if (err) {
+        if (err.errno === 1050) {
+          console.log(`${tableName} table already exists`);
+          resolve();
+        } else {
+          console.error(`Error creating ${tableName} table:`, err);
+          reject(err);
+        }
+      } else {
+        console.log(`${tableName} table created successfully`);
+        resolve();
+      }
+    });
+  });
+};
 
-dbconnection.query(threadsql, (err, results) => {
-  if (err) {
-    if (err.errno === 1050) {
-      console.log("thread table already exists");
-    }
-  } else {
-    console.log("thread table created successfully");
-  }
-});
+const createDatabase = () => {
+  return new Promise((resolve, reject) => {
+    dbconnection.query("CREATE DATABASE IF NOT EXISTS AIducator", (err) => {
+      if (err) {
+        console.error("Error creating database:", err);
+        reject(err);
+      } else {
+        console.log("Database created or already exists");
+        resolve();
+      }
+    });
+  });
+};
 
-dbconnection.query(postsql, (err, results) => {
-  if (err) {
-    if (err.errno === 1050) {
-      console.log("post table already exists");
-    }
-  } else {
-    console.log("post table created successfully");
-  }
-});
+createDatabase()
+  .then(() => createTable(usersql, "Users"))
+  .then(() => createTable(forumsql, "Forums"))
+  .then(() => createTable(threadsql, "Threads"))
+  .then(() => createTable(postsql, "Posts"))
+  .then(() => createTable(postVotesql, "PostVoteTracking"))
+  .then(() => createTable(threadVotesql, "Thread Vote"))
+  .then(() => createTable(tablesql, "queryTable"))
+  .catch((err) => {
+    console.error("An error occurred:", err);
+  });
 
-dbconnection.query(postVotesql, (err, results) => {
-  if (err) {
-    if (err.errno === 1050) {
-      console.log("postVote table already exists");
-    }
-  } else {
-    console.log("postVote table created successfully");
-  }
-});
-
-dbconnection.query(threadVotesql, (err, results) => {
-  if (err) {
-    if (err.errno === 1050) {
-      console.log("threadVote table already exists");
-    }
-  } else {
-    console.log("threadVote table created successfully");
-  }
-});
 
 // table connection here - Paboda
 

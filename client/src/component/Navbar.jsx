@@ -64,7 +64,7 @@ function Navbar() {
                 className="NavLinks"
                 to={"/videoPage"}
                 style={{
-                  textDecoration: showActivePage("/video", url.pathname),
+                  textDecoration: showActivePage("/videoPage", url.pathname),
                 }}
               >
                 VIDEOS
