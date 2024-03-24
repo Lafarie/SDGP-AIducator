@@ -212,8 +212,6 @@ createDatabase()
     console.error("An error occurred:", err);
   });
 
-// table connection here - Paboda
-
 async function main(input) {
   const completion = await openai.chat.completions.create({
     messages: [{ "role": "system", "content": INSTRUCTIONS }, { "role": "assistant", "content": input }],
