@@ -151,6 +151,17 @@
     cursor: pointer;
 }
 
+.deleteButton {
+    font-family: "Inria Sans";
+    color: #003366;
+    background-color: #FFF;
+    cursor: pointer;
+    border-radius: 20px;
+    width: 80px;
+    height: 23px;
+    font-size: 12px;
+}
+
 
 
 

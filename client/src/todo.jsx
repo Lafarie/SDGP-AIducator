@@ -76,6 +76,28 @@ const ToDo = ({}) => {
         setTasks([...tasks, newTask]);
     };
 
+    const handleDeleteTask = (index) => {
+        const updatedTasks = [...tasks];
+        updatedTasks.splice(index, 1);
+        setTasks(updatedTasks);
+
+        const updatedEvents = [...events];
+        updatedEvents.splice(index, 1);  //task gets deleted from the calendar
+        setEvents(updatedEvents);
+    };
+    
+    const handleUpdateTask = (index, updatedTask) => {
+        const updatedTasks = [...tasks];
+        updatedTasks[index] = updatedTask;
+        setTasks(updatedTasks);
+    };
+    
+    const handleCheckboxChange = (index) => {
+        const updatedTasks = [...tasks];
+        updatedTasks[index].checked = !updatedTasks[index].checked;
+        setTasks(updatedTasks);
+    };
+
     return (
         <div className="ToDo">
         <Navbar />    
@@ -109,22 +131,27 @@ const ToDo = ({}) => {
                     </form>
                 </div>
             </div>
-                <div className="taskContainer">
-                    <p className="topic">TO-DO LIST</p>
-                    <br />
-                        {tasks.map((task, index) => (
-                            <div key={index} className="checkboxContainer">
-                                <input type="checkbox"/>
-                                <label >{task.name} ~ {task.date}</label>                                
+            <div className="taskContainer">
+                <p className="topic">TO-DO LIST</p>
+                <br />
+                {tasks.map((task, index) => (
+                    <div key={index} className="checkboxContainer">
+                        <input type="checkbox" checked={task.checked} onChange={() => handleCheckboxChange(index)} />
+                        <label>{task.name} ~ {task.date}</label>
+                        {task.checked && (
+                            <div>
+                                <button onClick={() => handleDeleteTask(index)} className="deleteButton">Delete</button>
                             </div>
-                        ))}
-                </div>
-            
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
-        <Footer />
-        </div>
+    <Footer />
+    </div>
     );
 }
 
-
 export default ToDo;
+
+
