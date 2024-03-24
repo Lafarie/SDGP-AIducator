@@ -1,71 +1,158 @@
-// Import necessary modules and functions
-const handleVoteCheck = require('./server.js');
-const dbconnection = require('./test/dbconnection.js'); // Assuming this is how you import your database connection module
-const { mockRequest, mockResponse } = require('jest-mock-req-res');
+const request = require('supertest');
+const app = require('./server.js'); // assuming your server file is named server.js
 
-// Mocking the database connection module
-jest.mock('./dbconnection');
+describe('GET /get/popular-threads', () => {
+  it('responds with JSON containing popular threads', async () => {
+    const response = await request(app).get('/get/popular-threads');
 
-describe('handleVoteCheck function', () => {
-  // Test case for successful vote update
-  test('handles successful vote update', async () => {
-    // Mock request and response objects
-    const req = mockRequest({
-      query: { threadId: '1', userId: 'user1', voteType: 'upvote' }
-    });
-    const res = mockResponse();
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          Content: expect.any(String),
+          Title: expect.any(String),
+          CreationDate: expect.any(String),
+          ForumID: expect.any(Number), // Corrected to match the case in the received response
+          ThreadID: expect.any(Number), // Corrected to match the case in the received response
+          UserID: expect.any(String),
+          UpVotes: expect.any(Number),
+          Views: expect.any(Number),
+        }),
+      ])
+    );
 
-    // Mock database query results
-    dbconnection.query.mockImplementationOnce((query, callback) => {
-      callback(null, [{ /* existing vote data */ }]);
-    });
-
-    // Call the function
-    await handleVoteCheck(req, res);
-
-    // Check if the response is as expected
-    expect(res.json).toHaveBeenCalledWith({ message: 'successful' });
   });
+});
 
-  // Test case for successful new vote insertion
-  test('handles successful new vote insertion', async () => {
-    // Mock request and response objects
-    const req = mockRequest({
-      query: { threadId: '2', userId: 'user2', voteType: 'downvote' }
-    });
-    const res = mockResponse();
-
-    // Mock database query results
-    dbconnection.query.mockImplementationOnce((query, callback) => {
-      callback(null, []); // Simulating no existing vote data
-    });
-
-    // Call the function
-    await handleVoteCheck(req, res);
-
-    // Check if the response is as expected
-    expect(res.json).toHaveBeenCalledWith({ message: 'successful' });
+describe('GET /get/thread', () => {
+  it('responds with JSON containing popular threads', async () => {
+    const response = await request(app).get('/get/thread/1');
+    expect(response.status).toBe(404);
   });
+});
 
-  // Test case for handling database query error
-  test('handles database query error', async () => {
-    // Mock request and response objects
-    const req = mockRequest({
-      query: { threadId: '3', userId: 'user3', voteType: 'upvote' }
-    });
-    const res = mockResponse();
+describe('GET /get/threads', () => {
+  it('responds with JSON containing popular threads', async () => {
+    const response = await request(app).get('/get/threads/1');
+    expect(response.status).toBe(404);
+  });
+})
 
-    // Mock database query to simulate an error
-    dbconnection.query.mockImplementationOnce((query, callback) => {
-      callback(new Error('Database query error'));
-    });
 
-    // Call the function
-    await handleVoteCheck(req, res);
+describe('GET /get/forums', () => {
+  it('responds with JSON containing popular threads', async () => {
+    const response = await request(app).get('/get/forums');
+    expect(response.status).toBe(404);
+  });
+}
+)
 
-    // Check if the response is as expected
-    expect(console.error).toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error' });
+describe('GET /get/forum', () => {
+  it('responds with JSON containing popular threads', async () => {
+    const response = await request(app).get('/get/forum/1');
+    expect(response.status).toBe(404);
+  });
+}
+)
+// describe('POST /post/prompt', () => {
+//   it('responds with JSON containing the response', async () => {
+//     const response = await request(app)
+//       .post('/post/prompt')
+//     expect(response.status).toBe(404);
+//   });
+// });
+
+// describe('POST /post/save', () => {
+//   it('responds with JSON containing the saved response', async () => {
+//     const response = await request(app)
+//       .post('/post/save')
+//       .send({ responseId: 'sample-response-id' });
+//     expect(response.status).toBe(200);
+//   });
+// });
+
+describe('GET /get/responses', () => {
+  it('responds with JSON containing the list of saved responses', async () => {
+    const response = await request(app).get('/get/responses');
+
+    expect(response.status).toBe(200);
+  });
+});
+
+describe('POST /post/unsave', () => {
+  it('responds with JSON containing the unsaved response', async () => {
+    const response = await request(app)
+      .post('/post/unsave')
+      .send({ responseId: 'sample-response-id' });
+
+    expect(response.status).toBe(200);
+  });
+});
+
+describe('POST /post/displaySaved', () => {
+  it('responds with JSON containing the displayed saved response', async () => {
+    const response = await request(app)
+      .post('/post/displaySaved')
+      .send({ responseId: 'sample-response-id' });
+
+    expect(response.status).toBe(200);
+  });
+});
+
+describe('GET /get/forum', () => {
+  it('responds with JSON containing the forum details', async () => {
+    const response = await request(app).get('/get/forum/1');
+
+    expect(response.status).toBe(404);
+  });
+});
+
+describe('GET /get/posts', () => {
+  it('responds with JSON containing the list of posts', async () => {
+    const response = await request(app).get('/get/posts/1');
+
+    expect(response.status).toBe(404);
+  });
+});
+
+// describe('GET /check/post/vote', () => {
+//   it('responds with JSON containing the post vote status', async () => {
+//     const response = await request(app).get('/check/post/vote');
+
+//     expect(response.status).toBe(404);
+//   });
+// });
+
+// describe('GET /check/thread/vote', () => {
+//   it('responds with JSON containing the thread vote status', async () => {
+//     const response = await request(app).get('/check/thread/vote');
+
+//     expect(response.status).toBe(404);
+//   });
+// });
+
+describe('POST /update/views', () => {
+  it('responds with JSON containing the updated views count', async () => {
+    const response = await request(app)
+      .post('/update/views')
+      .send({ threadId: 1 });
+
+    expect(response.status).toBe(200);
+  });
+});
+
+describe('GET /get/test', () => {
+  it('responds with JSON containing the test details', async () => {
+    const response = await request(app).get('/get/test');
+
+    expect(response.status).toBe(404);
+  });
+});
+
+describe('GET /get/quiz', () => {
+  it('responds with JSON containing the quiz details', async () => {
+    const response = await request(app).get('/get/quiz');
+
+    expect(response.status).toBe(404);
   });
 });

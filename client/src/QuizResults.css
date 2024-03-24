@@ -4,6 +4,7 @@
     align-items: flex-start;
     padding: 0 5vw;
     margin-top: 12vh;
+    margin-bottom: 3vw;
 }
 
 .column {
@@ -30,6 +31,7 @@
     grid-column: 1;
     width: 20vw;
     height: 20vh;
+    padding: 1vw;
     margin-bottom: 6vh;
     color: #ffff;
     border-radius: 1vw;
@@ -46,6 +48,7 @@
     width: 20vw;
     height: 20vh;
     margin-bottom: 6vh;
+    padding: 1vw;
     color: #ffff;
     border-radius: 1vw;
     font-weight: bold;
@@ -58,6 +61,7 @@
     background-color: #003366;
     grid-column: 1;
     width: 20vw;
+    padding: 1vw;
     height: 20vh;
     margin-bottom: 1vh;
     color: #ffff;
@@ -79,6 +83,7 @@
     border-radius: 1vw;
     font-weight: bold;
     margin-top: 3vh;
+    padding: 2vw 0vw;
 }
 
 .Remarks-box {
