@@ -3,7 +3,10 @@
     overflow-x: hidden;
     font-family: "Inria Sans";
     /* overflow-y: hidden; */
+}
 
+.layout {
+    margin-bottom: 20px;
 }
 
 .form {

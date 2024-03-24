@@ -77,9 +77,9 @@ const ToDo = ({}) => {
     };
 
     return (
-        <body className="ToDo">
+        <div className="ToDo">
         <Navbar />    
-        <div >
+        <div className="layout">
             <div className="container">
                 <div className="calendarArea">
                     <MyCalendar events={events} />
@@ -122,7 +122,7 @@ const ToDo = ({}) => {
             
         </div>
         <Footer />
-        </body>
+        </div>
     );
 }
 
