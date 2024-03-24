@@ -99,6 +99,7 @@ const QuizHome = () => {
             <QuizPage lesson={selectedLesson} />
           </div>
         )}
+        <Footer/>
       </div>
   );
 }

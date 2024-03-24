@@ -7,6 +7,7 @@ import getCurrentUser from './currentUser';
 import { getDatabase, ref, onValue} from "firebase/database";
 import { getAuth } from "firebase/auth";
 import app from './firebase';
+import Footer from './component/Footer';
 
 
 
@@ -58,7 +59,7 @@ const QuizResults = () => {
 
   return (
     <div>
-        <Navbar></Navbar>
+        <Navbar/>
         <div className="quiz-results-container">
             <div className="column">
                 <div className="N-Questions">
@@ -97,6 +98,7 @@ const QuizResults = () => {
                 </div>
             </div>
         </div>
+        <Footer/>
     </div>
   );
 };
