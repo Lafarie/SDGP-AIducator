@@ -1,13 +1,16 @@
 #AIAssistant{
     width: calc(100% - 60px);
-    margin-top: 110px;
     margin-bottom: 20px;
+    margin-top: 100px;
     min-height: calc(100% - 130px);
     max-height: fit-content;
     padding: 0px 30px;
+    margin-top: 100px;
     display: inline-grid;
-    grid-template-columns:50% 50%;
+    grid-template-columns:20% 50% auto;
+    justify-content: space-between;
     column-gap: 10px;
+    font-size: 0.9vw;
 }
 
 #AIAssistant>*{
@@ -15,6 +18,26 @@
     border-radius: 15px;
     width: inherit;
 }
+
+
+.savedResponseClass{
+    background-color: white;
+    margin-top: 1vw;
+    padding: 1.2vw 1vw;
+    border-radius: 10px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.savedResponseClass:hover, .selectedResponse{
+    background-color: #003366;
+    color: white;
+}
+#savedResponsesContainer{
+    padding: 1vw 2vw;
+    text-align: center;
+}
+
 
 .frames{
     padding: 25px 20px;
@@ -24,13 +47,17 @@
 }
 
 .button{
-    height: 20px;
-    width: 30px;
+    height: 1.2vw;
+    width: 1vw;
     border-radius: 3px;
-    transition: 0.2s;
-    padding: 5px;
+    /* padding: 5px; */
     filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.541));
 }
+
+/* #generate:disabled{
+    filter: none;
+    background-color: grey;
+} */
 
 .button img{
     height: 100%;
@@ -38,22 +65,24 @@
     margin: auto;
 }
 
-#generate{
-    background-color: #003366;
-    padding: 5px 10px 5px 5px;
-}
-
 #bad{
     background-color: #C16C6C;
+    padding: 0.5vw;
 }
 
 #good{
     background-color: #80A98C;
+    padding: 0.5vw;
 }
 
-/* #generate:hover{
-    background-color: #5d7070;
-} */
+#save{
+    background-color: #003366;
+    color: white;
+    display: none; 
+    padding: 0.5vw 1.2vw;
+    width: fit-content;
+    cursor: pointer;
+}
 
 .button:active{
     filter: none
@@ -62,13 +91,30 @@
 #prompt{
     width: 100%;
     height: 20px;
-    padding: 10px 20px;
+    padding: 0.9vw 1.2vw;
     border-radius: 5px;
     border: none;
+    font-size: 0.8vw;
 }
 
 #prompt:focus{
-    outline: solid #003366;
+    outline: solid 2px #003366;
+}
+
+#generateContainer{
+    height: fit-content;
+    width: 1.2vw;
+    padding: 0.5vw; 
+    background-color:  #003366;
+    display: flex;
+    justify-content: center;
+    border-radius: 0.2vw;
+    cursor: pointer;
+}
+
+#generateContainer #generate{
+    height: 100%;
+    width: 100%;  
 }
 
 #assistentFrame{
@@ -82,16 +128,30 @@
 #response{
     background-color: white;
     margin: 15px 0;
-    padding: 15px 20px;
+    padding: 1vw 1.5vw;
     border-radius: 10px; 
     min-height: 70%;
     height: fit-content;
-    border: solid 2.5px #003366;
+    /* border: solid 2.5px #003366; */
 }
 
 #response>*{
     text-align: justify;
-    line-height: 1.5;
+    line-height: 1.9vw;
+    font-size: 0.9vw;
+}
+
+#response h1, #reponse h2, #reponse h3, #reponse h4, #reponse h5, #reponse h6{
+    font-size: 1.9vw;
+}
+
+#reponse{
+    text-align: justify;
+}
+
+#models{
+    width: fit-content;
+    padding: 1vw 4vw;
 }
 
 #response li{
@@ -100,8 +160,85 @@
 
 #rating{
     display: inline-grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto auto auto;
     column-gap: 10px;
     margin: 0;
     float: right;
+}
+
+#models{
+    min-width: 15vw;
+    text-align: center;
+}
+
+.modelContainer{
+    background-color: white;
+    width: fit-content;
+    min-width: 10vw;
+    margin-bottom: 2vw;
+    padding: 2vw;
+    margin: 2vw auto;
+    border-radius: 1vw;
+    filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.3));
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modelContainer:hover{
+    filter: none;
+    transform: scale(0.95);
+}
+
+.modelContainer model-viewer{
+    width: 10vw;
+    padding: 1vw;
+}
+
+#Innermodels{
+    text-align: center;
+}
+
+#noModelsHeading{
+    justify-content: center;
+    height: 100%;
+}
+#noModelsHeading p{
+    margin-top: auto;
+}
+
+#modelContainerLarge{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    background-color: #d9d9d9;
+    border: 0.4vw solid white;
+    height: 70%;
+    width: 70%;
+    filter: drop-shadow(2px 2px 20px rgba(0, 0, 0, 0.364));
+    border-radius: 1vw;
+}
+
+#modelContainerLarge model-viewer{
+    width: calc(100% - 4vw);
+    height: calc(100% - 4vw);
+    margin: 2vw;
+}
+
+#displaymodelName{
+    font-size: 2vw;
+    margin: 2vw;
+}
+
+#close{
+    cursor: pointer;
+    position: fixed;
+    top: 2vw;
+    right: 2vw;
+    transition: 0.2s;
+}
+
+#close:hover{
+    transform: scale(1.12);
 }

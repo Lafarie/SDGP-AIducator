@@ -1,0 +1,63 @@
+.heading {
+    margin-left: 1%;
+}
+
+/* #VideoSection {
+    /* width: 120px;
+    height: 100%; */
+
+/* .thumbnail {
+    width: 10vw;
+} */
+
+.video-container {
+
+    margin: 2.8%;
+
+    width: 95%;
+    /* display: inline-grid;
+    grid-template-columns: auto auto auto auto; */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    height: 100%;
+    row-gap: 2vw;
+    float: left;
+    column-gap: 3vw;
+
+
+}
+
+.Video {
+    height: auto;
+    width: 20vw;
+}
+
+
+.yt-video {
+
+    filter: drop-shadow(2px 8px 10px rgb(82, 82, 82));
+    display: block;
+    text-decoration: none;
+    background: #003366;
+    max-width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 10%;
+    height: 100%;
+    color: white;
+}
+
+.yt-video-image {
+    width: 85%;
+}
+
+.yt-video h3 {
+    font-weight: 400;
+    padding: 15px;
+    color: rgb(255, 255, 255);
+}
+
+.testing {
+    visibility: hidden;
+}

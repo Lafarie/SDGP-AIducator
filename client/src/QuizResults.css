@@ -1,0 +1,160 @@
+.quiz-results-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 5vw;
+    margin-top: 12vh;
+    margin-bottom: 3vw;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(30% - 5vw);
+
+}
+
+.profile-picture {
+    background-color: #D9D9D9;
+    margin-bottom: 1vw;
+    border-radius: 50%;
+    margin-top: 2vh;
+    border: 5px solid #003366;
+    overflow: hidden;
+    width: 140px; 
+    height: 140px; 
+}
+
+.N-Questions {
+    background-color: #003366;
+    grid-column: 1;
+    width: 20vw;
+    height: 20vh;
+    padding: 1vw;
+    margin-bottom: 6vh;
+    color: #ffff;
+    border-radius: 1vw;
+    font-weight: bold;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2vh;
+}
+
+.Correct-box {
+    background-color: #003366;
+    grid-column: 1;
+    width: 20vw;
+    height: 20vh;
+    margin-bottom: 6vh;
+    padding: 1vw;
+    color: #ffff;
+    border-radius: 1vw;
+    font-weight: bold;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.Score-box {
+    background-color: #003366;
+    grid-column: 1;
+    width: 20vw;
+    padding: 1vw;
+    height: 20vh;
+    margin-bottom: 1vh;
+    color: #ffff;
+    border-radius: 1vw;
+    font-weight: bold;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.details-box {
+    background-color: #003366;
+    grid-column: 2;
+    margin-bottom: 5vh;
+    width: 33.5vw; 
+    max-width: 40vw; 
+    height: 30vh;
+    color: #ffff;
+    border-radius: 1vw;
+    font-weight: bold;
+    margin-top: 3vh;
+    padding: 2vw 0vw;
+}
+
+.Remarks-box {
+    background-color: #003366;
+    grid-column: 3;
+    width: 30vw; 
+    max-width: 40vw; 
+    height: 25vh;
+    margin-bottom: 1vh;
+    color: #ffff;
+    border-radius: 1vw;
+    font-weight: bold;
+    margin-top: 27.5vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Name-box, .Email-box, .Grade-box {
+    margin-bottom: 5vh;
+    margin-top: 5.5vh;
+    margin-left: 2vw;
+    font-size: 1.5vw;
+    white-space: nowrap;
+}
+
+.feedback{
+    font-size: x-large;
+    margin-top: 2vh;
+}
+
+.Remarks {
+    margin-top: 3vh;
+    font-size: 2vw;
+    text-align: center;
+    margin-bottom: 3vh;
+    text-decoration: underline;
+}
+
+.CorrectLabel {
+    text-align: center;
+    font-size: 1.5vw;
+}
+
+.ScoreLabel {
+    text-align: center;
+    font-size: 1.5vw;
+}
+
+.NQs {
+    text-align: center;
+    font-size: 1.5vw;
+}
+
+.NQ-digit {
+    font-size: 5vw;
+    text-align: center;
+    margin-bottom: 1vh;
+    margin-top: 2vh;
+}
+
+.Score {
+    font-size: 5vw;
+    text-align: center;
+    margin-bottom: 1vh;
+    margin-top: 2vh;
+}
+
+.Correct {
+    font-size: 5vw;
+    text-align: center;
+    margin-bottom: 1vh;
+    margin-top: 2vh;
+}
