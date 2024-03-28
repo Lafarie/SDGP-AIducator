@@ -333,7 +333,7 @@ function ModelViewerLarge({src, name}){
         ><p id='displaymodelName'>{name}</p>
         <div id='close' onClick={() => {
             let modelviewerPlatform = document.getElementById("modelContainerLarge");
-            modelviewerPlatform.style.display = "none";
+            modelviewerPlatform.style.display = "none"; 
         }}><img src={closeModeView}/></div>
         </model-viewer>
     </div>

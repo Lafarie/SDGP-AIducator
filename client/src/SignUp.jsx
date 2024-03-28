@@ -116,7 +116,7 @@ function SignUp(){
                         firstName.current.value = "";
                         lastName.current.value = "";
                         email.current.value = "";
-                        password.current.value = "";
+                        password.current.value = "";Í
                         document.getElementById("terms").checked = false;
                         document.getElementById("CreateAccount").disabled = true;
                         setShowPass(false);
