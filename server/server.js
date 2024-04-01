@@ -35,10 +35,13 @@ const openai = new OpenAI({
 });
 
 var dbconnection = sql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
+  host: "sql6.freesqldatabase.com",
+  user: "sql6695838",
+  password: "mi9NYFrdVz",
   port: 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 function pingdb() {
@@ -147,19 +150,19 @@ VALUES
     ('mountain.glb', 'Mountain', 'geography,geology')
     ;`;
 
-dbconnection.query("CREATE DATABASE AIducator", (err, result) => {
-  if (err) {
-    if (err.errno === 1007) {
-      console.log("Database already exists, Storing data in existing database");
-    } else {
-      console.log(err);
-    }
-  } else {
-    console.log("databse created");
-  }
-});
+// dbconnection.query("CREATE DATABASE sql6695838", (err, result) => {
+//   if (err) {
+//     if (err.errno === 1007) {
+//       console.log("Database already exists, Storing data in existing database");
+//     } else {
+//       console.log(err);
+//     }
+//   } else {
+//     console.log("databse created");
+//   }
+// });
 
-dbconnection.changeUser({ database: "AIducator" }); // selecting databse after creation
+dbconnection.changeUser({ database: "sql6695838" }); // selecting databse after creation
 
 const createTable = async (sql, tableName) => {
   return new Promise((resolve, reject) => {
@@ -180,22 +183,23 @@ const createTable = async (sql, tableName) => {
   });
 };
 
-const createDatabase = () => {
-  return new Promise((resolve, reject) => {
-    dbconnection.query("CREATE DATABASE IF NOT EXISTS AIducator", (err) => {
-      if (err) {
-        console.error("Error creating database:", err);
-        reject(err);
-      } else {
-        console.log("Database created or already exists");
-        resolve();
-      }
-    });
-  });
-};
+// const createDatabase = () => {
+//   return new Promise((resolve, reject) => {
+//     dbconnection.query("CREATE DATABASE IF NOT EXISTS AIducator", (err) => {
+//       if (err) {
+//         console.error("Error creating database:", err);
+//         reject(err);
+//       } else {
+//         console.log("Database created or already exists");
+//         resolve();
+//       }
+//     });
+//   });
+// };
 
-createDatabase()
-  .then(() => createTable(usersql, "Users"))
+// createDatabase()
+
+  createTable(usersql, "Users")
   .then(() => createTable(forumsql, "Forums"))
   .then(() => createTable(threadsql, "Threads"))
   .then(() => createTable(postsql, "Posts"))
@@ -208,7 +212,10 @@ createDatabase()
 
 async function main(input) {
   const completion = await openai.chat.completions.create({
-    messages: [{ "role": "system", "content": INSTRUCTIONS }, { "role": "assistant", "content": input }],
+    messages: [
+      { role: "system", content: INSTRUCTIONS },
+      { role: "assistant", content: input },
+    ],
     model: "gpt-3.5-turbo",
   });
   return completion.choices[0];
@@ -229,19 +236,18 @@ function MatchingTags(array1, array2) {
   }
 }
 
-
 //fucntion to get what models match
 function getMatchingModels(promptTagArr) {
   return new Promise((resolve, reject) => {
-    let getModels = `SELECT modelSrc, tagStr, modelName FROM modelTable;`
+    let getModels = `SELECT modelSrc, tagStr, modelName FROM modelTable;`;
     let modelArray = [];
 
     dbconnection.query(getModels, (err, results) => {
       if (err) {
-        console.error(err)
-        reject(err)
+        console.error(err);
+        reject(err);
       } else {
-        results.forEach(result => {
+        results.forEach((result) => {
           let sqltags = result.tagStr.split(",");
           if (MatchingTags(promptTagArr, sqltags)) {
             modelArray.push(result.modelSrc + "," + result.modelName);
@@ -249,9 +255,8 @@ function getMatchingModels(promptTagArr) {
         });
         resolve(modelArray);
       }
-    })
-  })
-
+    });
+  });
 }
 
 dbconnection.query(modelTable, (err, results) => {
@@ -268,7 +273,7 @@ let gettingCount = `SELECT COUNT(*) AS count FROM modelTable`;
 
 dbconnection.query(gettingCount, (err, results) => {
   if (err) {
-    console.error(err)
+    console.error(err);
   } else {
     const count = results[0].count;
     console.log(count);
@@ -276,7 +281,7 @@ dbconnection.query(gettingCount, (err, results) => {
     if (count === 0) {
       dbconnection.query(addmodels, (err, result) => {
         if (err) {
-          console.log("Error is adding values")
+          console.log("Error is adding values");
         } else {
           console.log("models added sucessfully");
         }
@@ -285,7 +290,7 @@ dbconnection.query(gettingCount, (err, results) => {
       console.log("Models already added");
     }
   }
-})
+});
 
 async function getKeywords(input) {
   const completion = await openai.chat.completions.create({
@@ -303,9 +308,9 @@ function getCategories(objectArr) {
   let returnArr = [];
   keyArr.forEach((elements) => {
     if (objectArr[elements]) {
-      returnArr.push(elements)
+      returnArr.push(elements);
     }
-  })
+  });
 }
 
 let app = new express();
@@ -315,43 +320,58 @@ app.use(bodyParser.json());
 app.post("/post/prompt", async (req, res) => {
   console.log(req.body.prompt); // remove later
   if (req.body.prompt === "") {
-    res.json({ "generated_result": "I'm sorry but I have not recieved a proper question." })
+    res.json({
+      generated_result: "I'm sorry but I have not recieved a proper question.",
+    });
   } else {
     fetch(moderationUrl, {
       method: "POST",
-      headers: { 'Content-Type': "application/json", 'Authorization': `Bearer ${process.env.API_KEY}` },
-      body: JSON.stringify({ input: req.body.prompt })
-    }).then(response => response.json()).then(async (data) => {
-      if (!data.results[0].flagged) {
-        let returnMsg = main(req.body.prompt);
-        let tags = getKeywords(req.body.prompt);
-        let result = (await returnMsg).message;
-        let tagresults = (await tags).message;
-        let searchArr = [];
-        tagresults.content.split(',').forEach(element => {
-          let trimmed = element.trim().toLowerCase();
-          searchArr.push(trimmed)
-        });
-        console.log(searchArr);
-        let modelArray = await getMatchingModels(searchArr).then(result => {
-          return result;
-        }).catch(err => {
-          console.error(err);
-        });
-        console.log(modelArray)
-        res.json({ "flagged": false, "generated_result": result.content, "tags": tagresults.content, "models": modelArray })
-      } else {
-        let arr = getCategories(data.results[0].categories)
-        res.json({ "flagged": true, "generated_result": arr })
-      }
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.API_KEY}`,
+      },
+      body: JSON.stringify({ input: req.body.prompt }),
     })
+      .then((response) => response.json())
+      .then(async (data) => {
+        if (!data.results[0].flagged) {
+          let returnMsg = main(req.body.prompt);
+          let tags = getKeywords(req.body.prompt);
+          let result = (await returnMsg).message;
+          let tagresults = (await tags).message;
+          let searchArr = [];
+          tagresults.content.split(",").forEach((element) => {
+            let trimmed = element.trim().toLowerCase();
+            searchArr.push(trimmed);
+          });
+          console.log(searchArr);
+          let modelArray = await getMatchingModels(searchArr)
+            .then((result) => {
+              return result;
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+          console.log(modelArray);
+          res.json({
+            flagged: false,
+            generated_result: result.content,
+            tags: tagresults.content,
+            models: modelArray,
+          });
+        } else {
+          let arr = getCategories(data.results[0].categories);
+          res.json({ flagged: true, generated_result: arr });
+        }
+      });
   }
 });
 
 app.post("/post/save", async (req, res) => {
   console.log(req.body.rating); // remove later
   dbconnection.query(
-    `INSERT INTO querytable(prompt, response, promptrating) VALUES("${req.body.prompt
+    `INSERT INTO querytable(prompt, response, promptrating) VALUES("${
+      req.body.prompt
     }", '${req.body.response.replaceAll("'", "*")}', "${req.body.rating}");`,
     (err, result) => {
       if (err) {
@@ -551,17 +571,19 @@ app.get("/put/create/forum", async (req, res) => {
     let forumName = req.query.forumName;
     let forumDescription = req.query.content;
     let query = `INSERT INTO Forums (Name, Description) VALUES (?, ?)`;
-    
+
     // Assuming dbconnection.query supports promises
-    const result = await dbconnection.query(query, [forumName, forumDescription]);
-    
+    const result = await dbconnection.query(query, [
+      forumName,
+      forumDescription,
+    ]);
+
     res.json({ message: "Forum created successfully" });
   } catch (err) {
     console.error("Error executing query:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 app.get("/put/create/thread", (req, res) => {
   let forumID = req.query.forumID;
@@ -764,40 +786,52 @@ app.get("/get/popular-threads", (req, res) => {
   });
 });
 
-
-app.post('/get/test', (req, res) => {
+app.post("/get/test", (req, res) => {
   const gradeid = req.body.QuestionDetails.gradeid;
   const lessonName = req.body.QuestionDetails.lessonName;
-  console.log(req.body.QuestionDetails.gradeid)
-  console.log(lessonName)
-  const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(gradeid)} AND lessonName = '${lessonName}')`;
+  console.log(req.body.QuestionDetails.gradeid);
+  console.log(lessonName);
+  const query = `SELECT * FROM QuizQuestions WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE grade = ${parseInt(
+    gradeid
+  )} AND lessonName = '${lessonName}')`;
   dbconnection.query(query, (err, questionResults) => {
     if (err) {
       console.error("Error executing query:", err);
       res.status(500).json({ message: "Internal server error" });
     } else {
       let optionArray = [];
-      Promise.all(questionResults.map(question => {
-        return new Promise((resolve, reject) => {
-          const optionsQuery = 'SELECT OptionText FROM QuestionOptions WHERE QuestionID = ?';
-          dbconnection.query(optionsQuery, [question.QuestionID], (err, optionsResults) => {
-            if (err) {
-              console.error('Error retrieving question options:', err);
-              reject('Internal server error');
-            } else {
-              const options = optionsResults.map(option => option.OptionText);
-              console.log(options);
-              optionArray.push(options);
-              resolve();
-            }
+      Promise.all(
+        questionResults.map((question) => {
+          return new Promise((resolve, reject) => {
+            const optionsQuery =
+              "SELECT OptionText FROM QuestionOptions WHERE QuestionID = ?";
+            dbconnection.query(
+              optionsQuery,
+              [question.QuestionID],
+              (err, optionsResults) => {
+                if (err) {
+                  console.error("Error retrieving question options:", err);
+                  reject("Internal server error");
+                } else {
+                  const options = optionsResults.map(
+                    (option) => option.OptionText
+                  );
+                  console.log(options);
+                  optionArray.push(options);
+                  resolve();
+                }
+              }
+            );
           });
+        })
+      )
+        .then(() => {
+          res.json({ questions: questionResults, options: optionArray });
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "Internal server error" });
         });
-      })).then(() => {
-        res.json({ questions: questionResults, options: optionArray });
-      }).catch(error => {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-      });
     }
   });
 });
@@ -836,7 +870,6 @@ app.post("/get/quiz", (req, res) => {
     }
   });
 });
-
 
 app.listen(3002, () => {
   console.log("listenning on port 3002.");

@@ -54,6 +54,7 @@ function Post() {
       .then((data) => {
         if (data.message.length > 0) {
           setPosts(data.message);
+          // console.log(data.message);
         }
       })
       .catch((error) => {
@@ -189,7 +190,7 @@ function Post() {
           </div>
           <div className="post-user-details">
             <div className="post-info">
-              <p>Posted by: {post.Username}</p>
+              <p>Posted by: {post.Name}</p>
               <p>Replyed: {post.TimeAgo}</p>
             </div>
             <img src={Logo} alt="" />
@@ -244,7 +245,7 @@ function Post() {
                   <img src={Logo} alt="" />
                 </div>
                 <div className="thread-info">
-                  <p>Posted by: {thread.Username}</p>
+                  <p>Posted by: {thread.UserName}</p>
                   <p>Posted on: {thread.Date}</p>
                 </div>
                 <div className="post-body">

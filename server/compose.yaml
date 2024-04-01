@@ -7,31 +7,42 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
-services:
-  server:
-    build:
-      context: .
-      dockerfile: dockerfile
-    environment:
-      NODE_ENV: production,
-      API_KEY: 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
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+server:
+  node:
+    image: node:latest
+    build: .
     ports:
       - 3002:3002
     volumes:
-      - .:/usr/src/app
+      - .:/app
+    environment:
+      - NODE_ENV=development
     depends_on:
-      - mysql
+      - db
+    command: ["npm", "run", "dev"]
+  db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: AIducator
+      MYSQL_USER: sql6695838
+      MYSQL_PASSWORD: "mi9NYFrdVz"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     
 
-mysql:
-  image: mysql:latest
-  environment:
-    MYSQL_ROOT_PASSWORD: ""
-    MYSQL_DATABASE: AIducator
-    MYSQL_USER: root
-    MYSQL_PASSWORD: ""
-  ports:
-    - 3306:3306
+# mysql:
+#   image: mysql:latest
+#   environment:
+#     MYSQL_ROOT_PASSWORD: ""
+#     MYSQL_DATABASE: AIducator
+#     MYSQL_USER: root
+#     MYSQL_PASSWORD: ""
+#   ports:
+#     - 3306:3306
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

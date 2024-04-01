@@ -12,6 +12,7 @@ export default defineConfig({
         proxy: {
             '/foo' : "",
 
+            
             '/api': {
               target: 'http://localhost:3002',// this is the port where the server is running
               changeOrigin: true,
