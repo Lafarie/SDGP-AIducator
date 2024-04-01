@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js
 
 on:
   push:
@@ -23,8 +23,6 @@ jobs:
           cache: 'npm'
           cache-dependency-path: "./server/package-lock.json"
 
-      - name: Install Dependencies and Run Development Server
-        run: |
-          cd server  # Navigate to the server directory
-          npm install  # Install dependencies
-          npm run dev  # Start the server in development mode
+      - run : npm install
+      - run : npm run dev
+        working-directory: ./server

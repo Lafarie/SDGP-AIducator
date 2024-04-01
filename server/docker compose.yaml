@@ -14,7 +14,7 @@ server:
     image: node:latest
     build: .
     ports:
-      - 3002:3002
+      - 8080:8080
     volumes:
       - .:/app
     environment:
