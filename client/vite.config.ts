@@ -10,7 +10,6 @@ export default defineConfig({
         // this ensures that the browser opens upon server start
         open: true,
         proxy: {
-            '/foo' : "",
             '/api': {
               target: 'https://server-419501.uc.r.appspot.com',// this is the port where the server is running
               changeOrigin: true,
