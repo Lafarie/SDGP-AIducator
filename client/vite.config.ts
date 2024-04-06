@@ -12,7 +12,7 @@ export default defineConfig({
         proxy: {
             '/foo' : "",
             '/api': {
-              target: 'https://server-419501.uc.r.appspot.com/',// this is the port where the server is running
+              target: 'https://server-419501.uc.r.appspot.com',// this is the port where the server is running
               changeOrigin: true,
               rewrite: (path) => path.replace(/^\/api/, ''),
             },
