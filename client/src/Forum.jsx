@@ -27,7 +27,6 @@ function Forum() {
   }, []);
 
   const handleSearch = () => {
-    
     if (searchInput.trim() !== "") {
       const filteredForums = forums.filter((forum) =>
         forum.Name.toLowerCase().includes(searchInput.toLowerCase())
@@ -52,8 +51,8 @@ function Forum() {
         <div className="forum-page-top-bar">
           <h1 className="forum-title">Forum</h1>
           <Link to={"/create/forum/0"} id="create-post-button">
-          Create Forum
-        </Link>
+            Create Forum
+          </Link>
         </div>
         <div className="search-bar">
           <input
@@ -72,31 +71,37 @@ function Forum() {
         </div>
         <div className="forum-container">
           <div className="forums-list">
-            {(searchResults.length > 0 ? searchResults : forums).map((forum) => (
-              <div
-                className="forum"
-                key={forum.ForumID}
-                onClick={() => setCurrentID(forum.ForumID)}
-              >
-                <div className="img">
-                  <img src={ForumIcon} alt="" />
-                </div>
-                <div className="forum-short-details">
-                  <h2>{forum.Name}</h2>
-                  <p>{forum.Description.length > 85 ? forum.Description.slice(0, 85) + '...' : forum.Description}</p>
-                </div>
-                <div className="forum-status">
-                  <div>
-                    <p>{"Questions"}</p>
-                    <p>{"Answers"}</p>
+            {(searchResults.length > 0 ? searchResults : forums).map(
+              (forum) => (
+                <div
+                  className="forum"
+                  key={forum.ForumID}
+                  onClick={() => setCurrentID(forum.ForumID)}
+                >
+                  <div className="img">
+                    <img src={ForumIcon} alt="" />
                   </div>
-                  <div>
-                    <p>{forum.questions}</p>
-                    <p>{forum.answers}</p>
+                  <div className="forum-short-details">
+                    <h2>{forum.Name}</h2>
+                    <p>
+                      {forum.Description.length > 85
+                        ? forum.Description.slice(0, 85) + "..."
+                        : forum.Description}
+                    </p>
+                  </div>
+                  <div className="forum-status">
+                    <div>
+                      <p>{"Questions"}</p>
+                      <p>{"Answers"}</p>
+                    </div>
+                    <div>
+                      <p>{forum.questions}</p>
+                      <p>{forum.answers}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
           <div className="side-bar">
             {currentID && !isSearching ? (
@@ -104,7 +109,15 @@ function Forum() {
                 if (forum.ForumID === currentID) {
                   return (
                     <div key={forum.ForumID}>
-                      <div className="img" style={{backgroundImage : 'url(/forumImg/'+ Math.floor(Math.random() * 6) + '.jpeg)'}}>
+                      <div
+                        className="img"
+                        style={{
+                          backgroundImage:
+                            "url(/forumImg/" +
+                            Math.floor(Math.random() * 6) +
+                            ".jpeg)",
+                        }}
+                      >
                         {/* <img src={'/forumImg/'+ Math.floor(Math.random() * 6) + '.jpeg'} alt="" /> */}
                       </div>
                       <div className="forum-long-details">
@@ -112,15 +125,9 @@ function Forum() {
                         <p>{forum.Description}</p>
                       </div>
                       <div className="side-bar-button">
-                        <button
-                          id="join-button"
-                          onClick={() =>
-                            (window.location.href =
-                              "/forum-page/" + forum.ForumID + "/" + forum.Name)
-                          }
-                        >
+                        <Link id="join-button" to={`/forum-page/${forum.ForumID}/${forum.Name}`}>
                           Join
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   );

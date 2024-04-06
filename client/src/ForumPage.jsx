@@ -97,12 +97,10 @@ function ForumPage() {
           </div>
           {(searchResults.length > 0 ? searchResults : threads).map((thread) => {
             return (
-              <div
+              <Link
+                to={"/post/" + thread.ThreadID}
                 className="post"
                 key={thread.ThreadID}
-                onClick={() => {
-                  window.location.href = "/post/" + thread.ThreadID;
-                }}
               >
                 <div className="post-status">
                   <div className="post-vote">
@@ -123,9 +121,13 @@ function ForumPage() {
                 </div>
                 <div className="post-details">
                   <h2>{thread.Title}</h2>
-                  <p>{thread.Content.length > 85 ? thread.Content.slice(0, 85) + '...' : thread.Content}</p>
+                  <p>
+                    {thread.Content.length > 85
+                      ? thread.Content.slice(0, 85) + "..."
+                      : thread.Content}
+                  </p>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

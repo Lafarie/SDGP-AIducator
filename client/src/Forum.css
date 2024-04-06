@@ -191,8 +191,16 @@ body {
   
 }
 
+a {
+  text-decoration: none;
+}
 
-.side-bar button {
+#join-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: bold;
   width: 45%;
   height: 50px;
   background-color: #007bff;
@@ -201,24 +209,17 @@ body {
   border-radius: 15px;
   cursor: pointer;
   box-shadow: 0px 5px 15px #333;
+  font-size: 16px;
+  margin: 4px 2px;
 }
 
-.side-bar button:hover {
+#join-button:hover {
   background-color: #0056b3;
 }
 
-.side-bar button:active {
+#join-button:active {
   box-shadow: 0px 0px 0px #333;
 }
-
-/* 
-#join-button{
-  justify-content: center;
-  align-items: center;
-  margin:auto;
-  margin-left: 50px;
-} */
-
 
 /* Forum-page */
 
@@ -390,7 +391,7 @@ p {
   display: flex;
   flex-direction: row;
   text-decoration: none;
-  background-color: red;
+  background-color: #D9D9D9;
   color: #333;
 }
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 
 function PopularPosts() {
-  
   const [popularPostsData, setPopularPostsData] = useState([]);
 
   useEffect(() => {
@@ -23,9 +23,9 @@ function PopularPosts() {
       <h2>Popular Posts</h2>
       {popularPostsData.map((post) => (
         <div key={post.ThreadID}>
-          <h3 onClick={() => (window.location.href = "/post/" + post.ThreadID)}>
-            {post.Title}
-          </h3>
+          <Link to={`/post/${post.ThreadID}`}>
+            <h3>{post.Title}</h3>
+          </Link>
           <hr />
         </div>
       ))}
