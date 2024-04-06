@@ -118,7 +118,7 @@ const threadVotesql = `CREATE TABLE ThreadVoteTracking (
 );`;
 
 let tablesql =
-  "CREATE TABLE queryTable" +
+  "CREATE TABLE querytable" +
   "(id INTEGER NOT NULL AUTO_INCREMENT," +
   "prompt VARCHAR(100) NOT NULL," +
   "response VARCHAR(5000) NOT NULL," +

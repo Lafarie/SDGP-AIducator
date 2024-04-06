@@ -11,10 +11,8 @@ export default defineConfig({
         open: true,
         proxy: {
             '/foo' : "",
-
-            
             '/api': {
-              target: 'http://localhost:3002',// this is the port where the server is running
+              target: 'https://server-419501.uc.r.appspot.com/',// this is the port where the server is running
               changeOrigin: true,
               rewrite: (path) => path.replace(/^\/api/, ''),
             },
