@@ -1,5 +1,9 @@
 /* the body style to stop scrolling of the page */
 .ToDo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     overflow-x: hidden;
     font-family: "Inria Sans";
     /* overflow-y: hidden; */
@@ -85,7 +89,7 @@
 .calendarArea {
     background-color: #003366;
     width: 800px;
-    height: 350px;
+    height: 450px;
     border-radius: 20px;
     display: flex;
     justify-content: center;
@@ -103,7 +107,7 @@
 }
 
 .container {
-    margin: 0 0 0 650px;
+    margin: 0 0 0 600px;
 }
 
 .taskContainer {
@@ -112,7 +116,7 @@
     flex-shrink: 0;
     border-radius: 20px;
     background: #D9D9D9;
-    margin: -724px 0 0 50px;
+    margin: -825px 0 0 0px;
 }
 
 .topic {

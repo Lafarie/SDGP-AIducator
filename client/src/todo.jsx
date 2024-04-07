@@ -9,7 +9,7 @@ import Footer from './component/Footer';
 const MyCalendar = ({ events, onDateClick }) => {
     return (
         // styles for the calendar
-        <div style={{ width: '790px', height: '275px', borderRadius: '20px', overflow: 'hidden', color: 'white'}}>   
+        <div style={{ width: '790px', height: '400px', borderRadius: '20px', overflow: 'hidden', color: 'white'}}>   
             <FullCalendar 
                 plugins={[ dayGridPlugin, interactionPlugin ]}
                 initialView="dayGridMonth"
@@ -21,7 +21,7 @@ const MyCalendar = ({ events, onDateClick }) => {
                 dayMaxEvents={true}
                 weekends={true}
                 style={{width: '100%', height: '100%'}}
-                aspectRatio={3.9}      //aspect ratio used to set the height of the dates   
+                aspectRatio={2.5}      //aspect ratio used to set the height of the dates   
                 eventClick={onDateClick} 
                 key={JSON.stringify(events)}
             />   
@@ -99,6 +99,7 @@ const ToDo = ({}) => {
     };
 
     return (
+        <>        
         <div className="ToDo">
         <Navbar />    
         <div className="layout">
@@ -147,8 +148,10 @@ const ToDo = ({}) => {
                 ))}
             </div>
         </div>
-    <Footer />
+   
     </div>
+     <Footer />
+     </>
     );
 }
 

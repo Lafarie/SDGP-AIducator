@@ -380,7 +380,7 @@ app.post("/post/save", async (req, res) => {
       } else {
         console.log("saved");
         dbconnection.query(
-          "SELECT id FROM queryTable ORDER BY id DESC LIMIT 1",
+          "SELECT id FROM querytable ORDER BY id DESC LIMIT 1",
           (err, result) => {
             // to get the id of the last entry
             if (err) {
