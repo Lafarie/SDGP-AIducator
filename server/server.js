@@ -35,9 +35,9 @@ const openai = new OpenAI({
 });
 
 var dbconnection = sql.createConnection({
-  host: "sql6.freesqldatabase.com",
-  user: "sql6695838",
-  password: "mi9NYFrdVz",
+  host: "localhost",
+  user: "root",
+  password: "",
   port: 3306,
   waitForConnections: true,
   connectionLimit: 10,
@@ -162,7 +162,7 @@ VALUES
 //   }
 // });
 
-dbconnection.changeUser({ database: "sql6695838" }); // selecting databse after creation
+dbconnection.changeUser({ database: "aiducator" }); // selecting databse after creation
 
 const createTable = async (sql, tableName) => {
   return new Promise((resolve, reject) => {
@@ -334,6 +334,7 @@ app.post("/post/prompt", async (req, res) => {
     })
       .then((response) => response.json())
       .then(async (data) => {
+        console.log(data)
         if (!data.results[0].flagged) {
           let returnMsg = main(req.body.prompt);
           let tags = getKeywords(req.body.prompt);
@@ -872,7 +873,7 @@ app.post("/get/quiz", (req, res) => {
 });
 
 app.listen(8080, () => {
-  console.log("listenning on port 3002.");
+  console.log("listenning on port 8080.");
 });
 
 // module.exports = app;

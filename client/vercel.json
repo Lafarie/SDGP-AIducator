@@ -1,8 +1,1 @@
-{
-    "rewrites": [
-      {
-        "source": "/api/:path*",
-        "destination": "https://server-419501.uc.r.appspot.com/:path*"
-      }
-    ]
-  }
+{ "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }] }
