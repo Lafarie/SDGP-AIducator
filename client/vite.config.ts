@@ -8,15 +8,13 @@ export default defineConfig({
 
     plugins: [react(), viteTsconfigPaths()],
     server: {    
-        // this ensures that the browser opens upon server start
         open: true,
         proxy: {
             '/api': {
-              target: 'server-419501@appspot.gserviceaccount.com',// this is the port where the server is running
+              target: 'https://aiducator-421817.de.r.appspot.com',// this is the port where the server is running
               changeOrigin: true,
               rewrite: (path) => path.replace(/^\/api/, ''),
             },
         },
-        port: 3000,
     },
 })

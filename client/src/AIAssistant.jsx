@@ -36,7 +36,7 @@ function Assistant(){
     useEffect(() => {
         getCurrentUser().then((user) => {
             if(user) {
-                console.log(user.email);
+                // console.log(user.email);
             } else {
                 console.log(null)
             }
@@ -114,7 +114,7 @@ function Assistant(){
         });
         const end = performance.now() - start;
 
-        console.log(end); // for performance reasons
+        // console.log(end); // for performance reasons
     }, [saved])
 
     useEffect(() => { // to set the look of the save button

@@ -1,32 +1,10 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const OpenAI = require("openai");
-const dotenv = require("dotenv");
-const sql = require("mysql2");
-// const dbconnection = require("./dbconnection");
+const mysql = require('mysql2');
+const OpenAI = require('openai');
+const express = require('express');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 
 dotenv.config();
-
-let INSTRUCTIONS = `
-    Queries about history should be considered education, for example questions about historical people and events in history.
-    ANSWER SPECIFICALLY WHAT THE USER ASKS.
-    DO NOT answer any personal issues or statements a user might give as a prompt.
-    DO NOT give advice to users if they ask any issues outside an academic sense.
-    Give the answers in a very informative way, do not make them concise.
-    DO NOT GIVE HEADING TO QUESTIONS YOU ARE NOT ALLOWED TO ANSWER.
-    If you are unable to provide an answer to a question, please respond with the phrase "Sorry, but I am just an educational assistant. I can only assist you in that manner."
-    Please aim to be as helpful, creative, and friendly as possible in all of your responses.
-    Do not use any external URLs in your answers. Do not refer to any blogs in your answers.
-    Start every answer with proper heading for the prompt as a HTML heading. The heading must be enclosed with <h1></h1> tags. An-y text should be enclosed in <p></p> tags.
-    If you generate a response in point form then enclose the list in a <ul> tag and the points in <li> tags. Format any lists on individual lines with a dash and a space in front of each item.
-    Add heading to question answered and have sections for the answers.
-    Keep responses to a maximum of 5000 words.
-    FOLLOW ALL THESE RULES AT ALL TIMES.
-    `;
-
-let MODELINSTRUCTIONS = `I want you take the users prompt and then compare it with these topics which are 
-                        "Math", "Geography", "Science", "Geometry", "Astronomy", "Geology", "Chemical", "Flora and Fauna", "People" and return the 
-                        tages that relate to the prompt and give them as an comma seperated string. If the awnser doesnt relate to any topic return a empty string`;
 
 const moderationUrl = "https://api.openai.com/v1/moderations"; // Open AI moderation URL
 
@@ -34,31 +12,64 @@ const openai = new OpenAI({
   apiKey: process.env.API_KEY,
 });
 
-var dbconnection = sql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
+const dbconnection = mysql.createPool({
+  host: "34.131.236.33",
+  user: "aiducator",
+  password: "]?k(*D|^.]0FJ][=",
   port: 3306,
+  database: "Aiducator",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
 
+const app = express();
+
+app.use(bodyParser.json());
+
+
 function pingdb() {
-  // t
-  var sql_keep = `SELECT 1 + 1 AS solution`;
-  dbconnection.query(sql_keep, function (err, result) {
-    if (err) throw err;
+  dbconnection.getConnection((err, connection) => {
+    if (err) throw err; // not connected!
+
+    var sql_keep = `SELECT 1 + 1 AS solution`;
+    connection.query(sql_keep, function (err, result) {
+      connection.release(); // release the connection back to the pool
+      if (err) throw err;
+    });
   });
 }
+
 setInterval(pingdb, 40000);
 
-dbconnection.connect((err) => {
+dbconnection.getConnection((err) => {
   if (err) {
-    // console.log(err);
+    console.error('Error connecting: ' + err);
   } else {
     console.log("connected");
   }
+});
+
+dbconnection.getConnection((err, connection) => {
+  if (err) {
+    console.error('Error connecting to the database: ' + err.stack);
+    return;
+  }
+
+  // Use the connection
+  connection.query('SELECT 1 + 1 AS solution', (error, results, fields) => {
+    // When done with the connection, release it.
+    connection.release();
+
+    // Handle error after the release.
+    if (error) {
+      console.error('Error executing query: ' + error.stack);
+      return;
+    }
+
+    // If there is no error, your query was successful
+    console.log('The solution is: ', results[0].solution);
+  });
 });
 
 const usersql = `CREATE TABLE Users (
@@ -150,19 +161,16 @@ VALUES
     ('mountain.glb', 'Mountain', 'geography,geology')
     ;`;
 
-// dbconnection.query("CREATE DATABASE sql6695838", (err, result) => {
-//   if (err) {
-//     if (err.errno === 1007) {
-//       console.log("Database already exists, Storing data in existing database");
-//     } else {
-//       console.log(err);
-//     }
-//   } else {
-//     console.log("databse created");
-//   }
-// });
 
-dbconnection.changeUser({ database: "aiducator" }); // selecting databse after creation
+dbconnection.getConnection((err, connection) => {
+  if (err) throw err; // not connected!
+
+  connection.query("USE Aiducator", function(err) {
+    if (err) throw err;
+    console.log('Database changed');
+    connection.release(); // release the connection back to the pool
+  });
+});
 
 const createTable = async (sql, tableName) => {
   return new Promise((resolve, reject) => {
@@ -199,16 +207,28 @@ const createTable = async (sql, tableName) => {
 
 // createDatabase()
 
+dbconnection.getConnection((err, connection) => {
+  if (err) {
+    console.error('Error connecting: ' + err.stack);
+    return;
+  }
+
+  console.log('Connected as id ' + connection.threadId);
+
   createTable(usersql, "Users")
-  .then(() => createTable(forumsql, "Forums"))
-  .then(() => createTable(threadsql, "Threads"))
-  .then(() => createTable(postsql, "Posts"))
-  .then(() => createTable(postVotesql, "PostVoteTracking"))
-  .then(() => createTable(threadVotesql, "Thread Vote"))
-  .then(() => createTable(tablesql, "queryTable"))
-  .catch((err) => {
-    console.error("An error occurred:", err);
-  });
+    .then(() => createTable(forumsql, "Forums"))
+    .then(() => createTable(threadsql, "Threads"))
+    .then(() => createTable(postsql, "Posts"))
+    .then(() => createTable(postVotesql, "PostVoteTracking"))
+    .then(() => createTable(threadVotesql, "Thread Vote"))
+    .then(() => createTable(tablesql, "queryTable"))
+    .catch((err) => {
+      console.error("An error occurred:", err);
+    }).finally(() => {
+      connection.release();
+    });
+});
+
 
 async function main(input) {
   const completion = await openai.chat.completions.create({
@@ -313,9 +333,9 @@ function getCategories(objectArr) {
   });
 }
 
-let app = new express();
-
-app.use(bodyParser.json());
+app.get("/", (req, res) => {
+  res.send("Hello Worlds");
+});
 
 app.post("/post/prompt", async (req, res) => {
   console.log(req.body.prompt); // remove later
@@ -334,7 +354,6 @@ app.post("/post/prompt", async (req, res) => {
     })
       .then((response) => response.json())
       .then(async (data) => {
-        console.log(data)
         if (!data.results[0].flagged) {
           let returnMsg = main(req.body.prompt);
           let tags = getKeywords(req.body.prompt);
@@ -381,7 +400,7 @@ app.post("/post/save", async (req, res) => {
       } else {
         console.log("saved");
         dbconnection.query(
-          "SELECT id FROM querytable ORDER BY id DESC LIMIT 1",
+          "SELECT id FROM queryTable ORDER BY id DESC LIMIT 1",
           (err, result) => {
             // to get the id of the last entry
             if (err) {
@@ -436,6 +455,18 @@ app.post("/post/displaySaved", (req, res) => {
       }
     }
   );
+});
+
+
+app.get("/get/users", (req, res) => {
+  dbconnection.query("SELECT * FROM Users", (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      res.json({ message: result });
+    }
+  });
 });
 
 app.get("/get/forum", (req, res) => {
@@ -873,7 +904,6 @@ app.post("/get/quiz", (req, res) => {
 });
 
 app.listen(8080, () => {
-  console.log("listenning on port 8080.");
-});
-
-// module.exports = app;
+  console.log(`Server running on port 8080`);
+}
+);

@@ -165,7 +165,7 @@ function ProfileSection({ id }) {
             });
           });
           const end = performance.now() - start;
-          console.log(end);
+          // console.log(end);
         }
       })
       .catch((error) => {
