@@ -2,7 +2,7 @@
     "rewrites": [
       {
         "source": "/api/:path*",
-        "destination": "https://server-419501.uc.r.appspot.com/:path*"
+        "destination": "https://aiducator-421817.de.r.appspot.com/:path*"
       }
     ]
   }
