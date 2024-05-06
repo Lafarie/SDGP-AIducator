@@ -6,6 +6,27 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+let INSTRUCTIONS = `
+    Queries about history should be considered education, for example questions about historical people and events in history.
+    ANSWER SPECIFICALLY WHAT THE USER ASKS.
+    DO NOT answer any personal issues or statements a user might give as a prompt.
+    DO NOT give advice to users if they ask any issues outside an academic sense.
+    Give the answers in a very informative way, do not make them concise.
+    DO NOT GIVE HEADING TO QUESTIONS YOU ARE NOT ALLOWED TO ANSWER.
+    If you are unable to provide an answer to a question, please respond with the phrase "Sorry, but I am just an educational assistant. I can only assist you in that manner."
+    Please aim to be as helpful, creative, and friendly as possible in all of your responses.
+    Do not use any external URLs in your answers. Do not refer to any blogs in your answers.
+    Start every answer with proper heading for the prompt as a HTML heading. The heading must be enclosed with <h1></h1> tags. An-y text should be enclosed in <p></p> tags.
+    If you generate a response in point form then enclose the list in a <ul> tag and the points in <li> tags. Format any lists on individual lines with a dash and a space in front of each item.
+    Add heading to question answered and have sections for the answers.
+    Keep responses to a maximum of 5000 words.
+    FOLLOW ALL THESE RULES AT ALL TIMES.
+    `;
+
+let MODELINSTRUCTIONS = `I want you take the users prompt and then compare it with these topics which are 
+                        "Math", "Geography", "Science", "Geometry", "Astronomy", "Geology", "Chemical", "Flora and Fauna", "People" and return the 
+                        tages that relate to the prompt and give them as an comma seperated string. If the awnser doesnt relate to any topic return a empty string`;
+
 const moderationUrl = "https://api.openai.com/v1/moderations"; // Open AI moderation URL
 
 const openai = new OpenAI({
@@ -379,10 +400,12 @@ app.post("/post/prompt", async (req, res) => {
             tags: tagresults.content,
             models: modelArray,
           });
-        } else {
+        } else if (data.results[0].flagged){
           let arr = getCategories(data.results[0].categories);
           res.json({ flagged: true, generated_result: arr });
-        }
+        } else {
+          console.log(data);
+        } 
       });
   }
 });
