@@ -1,8 +1,7 @@
-{
-    "rewrites": [
+{"rewrites": [
       {
         "source": "/api/:path*",
         "destination": "https://aiducator-421817.de.r.appspot.com/:path*"
-      }
+      },{"source": "/(.*)", "destination": "/"}
     ]
   }
